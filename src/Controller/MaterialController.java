@@ -16,10 +16,13 @@ public class MaterialController {
        get("/materials", ((request, response) -> {
          try {
              response.type("application/json");
+             response.status(200);
              return new Gson().toJson(materialService.getAll());
          } catch (Exception e) {
              System.err.println(e.getMessage());
-             return null;
+             response.type("application/json");
+             response.status(500);
+            return new Gson().toJson("Erro ao listar os materiais.");
          }
        }));
    }
