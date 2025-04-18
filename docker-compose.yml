@@ -1,0 +1,20 @@
+version: '3.8' # versão recomendada para recursos modernos
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: api-bibliotech
+    restart: unless-stopped # reinicia automaticamente se cair
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: Bibliotech
+      MYSQL_USER: user
+      MYSQL_PASSWORD: mysqlpassword
+    ports:
+      - "3308:3306"
+    volumes:
+      - bibliotech_mysql_data:/var/lib/mysql
+
+volumes:
+  bibliotech_mysql_data:
+    driver: local
