@@ -1,4 +1,3 @@
-import Controller.MaterialController;
 import server.Server;
 
 import static spark.Spark.get;

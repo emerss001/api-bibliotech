@@ -1,6 +1,6 @@
 package server;
 
-import Controller.MaterialController;
+import controller.MaterialController;
 
 import static spark.Spark.get;
 import static spark.Spark.port;

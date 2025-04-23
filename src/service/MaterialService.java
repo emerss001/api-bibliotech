@@ -11,4 +11,11 @@ public class MaterialService {
     public List<Material> getAll() {
         return materialDAO.getAll();
     }
+
+    public Material addMaterial(Material material) {
+        if (material.getTitulo() == null || material.getTitulo().trim().isEmpty()) {
+            throw new IllegalArgumentException("O título do material é obrigatório");
+        }
+        return materialDAO.addMaterial(material);
+    }
 }
