@@ -30,6 +30,7 @@ public class MaterialController {
          }
        }));
 
+       // POST /materials --> Criar um novo material
        post("/materials", (request, response) -> {
            try {
                response.type("application/json");
