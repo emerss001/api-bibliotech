@@ -2,7 +2,6 @@
 
 Este projeto é uma API desenvolvida em Java cujo objetivo é prover funcionalidades para um sistema de uma biblioteca virtual de materiais acessíveis. Ele foi construído para ser escalável, fácil de utilizar e de manter.
 
----
 
 ## Requisitos ✅
 
@@ -11,7 +10,6 @@ Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
 - **Maven 3.6.3** ou superior para gerenciamento de dependências
 - **Docker-compose** para executar o banco de dados MySQL
 
----
 
 # Estrutura de Pastas 📦
 
@@ -33,15 +31,14 @@ api-bibliotec
 └── README.md     -> Documentação do projeto
 ```
 
----
 
 ## Como Executar o Projeto 🚀
 Siga as etapas abaixo para executar o projeto localmente:
 
 1. Clone o repositório:
     ```bash
-    git clone https://github.com/seurepositorio/projeto.git
-    cd projeto
+    git clone git@github.com:emerss001/api-bibliotech.git
+    cd api-bibliotech
     ```
 
 2. Configure as dependências do projeto:
@@ -72,14 +69,14 @@ Siga as etapas abaixo para executar o projeto localmente:
    ```
    http://localhost:8888
    ```
----
+
 
 ## Documentação da API 📖
 A seguir estão os principais endpoints da API:
 
 #### Criar um novo usuário
 
-```http
+```
   POST /pessoas
 ```
 ##### Dados esperados:
@@ -87,28 +84,28 @@ A seguir estão os principais endpoints da API:
 {
   "nome": "Emerson Neves",
   "email": "fdfdf@gmail.com",
-  "vinculo": "PROFESSOR", (ou "ALUNO")
-  "matricula": "202501GT078", (Quando for aluno)
-  "siap": "123456789", (Quando for professor)
+  "vinculo": "PROFESSOR", // (ou "ALUNO")
+  "matricula": "202501GT078", // (Quando for aluno)
+  "siap": "123456789", // (Quando for professor)
   "senha": "minhasenha",
-  "idNecessidade": 1 (quando for aluno)
+  "idNecessidade": 1 // (quando for aluno)
 }
 ```
 
 ##### Possíveis respostas:
 ```json
-201 - created
+// 201 - created
 {
     "id": 3
 
 }
 
-400 - bad request
+// 400 - bad request
 {
     "error": "Nome deve ter pelo menos 3 caracteres"
 }
 
-500 - internal server error
+// 500 - internal server error
 {
     "error": "Erro interno no servidor"
 }
