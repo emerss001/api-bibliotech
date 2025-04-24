@@ -80,7 +80,7 @@ A seguir estão os principais endpoints da API:
   POST /pessoas
 ```
 ##### Dados esperados:
-```json
+```json lines
 {
   "nome": "Emerson Neves",
   "email": "fdfdf@gmail.com",
@@ -93,19 +93,19 @@ A seguir estão os principais endpoints da API:
 ```
 
 ##### Possíveis respostas:
-```json
-// 201 - created
+```json Lines
+201 - created
 {
     "id": 3
 
 }
 
-// 400 - bad request
+400 - bad request
 {
     "error": "Nome deve ter pelo menos 3 caracteres"
 }
 
-// 500 - internal server error
+500 - internal server error
 {
     "error": "Erro interno no servidor"
 }
