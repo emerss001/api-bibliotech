@@ -20,11 +20,13 @@ api-bibliotec
 ├── src
 │   ├── controller/     -> Controladores REST
 │   ├── dao/        -> Acesso e  manipulação do banco de dados
+│   ├── db/        -> Configuração do banco de dados
 │   ├── dto/        -> Objetos de Transferência de Dados
 │   ├── exception/      -> Exceções personalizadas
 │   ├── model/      -> Modelos de dados
 │   ├── service/        -> Lógica de negócios
 │   ├── type/       -> Tipos de dados
+│   ├── util/       -> Utilitários
 │   └── Server.java     -> Classe principal do projeto
 ├── pom.xml     -> Arquivo de configuração do Maven
 ├── docker-compose.yml      -> Arquivo de configuração do Docker
@@ -108,5 +110,36 @@ A seguir estão os principais endpoints da API:
 500 - internal server error
 {
     "error": "Erro interno no servidor"
+}
+```
+
+#### Fazer login
+
+```
+  POST /login
+```
+##### Dados esperados:
+```json lines
+{
+  "email": "fdfdf@gmail.com",
+  "senha": "minhasenha",
+}
+```
+
+##### Possíveis respostas:
+```json Lines
+200 - authenticated
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGktYmlibGlvdGVjaC1qYXZhIiwic3ViIjoibG9naW5AZ21haWwuY29tIiwiZXhwIjoxNzQ1NTUwNzg2fQ.aiZuizBtXlWyJODjlzMffMvnEZFLwMpXVspI8wvKayI"
+}
+
+401 - unauthorized
+{
+  "error":"Token de autenticação inválido ou expirado."
+}
+
+400 - bad request
+{
+  "error": "Email ou senha inválidos"
 }
 ```
