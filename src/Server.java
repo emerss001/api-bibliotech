@@ -1,8 +1,10 @@
 import com.google.gson.Gson;
+import controller.AuthController;
 import controller.MaterialController;
 import controller.PessoaController;
 import dao.MaterialDAO;
 import dao.PessoaDAO;
+import service.AuthService;
 import service.MaterialService;
 import service.PessoaService;
 
@@ -30,6 +32,7 @@ public class Server {
         final MaterialDAO materialDAO = new MaterialDAO();
 
         final PessoaService pessoaService = new PessoaService(pessoaDAO);
+        final AuthService authService = new AuthService(pessoaDAO);
         final MaterialService materialService = new MaterialService();
     }
 
@@ -39,6 +42,7 @@ public class Server {
 
     private static void registrarControllers(depedenciasContainer dc) {
         new PessoaController(dc.pessoaService, dc.gson);
+        new AuthController(dc.authService, dc.gson);
         new MaterialController();
         // Adicione novos controllers aqui com 1 linha cada
     }
