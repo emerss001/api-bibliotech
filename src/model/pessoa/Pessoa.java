@@ -10,10 +10,14 @@ public class Pessoa {
     private String nome;
     private String email;
 
-    public Pessoa(String senha, String nome, String email) {
-        validarDados(senha, nome, email);
+    public Pessoa(String senha, String nome, String email, boolean senhaJaHasheada) {
+        if (!senhaJaHasheada) {
+            validarDados(senha, nome, email);
+            this.senhaHash = hashSenha(senha);
+        } else {
+            this.senhaHash = senha;
+        }
         this.id = -1;
-        this.senhaHash = hashSenha(senha);
         this.nome = nome.trim();
         this.email = email;
     }

@@ -2,8 +2,8 @@ package model.pessoa;
 
 public class Professor extends Pessoa {
     private String siap;
-    public Professor(String nome, String email, String siap, String senha) {
-        super(senha, nome, email);
+    public Professor(String nome, String email, String siap, String senha, boolean senhaJaHasheada) {
+        super(senha, nome, email, senhaJaHasheada);
         this.siap = siap;
     }
 
