@@ -15,7 +15,7 @@ public class MaterialController {
 
    private void setupRoutes() {
        // GET /materials --> Lista todos os materiais
-       get("/materials", ((request, response) -> {
+       get("/protegida/materials", ((request, response) -> {
          try {
              response.type("application/json");
              response.status(200);

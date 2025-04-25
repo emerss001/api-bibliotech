@@ -26,13 +26,13 @@ public class PessoaService {
 
     private Professor cadastrarProfessor(PessoaDTO dto) {
         dto.dadosEspecificosValidos();
-        Professor professor = new Professor(dto.nome(), dto.email(), dto.siap(), dto.senha());
+        Professor professor = new Professor(dto.nome(), dto.email(), dto.siap(), dto.senha(), false);
         return pessoaDAO.addProfessor(professor);
     }
 
     private Aluno cadastrarAluno(PessoaDTO dto) {
         dto.dadosEspecificosValidos();
-        Aluno aluno = new Aluno(dto.nome(), dto.email(), dto.matricula(), dto.senha(), dto.idNecessidade());
+        Aluno aluno = new Aluno(dto.nome(), dto.email(), dto.matricula(), dto.senha(), dto.idNecessidade(), false);
         return pessoaDAO.addAluno(aluno);
     }
 }
