@@ -2,13 +2,11 @@ package controller;
 
 import com.google.gson.Gson;
 import dto.PessoaDTO;
-import exception.InvalidDataException;
+
 import model.pessoa.Pessoa;
 import service.PessoaService;
 import spark.Request;
 import spark.Response;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -39,7 +37,7 @@ public class PessoaController {
             response.status(201);
             return gson.toJson(Map.of("Mensagem", "Usuário criado com sucesso")); // Resposta de sucesso
 
-        } catch (IllegalArgumentException | InvalidDataException e) {
+        } catch (IllegalArgumentException e) {
             response.status(400);
             return gson.toJson(Map.of("error", e.getMessage())); // Formato padronizado
         } catch (Exception e) {

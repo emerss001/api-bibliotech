@@ -1,7 +1,6 @@
 package dto;
 
 import dao.PessoaDAO;
-import exception.InvalidDataException;
 import type.PessoaVinculo;
 
 public record PessoaDTO(
@@ -37,7 +36,7 @@ public record PessoaDTO(
     }
 
     private boolean vinculoValido() {
-        if (vinculo != PessoaVinculo.ALUNO && vinculo != PessoaVinculo.PROFESSOR) throw new InvalidDataException("Vínculo inválido");
+        if (vinculo != PessoaVinculo.ALUNO && vinculo != PessoaVinculo.PROFESSOR) throw new IllegalArgumentException("Vínculo inválido");
         return true;
     }
 

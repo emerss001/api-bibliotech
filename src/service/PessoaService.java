@@ -2,7 +2,6 @@ package service;
 
 import dao.PessoaDAO;
 import dto.PessoaDTO;
-import exception.InvalidDataException;
 import model.pessoa.Aluno;
 import model.pessoa.Pessoa;
 import model.pessoa.Professor;
@@ -23,10 +22,10 @@ public class PessoaService {
         }
 
         if (!dto.valido()) {
-            throw new InvalidDataException("Dados obrigatórios não informados");
+            throw new IllegalArgumentException("Dados obrigatórios não informados");
         }
         if (!dto.dadosEspecificosValidos()) {
-            throw new InvalidDataException("Dados específicos inválidos para o vínculo");
+            throw new IllegalArgumentException("Dados específicos inválidos para o vínculo");
         }
 
          switch (dto.vinculo()) {

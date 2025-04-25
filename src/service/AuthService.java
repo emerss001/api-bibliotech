@@ -2,7 +2,6 @@ package service;
 
 import dao.PessoaDAO;
 import dto.LoginDTO;
-import exception.InvalidDataException;
 import model.pessoa.Pessoa;
 import util.TokenUtil;
 
@@ -14,9 +13,10 @@ public class AuthService {
     }
 
     public String autenticar(LoginDTO dto) {
+        dto.valido();
         Pessoa pessoa = pessoaDAO.buscarPorEmail(dto.email());
 
-        if (pessoa == null || !pessoa.validarSenha(dto.senha())) throw new InvalidDataException("Email ou senha inválidos");
+        if (pessoa == null || !pessoa.validarSenha(dto.senha())) throw new IllegalArgumentException("Email ou senha inválidos");
         return TokenUtil.gerarToken(pessoa.getEmail());
     }
 }
