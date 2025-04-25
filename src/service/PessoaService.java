@@ -2,6 +2,7 @@ package service;
 
 import dao.PessoaDAO;
 import dto.PessoaDTO;
+import exception.InvalidDataException;
 import model.pessoa.Aluno;
 import model.pessoa.Pessoa;
 import model.pessoa.Professor;
@@ -17,22 +18,30 @@ public class PessoaService {
     }
 
     public Pessoa cadastrarPessoa(PessoaDTO dto) {
-        return switch (dto.vinculo()) {
-            case ALUNO -> cadastrarAluno(dto);
-            case PROFESSOR -> cadastrarProfessor(dto);
-            default -> throw new IllegalArgumentException("Tipo de vínculo inválido" + dto.vinculo());
-        };
-    }
+        if (dto == null) {
+            throw new IllegalArgumentException("Dados da pessoa inválidos");
+        }
 
-    private Professor cadastrarProfessor(PessoaDTO dto) {
-        dto.dadosEspecificosValidos();
-        Professor professor = new Professor(dto.nome(), dto.email(), dto.siap(), dto.senha(), false);
-        return pessoaDAO.addProfessor(professor);
-    }
+        if (!dto.valido()) {
+            throw new InvalidDataException("Dados obrigatórios não informados");
+        }
+        if (!dto.dadosEspecificosValidos()) {
+            throw new InvalidDataException("Dados específicos inválidos para o vínculo");
+        }
 
-    private Aluno cadastrarAluno(PessoaDTO dto) {
-        dto.dadosEspecificosValidos();
-        Aluno aluno = new Aluno(dto.nome(), dto.email(), dto.matricula(), dto.senha(), dto.idNecessidade(), false);
-        return pessoaDAO.addAluno(aluno);
+         switch (dto.vinculo()) {
+            case ALUNO:
+                Aluno aluno = new Aluno(dto, dto.matricula(), dto.idNecessidade(), false);
+                aluno.cadastrarAluno(pessoaDAO);
+                return aluno;
+
+            case PROFESSOR:
+                Professor professor = new Professor(dto, dto.siap(), false);
+                professor.cadastrarProfessor(pessoaDAO);
+                return professor;
+
+            default:
+                throw new IllegalArgumentException("Tipo de vínculo inválido" + dto.vinculo());
+        }
     }
 }

@@ -30,22 +30,14 @@ public class PessoaController {
     private Object criarPessoa(Request request, Response response) {
         try {
             PessoaDTO dto = gson.fromJson(request.body(), PessoaDTO.class);
-            if (dto == null) {
-                throw new IllegalArgumentException("Dados da pessoa inválidos");
-            }
-
-            // Validações
-            if (!dto.valido()) {
-                throw new InvalidDataException("Dados obrigatórios não informados");
-            }
-            if (!dto.dadosEspecificosValidos()) {
-                throw new InvalidDataException("Dados específicos inválidos para o vínculo");
-            }
-
             Pessoa pessoaCriada = pessoaService.cadastrarPessoa(dto);
 
+            if (pessoaCriada == null) {
+                throw new RuntimeException();
+            }
+
             response.status(201);
-            return gson.toJson(Map.of("id", pessoaCriada.getId())); // Resposta de sucesso
+            return gson.toJson(Map.of("Mensagem", "Usuário criado com sucesso")); // Resposta de sucesso
 
         } catch (IllegalArgumentException | InvalidDataException e) {
             response.status(400);

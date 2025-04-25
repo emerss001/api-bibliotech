@@ -2,7 +2,6 @@ package dao;
 
 import db.ConnectionDB;
 import exception.NullConnectionException;
-import exception.UserNotFound;
 import model.pessoa.Aluno;
 import model.pessoa.Pessoa;
 import model.pessoa.Professor;
@@ -13,8 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PessoaDAO {
-    public Professor addProfessor(Professor professor) {
-        int pessoaId = addPessoa(professor);
+    public Professor addProfessor(Professor professor,  int pessoaId) {
         String sqlCommand = "INSERT INTO Professor (pessoa_id, siap) VALUES (?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
@@ -33,8 +31,7 @@ public class PessoaDAO {
         }
     }
 
-    public Aluno addAluno(Aluno aluno) {
-        int pessoaId = addPessoa(aluno);
+    public Aluno addAluno(Aluno aluno, int pessoaId) {
         String sqlCommand = "INSERT INTO Aluno (pessoa_id, matricula, id_necessidade) VALUES (?, ?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
@@ -128,43 +125,16 @@ public class PessoaDAO {
             ResultSet rsPessoa = stmt.executeQuery();
 
             if (rsPessoa.next()) {
-                System.out.println(rsPessoa.getString("senha"));
                 int id = rsPessoa.getInt("id");
                 String nome = rsPessoa.getString("nome");
                 String senha = rsPessoa.getString("senha");
 
-                // Verifica se é Aluno
-                String sqlAluno = "SELECT * FROM Aluno WHERE pessoa_id = ?";
-                PreparedStatement stmtAluno = connection.prepareStatement(sqlAluno);
-                stmtAluno.setInt(1, id);
-                ResultSet rsAluno = stmtAluno.executeQuery();
-
-                if (rsAluno.next()) {
-                    String matricula = rsAluno.getString("matricula");
-                    int idNecessidade = rsAluno.getInt("id_necessidade");
-
-                    return new Aluno(nome, email, matricula, senha, idNecessidade, true);
-                }
-
-                // Verifica se é Professor
-                String sqlProf = "SELECT * FROM Professor WHERE pessoa_id = ?";
-                PreparedStatement stmtProf = connection.prepareStatement(sqlProf);
-                stmtProf.setInt(1, id);
-                ResultSet rsProf = stmtProf.executeQuery();
-
-                if (rsProf.next()) {
-                    String siap = rsProf.getString("siap");
-                    return new Professor(nome, email, siap, senha, true);
-                }
-
-                throw new UserNotFound("Usuário não encontrado");
+                return new Pessoa(senha, nome, email, true);
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao buscar por email", e);
         }
-
         return null;
     }
+ }
 
-}

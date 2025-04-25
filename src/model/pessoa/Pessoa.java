@@ -1,5 +1,6 @@
 package model.pessoa;
 
+import dao.PessoaDAO;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class Pessoa {
@@ -42,6 +43,10 @@ public class Pessoa {
     // Método para verificar a senha
     public boolean validarSenha(String senha) {
         return BCrypt.checkpw(senha, this.senhaHash);
+    }
+
+    public int salvar(PessoaDAO dao) {
+         return dao.addPessoa(this);
     }
 
     // Getters e Setters

@@ -4,3 +4,4 @@ public enum PessoaVinculo {
     ALUNO,
     PROFESSOR
 }
+
