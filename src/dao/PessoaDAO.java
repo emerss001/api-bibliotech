@@ -2,6 +2,7 @@ package dao;
 
 import db.ConnectionDB;
 import exception.NullConnectionException;
+import exception.UserNotFound;
 import model.pessoa.Aluno;
 import model.pessoa.Pessoa;
 import model.pessoa.Professor;
@@ -117,4 +118,53 @@ public class PessoaDAO {
        }
        return false;
    }
+
+    public Pessoa buscarPorEmail(String email) {
+        String sqlPessoa = "SELECT * FROM Pessoa WHERE email = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(sqlPessoa);
+            stmt.setString(1, email);
+            ResultSet rsPessoa = stmt.executeQuery();
+
+            if (rsPessoa.next()) {
+                System.out.println(rsPessoa.getString("senha"));
+                int id = rsPessoa.getInt("id");
+                String nome = rsPessoa.getString("nome");
+                String senha = rsPessoa.getString("senha");
+
+                // Verifica se é Aluno
+                String sqlAluno = "SELECT * FROM Aluno WHERE pessoa_id = ?";
+                PreparedStatement stmtAluno = connection.prepareStatement(sqlAluno);
+                stmtAluno.setInt(1, id);
+                ResultSet rsAluno = stmtAluno.executeQuery();
+
+                if (rsAluno.next()) {
+                    String matricula = rsAluno.getString("matricula");
+                    int idNecessidade = rsAluno.getInt("id_necessidade");
+
+                    return new Aluno(nome, email, matricula, senha, idNecessidade, true);
+                }
+
+                // Verifica se é Professor
+                String sqlProf = "SELECT * FROM Professor WHERE pessoa_id = ?";
+                PreparedStatement stmtProf = connection.prepareStatement(sqlProf);
+                stmtProf.setInt(1, id);
+                ResultSet rsProf = stmtProf.executeQuery();
+
+                if (rsProf.next()) {
+                    String siap = rsProf.getString("siap");
+                    return new Professor(nome, email, siap, senha, true);
+                }
+
+                throw new UserNotFound("Usuário não encontrado");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar por email", e);
+        }
+
+        return null;
+    }
+
 }
