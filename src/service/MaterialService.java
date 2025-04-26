@@ -1,21 +1,26 @@
 package service;
 
 import dao.MaterialDAO;
-import model.Material;
+import dto.NovoMaterialDTO;
+import model.material.Material;
+import model.material.MaterialDigital;
 
-import java.util.List;
+import java.util.Objects;
 
 public class MaterialService {
-    private final MaterialDAO materialDAO = new MaterialDAO();
+    private final MaterialDAO materialDAO;
 
-    public List<Material> getAll() {
-        return materialDAO.getAll();
+    public MaterialService(MaterialDAO materialDAO) {
+        this.materialDAO = Objects.requireNonNull(materialDAO, "DAO não pode ser nulo");
     }
 
-    public Material addMaterial(Material material) {
-        if (material.getTitulo() == null || material.getTitulo().trim().isEmpty()) {
-            throw new IllegalArgumentException("O título do material é obrigatório");
-        }
-        return materialDAO.addMaterial(material);
+    public Material addMaterialDigital(NovoMaterialDTO dto) {
+        if (dto == null) throw new IllegalArgumentException("Dados do material inválidos");
+
+        if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
+
+        MaterialDigital materialDigital = new MaterialDigital(dto);
+        materialDigital.cadastrarMaterialDigital(materialDAO);
+        return materialDigital;
     }
 }

@@ -1,44 +1,19 @@
 package dao;
 
 import db.ConnectionDB;
-import model.Material;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import exception.NullConnectionException;
+import model.material.Material;
+import model.material.MaterialDigital;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class MaterialDAO {
-    public List<Material> getAll() {
-        String sqlCommand = "SELECT * FROM Material";
-        List<Material> materials = new ArrayList<>();
 
-        try (Connection connection = ConnectionDB.getConnection()) {
-            if (connection == null) return null;
-
-            PreparedStatement statement = connection.prepareStatement(sqlCommand);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                materials.add(mapMaterial(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return materials;
-    }
-
-    private Material mapMaterial(ResultSet rs) throws SQLException {
-        Material material = new Material();
-
-        material.setId(rs.getInt("id"));
-        material.setTitulo(rs.getString("titulo"));
-
-        return material;
-    }
-
-    public Material addMaterial(Material material) {
-        String sqlCommand = "INSERT INTO Material (titulo) VALUES (?)";
+    public Integer addMaterial(Material material) {
+        String sqlCommand = "INSERT INTO Material (titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
@@ -46,13 +21,16 @@ public class MaterialDAO {
             // Configura para retornar o ID gerado
             PreparedStatement statement = connection.prepareStatement(sqlCommand, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, material.getTitulo());
+            statement.setString(2, material.getFormato());
+            statement.setString(3, material.getArea());
+            statement.setString(4, material.getNivel());
+            statement.setString(5, material.getDescricao());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows > 0) {
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        material.setId(generatedKeys.getInt(1));
-                        return material;
+                try (ResultSet rs = statement.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);    // retorna o ID gerado
                     }
                 }
             }
@@ -60,5 +38,24 @@ public class MaterialDAO {
             throw new RuntimeException("Erro ao criar material", e);
         }
         return null;
+    }
+
+    public MaterialDigital cadastrarMaterialDigital(MaterialDigital materialDigital, Integer idMaterial) {
+        String sqlCommand = "INSERT INTO Material_digital (material_id, link) VALUES (?, ?)";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setString(1, String.valueOf(idMaterial));
+            statement.setString(2, materialDigital.getUrl());
+
+            statement.executeUpdate();
+
+            materialDigital.setId(idMaterial);
+            return materialDigital;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
