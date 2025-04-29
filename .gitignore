@@ -33,4 +33,5 @@ bin/
 testeJava.java
 .env
 project.sql
+/firebase
 /firebase/api-bibliotech-firebase.json

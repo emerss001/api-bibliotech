@@ -13,18 +13,19 @@ import java.sql.Statement;
 public class MaterialDAO {
 
     public Integer addMaterial(Material material) {
-        String sqlCommand = "INSERT INTO Material (titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao) VALUES (?, ?, ?, ?, ?)";
+        String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
 
             // Configura para retornar o ID gerado
             PreparedStatement statement = connection.prepareStatement(sqlCommand, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, material.getTitulo());
-            statement.setString(2, material.getFormato());
-            statement.setString(3, material.getArea());
-            statement.setString(4, material.getNivel());
-            statement.setString(5, material.getDescricao());
+            statement.setString(1, material.getAutor());
+            statement.setString(2, material.getTitulo());
+            statement.setString(3, material.getFormato());
+            statement.setString(4, material.getArea());
+            statement.setString(5, material.getNivel());
+            statement.setString(6, material.getDescricao());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows > 0) {

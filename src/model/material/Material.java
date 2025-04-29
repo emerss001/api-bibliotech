@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 
 public class Material {
     private Integer id;
+    private String autor;
     private String titulo;
     private String formato;
     private String area;
@@ -15,8 +16,9 @@ public class Material {
     private int quantidadeAvaliacoes;
     private String descricao;
 
-    public Material(String titulo, String formato, String area, String nivel, String descricao) {
+    public Material(String autor, String titulo, String formato, String area, String nivel, String descricao) {
         this.id = null;
+        this.autor = autor;
         this.titulo = titulo;
         this.formato = formato;
         this.area = area;
@@ -44,6 +46,9 @@ public class Material {
         return descricao;
     }
 
+    public String getAutor() {
+        return autor;
+    }
 
     public int getId() {
         return id;
@@ -57,7 +62,4 @@ public class Material {
         return titulo;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
 }

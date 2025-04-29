@@ -35,7 +35,7 @@ public class Server {
 
         final PessoaService pessoaService = new PessoaService(pessoaDAO);
         final AuthService authService = new AuthService(pessoaDAO);
-        final MaterialService materialService = new MaterialService(materialDAO);
+        final MaterialService materialService = new MaterialService(materialDAO, pessoaDAO);
     }
 
     private static depedenciasContainer setupDependencies() {

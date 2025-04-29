@@ -34,6 +34,7 @@ public class MaterialController {
              request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
              // Pegando os dados da requisição
+             String token = request.headers("Authorization");
              String titulo = request.queryParams("titulo");
              String formato = request.queryParams("formato");
              String area = request.queryParams("area");
@@ -49,7 +50,7 @@ public class MaterialController {
                              MaterialNivel.fromString(nivel),
                              descricao,
                              arquivo
-                     )
+                     ), token
              );
 
              if (novoMaterial == null) throw new RuntimeException();
@@ -61,7 +62,7 @@ public class MaterialController {
              response.type("application/json");
              response.status(500);
 
-            return gson.toJson("Erro ao listar os materiais.");
+            return gson.toJson(Map.of("error", e.getMessage()));
          }
    }
 
