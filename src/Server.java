@@ -14,7 +14,7 @@ import static spark.Spark.*;
 public class Server {
     public static void main(String[] args) {
         // 1. Configuração mínima do servidor
-        FirebaseInitializer.initialize();
+        //FirebaseInitializer.initialize();
         port(8888);
         after((req, res) -> res.type("application/json"));
 
