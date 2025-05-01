@@ -23,6 +23,11 @@ public class Pessoa {
         this.email = email;
     }
 
+    public Pessoa(int id, String senha) {
+        this.id = id;
+        this.senhaHash = senha;
+    }
+
     private void validarDados(String senha, String nome, String email) {
         if (senha == null || senha.trim().isEmpty()) {
             throw new IllegalArgumentException("Senha não pode ser vazia");

@@ -5,6 +5,7 @@ import exception.NullConnectionException;
 import model.pessoa.Aluno;
 import model.pessoa.Pessoa;
 import model.pessoa.Professor;
+import type.PessoaVinculo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -114,6 +115,34 @@ public class PessoaDAO {
            throw new RuntimeException(e);
        }
        return false;
+   }
+
+   public Pessoa buscarPorIdentificador(PessoaVinculo userTipo, String identificador) {
+        String sqlCommand;
+
+        if (userTipo == PessoaVinculo.ALUNO) {
+            sqlCommand = "SELECT pessoa_id, senha FROM Aluno join Pessoa on Aluno.pessoa_id = Pessoa.id WHERE matricula = ?";
+        } else {
+            sqlCommand = "SELECT pessoa_id, senha FROM Professor join Pessoa on Professor.pessoa_id = Pessoa.id WHERE siap = ?";
+        }
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(sqlCommand);
+            stmt.setString(1, identificador);
+            ResultSet rsPessoa = stmt.executeQuery();
+
+            if (rsPessoa.next()) {
+                int id = rsPessoa.getInt("pessoa_id");
+                String senha = rsPessoa.getString("senha");
+
+                return new Pessoa(id, senha);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException("Erro ao buscar por email", e);
+        }
+
+       return null;
    }
 
     public Pessoa buscarPorEmail(String email) {

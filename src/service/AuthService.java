@@ -17,9 +17,9 @@ public class AuthService {
 
     public String autenticar(LoginDTO dto) {
         dto.valido();
-        Pessoa pessoa = pessoaDAO.buscarPorEmail(dto.email());
+        Pessoa pessoa = pessoaDAO.buscarPorIdentificador(dto.vinculo(), dto.identificador());
 
-        if (pessoa == null || !pessoa.validarSenha(dto.senha())) throw new IllegalArgumentException("Email ou senha inválidos");
+        if (pessoa == null || !pessoa.validarSenha(dto.senha())) throw new IllegalArgumentException("Identificador ou senha inválidos");
         return TokenUtil.gerarToken(pessoa.getEmail());
     }
 
