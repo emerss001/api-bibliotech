@@ -2,13 +2,13 @@ package controller;
 
 import com.google.gson.Gson;
 import dto.LoginDTO;
+import dto.PessoaDTO;
+import model.pessoa.Pessoa;
 import service.AuthService;
 import spark.Request;
 import spark.Response;
 import util.TokenUtil;
-
 import static spark.Spark.*;
-
 import java.util.Map;
 
 public class AuthController {
@@ -23,6 +23,7 @@ public class AuthController {
 
     private void setupRoutes() {
         post("/login", this::login);
+        post("/cadastro", this::cadastro);
         before("/protegida/*", this::rotaProtegida);
     }
 
@@ -39,6 +40,26 @@ public class AuthController {
         }
     }
 
+    private Object cadastro(Request request, Response response) {
+        try {
+            PessoaDTO dto = gson.fromJson(request.body(), PessoaDTO.class);
+            Pessoa pessoaCriada = authService.cadastro(dto);
+
+            if (pessoaCriada == null) {
+                throw new RuntimeException();
+            }
+
+            response.status(201);
+            return gson.toJson(Map.of("Mensagem", "Usuário criado com sucesso"));
+        } catch (IllegalArgumentException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", e.getMessage())); // Formato padronizado
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            response.status(500);
+            return gson.toJson(Map.of("error", "Erro interno no servidor")); // Não expõe detalhes internos
+        }
+    }
     private void rotaProtegida(Request request, Response response) {
         String token = request.headers("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {
