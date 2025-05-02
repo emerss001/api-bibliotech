@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 
 public class Material {
     private Integer id;
+    private String tipo;
     private String autor;
     private String titulo;
     private String formato;
@@ -17,8 +18,9 @@ public class Material {
     private String descricao;
     private String cadastradoPor;
 
-    public Material(String autor, String titulo, String formato, String area, String nivel, String descricao, String cadastradoPor) {
+    public Material(String autor, String tipo, String titulo, String formato, String area, String nivel, String descricao, String cadastradoPor) {
         this.id = null;
+        this.tipo = tipo;
         this.autor = autor;
         this.titulo = titulo;
         this.formato = formato;
@@ -75,5 +77,9 @@ public class Material {
 
     public String getCadastradoPor() {
         return cadastradoPor;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 }
