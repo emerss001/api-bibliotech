@@ -23,8 +23,9 @@ public class Pessoa {
         this.email = email;
     }
 
-    public Pessoa(int id, String senha) {
+    public Pessoa(int id, String email, String senha) {
         this.id = id;
+        this.email = email;
         this.senhaHash = senha;
     }
 

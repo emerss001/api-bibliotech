@@ -133,9 +133,10 @@ public class PessoaDAO {
 
             if (rsPessoa.next()) {
                 int id = rsPessoa.getInt("pessoa_id");
+                String email = rsPessoa.getString("email");
                 String senha = rsPessoa.getString("senha");
 
-                return new Pessoa(id, senha);
+                return new Pessoa(id, email, senha);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
