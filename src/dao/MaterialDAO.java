@@ -15,7 +15,7 @@ import java.sql.Statement;
 public class MaterialDAO {
 
     public Integer addMaterial(Material material) {
-        String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao, cadastrado_por) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
@@ -28,6 +28,7 @@ public class MaterialDAO {
             statement.setString(4, material.getArea());
             statement.setString(5, material.getNivel());
             statement.setString(6, material.getDescricao());
+            statement.setString(7, material.getCadastradoPor());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows > 0) {

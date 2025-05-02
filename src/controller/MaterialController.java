@@ -38,6 +38,7 @@ public class MaterialController {
             // Pegando os dados da requisição
             String token = request.headers("Authorization");
             String titulo = request.queryParams("titulo");
+            String autor = request.queryParams("autor");
             String formato = request.queryParams("formato");
             String area = request.queryParams("area");
             String nivel = request.queryParams("nivel");
@@ -47,6 +48,7 @@ public class MaterialController {
             Material novoMaterial = materialService.addMaterialDigital(
                     new NovoMaterialDTO(
                             titulo,
+                            autor,
                             formato,
                             area,
                             MaterialNivel.fromString(nivel),
@@ -73,6 +75,7 @@ public class MaterialController {
             // Pegando os dados da requisição
             String token = request.headers("Authorization");
             String titulo = request.queryParams("titulo");
+            String autor = request.queryParams("autor");
             String formato = request.queryParams("formato");
             String areaConhecimento = request.queryParams("area");
             String nivel = request.queryParams("nivel");
@@ -83,6 +86,7 @@ public class MaterialController {
             Material novoMaterial = materialService.addMaterialFisico(
                     new NovoMaterialFisicoDTO(
                             titulo,
+                            autor,
                             formato,
                             areaConhecimento,
                             MaterialNivel.fromString(nivel),

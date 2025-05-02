@@ -15,8 +15,9 @@ public class Material {
     private Timestamp adicionado;
     private int quantidadeAvaliacoes;
     private String descricao;
+    private String cadastradoPor;
 
-    public Material(String autor, String titulo, String formato, String area, String nivel, String descricao) {
+    public Material(String autor, String titulo, String formato, String area, String nivel, String descricao, String cadastradoPor) {
         this.id = null;
         this.autor = autor;
         this.titulo = titulo;
@@ -24,6 +25,7 @@ public class Material {
         this.area = area;
         this.nivel = nivel;
         this.descricao = descricao;
+        this.cadastradoPor = cadastradoPor;
     }
 
     public Integer salvar(MaterialDAO dao) {
@@ -62,4 +64,7 @@ public class Material {
         return titulo;
     }
 
+    public String getCadastradoPor() {
+        return cadastradoPor;
+    }
 }

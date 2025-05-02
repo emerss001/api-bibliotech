@@ -121,9 +121,9 @@ public class PessoaDAO {
         String sqlCommand;
 
         if (userTipo == PessoaVinculo.ALUNO) {
-            sqlCommand = "SELECT pessoa_id, senha FROM Aluno join Pessoa on Aluno.pessoa_id = Pessoa.id WHERE matricula = ?";
+            sqlCommand = "SELECT pessoa_id, email, senha FROM Aluno join Pessoa on Aluno.pessoa_id = Pessoa.id WHERE matricula = ?";
         } else {
-            sqlCommand = "SELECT pessoa_id, senha FROM Professor join Pessoa on Professor.pessoa_id = Pessoa.id WHERE siap = ?";
+            sqlCommand = "SELECT pessoa_id, email, senha FROM Professor join Pessoa on Professor.pessoa_id = Pessoa.id WHERE siap = ?";
         }
 
         try (Connection connection = ConnectionDB.getConnection()) {
