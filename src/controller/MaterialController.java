@@ -12,6 +12,7 @@ import type.MaterialNivel;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 
+import java.util.List;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -27,6 +28,7 @@ public class MaterialController {
     }
 
     private void setupRoutes() {
+        get("/protegida/materials", this::listarMateriais);
         post("/protegida/materials/material-digital", this::criarMaterialDigital);
         post("/protegida/materials/material-fisico", this::criarMaterialFisico);
     }
@@ -104,6 +106,30 @@ public class MaterialController {
             response.type("application/json");
             response.status(500);
             return gson.toJson(Map.of("error", e.getMessage()));
+        }
+    }
+
+    private Object listarMateriais(Request request, Response response) {
+        try {
+            String inferiorParam = request.queryParams("limiteInferior");
+            String superiorParam = request.queryParams("limiteSuperior");
+
+            if (inferiorParam == null || superiorParam == null) return gson.toJson(Map.of("error", "Parâmetros 'limiteInferior' e 'limiteSuperior' são obrigatórios"));
+
+            List<Material> materiais = materialService.buscarTodosMateriais(Integer.parseInt(inferiorParam), Integer.parseInt(superiorParam));
+            return gson.toJson(materiais);
+
+
+        } catch (NumberFormatException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", "Parâmetros devem ser números inteiros"));
+        } catch (IllegalArgumentException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            response.status(500);
+            System.out.println(e.getMessage());
+            return gson.toJson(Map.of("error", "Erro interno ao buscar materiais"));
         }
     }
 }

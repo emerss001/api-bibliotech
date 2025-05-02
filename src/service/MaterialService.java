@@ -10,6 +10,8 @@ import model.material.MaterialFisico;
 import model.pessoa.Pessoa;
 import util.TokenUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MaterialService {
@@ -41,5 +43,12 @@ public class MaterialService {
         MaterialFisico materialFisico = new MaterialFisico(adm.getNome(), dto);
         materialFisico.cadastrarMaterialFisico(materialDAO);
         return materialFisico;
+    }
+
+    public List<Material> buscarTodosMateriais(int limiteInferior, int limiteSuperior) {
+        int diferenca = limiteSuperior - limiteInferior;
+        if (limiteInferior < 0 || limiteSuperior <= 0 || diferenca != 10) throw new IllegalArgumentException("Limites de busca de dados inválidos");
+
+        return materialDAO.buscarTodosMateriais(limiteInferior, limiteSuperior);
     }
 }
