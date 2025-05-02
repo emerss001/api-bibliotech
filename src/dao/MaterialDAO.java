@@ -4,6 +4,8 @@ import db.ConnectionDB;
 import exception.NullConnectionException;
 import model.material.Material;
 import model.material.MaterialDigital;
+import model.material.MaterialFisico;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,6 +57,25 @@ public class MaterialDAO {
 
             materialDigital.setId(idMaterial);
             return materialDigital;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public MaterialFisico cadastrarMaterialFisico(MaterialFisico materialFisico, Integer idMaterial){
+        String sqlCommand = "INSERT INTO Material_fisico (material_id, quantidade) VALUES (?, ?)";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setString(1, String.valueOf(idMaterial));
+            statement.setInt(2, materialFisico.getQuantidade());
+
+            statement.executeUpdate();
+
+            materialFisico.setId(idMaterial);
+            return materialFisico;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

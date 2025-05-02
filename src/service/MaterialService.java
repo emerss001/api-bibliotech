@@ -3,8 +3,10 @@ package service;
 import dao.MaterialDAO;
 import dao.PessoaDAO;
 import dto.NovoMaterialDTO;
+import dto.NovoMaterialFisicoDTO;
 import model.material.Material;
 import model.material.MaterialDigital;
+import model.material.MaterialFisico;
 import model.pessoa.Pessoa;
 import util.TokenUtil;
 
@@ -28,5 +30,16 @@ public class MaterialService {
         MaterialDigital materialDigital = new MaterialDigital(autor.getNome(), dto);
         materialDigital.cadastrarMaterialDigital(materialDAO);
         return materialDigital;
+    }
+
+    public Material addMaterialFisico(NovoMaterialFisicoDTO dto, String token) {
+        if (dto == null) throw new IllegalArgumentException("Dados do material inválidos");
+
+        if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
+
+        Pessoa autor = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
+        MaterialFisico materialFisico = new MaterialFisico(autor.getNome(), dto);
+        materialFisico.cadastrarMaterialFisico(materialDAO);
+        return materialFisico;
     }
 }
