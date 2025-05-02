@@ -115,4 +115,45 @@ public class MaterialDAO {
 
         return materiais;
     }
+
+    public Material buscarDetalhesMaterial(int idMaterial) {
+        String sqlCommand = "CALL GetMaterialCompleto(?)";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, idMaterial);
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                String autor = rs.getString("autor");
+                String tipo = rs.getString("tipo");
+                String titulo = rs.getString("titulo");
+                String formato = rs.getString("formato_material");
+                String area = rs.getString("area_conhecimento");
+                String nivel = rs.getString("nivel_conhecimento");
+                String descricao = rs.getString("descricao");
+                String cadastradoPor = rs.getString("cadastrado_por");
+                Double nota = rs.getDouble("nota");
+                int quantidadeAvaliacoes = rs.getInt("quantidade_avaliacao");
+
+                if (tipo.equals("Digital")) {
+                    String url = rs.getString("link");
+                    return new MaterialDigital(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes, url);
+                }
+
+                String quantidade = rs.getString("quantidade");
+                return new MaterialFisico(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes, quantidade.equals("null") ? 0 : Integer.parseInt(quantidade));
+            } else {
+                System.out.println("Nenhum resultado retornado pela procedure.");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+
 }

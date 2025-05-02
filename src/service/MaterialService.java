@@ -53,6 +53,6 @@ public class MaterialService {
     }
 
     public Material buscarDetalhesMaterial(int idMaterial) {
-            return null;
+            return materialDAO.buscarDetalhesMaterial(idMaterial);
     }
 }

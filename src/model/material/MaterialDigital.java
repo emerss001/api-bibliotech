@@ -12,6 +12,11 @@ public class MaterialDigital extends Material {
         this.url = FirebaseUpload.upload(dto.arquivo());
     }
 
+    public MaterialDigital(Integer idMaterial, String autor, String tipo, String titulo, String formato, String area, String nivel, String descricao, String cadastradoPor, double nota, int quantidadeAvaliacoes,String url) {
+        super(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes);
+        this.url = url;
+    }
+
     public MaterialDigital cadastrarMaterialDigital(MaterialDAO dao) {
         Integer id = salvar(dao);
         return dao.cadastrarMaterialDigital(this, id);
