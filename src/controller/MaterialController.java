@@ -29,6 +29,7 @@ public class MaterialController {
 
     private void setupRoutes() {
         get("/protegida/materials", this::listarMateriais);
+        get("/protegida/materials/:id", this::buscarDetalhesMaterial);
         post("/protegida/materials/material-digital", this::criarMaterialDigital);
         post("/protegida/materials/material-fisico", this::criarMaterialFisico);
     }
@@ -117,9 +118,9 @@ public class MaterialController {
             if (inferiorParam == null || superiorParam == null) return gson.toJson(Map.of("error", "Parâmetros 'limiteInferior' e 'limiteSuperior' são obrigatórios"));
 
             List<Material> materiais = materialService.buscarTodosMateriais(Integer.parseInt(inferiorParam), Integer.parseInt(superiorParam));
+
+            response.status(200);
             return gson.toJson(materiais);
-
-
         } catch (NumberFormatException e) {
             response.status(400);
             return gson.toJson(Map.of("error", "Parâmetros devem ser números inteiros"));
@@ -130,6 +131,21 @@ public class MaterialController {
             response.status(500);
             System.out.println(e.getMessage());
             return gson.toJson(Map.of("error", "Erro interno ao buscar materiais"));
+        }
+    }
+
+    private Object buscarDetalhesMaterial(Request request, Response response) {
+        try {
+            int idMaterial = Integer.parseInt(request.params("id"));
+
+            if (idMaterial <= 0) return gson.toJson(Map.of("error: ", "id inválido"));
+            Material material = materialService.buscarDetalhesMaterial(idMaterial);
+
+            response.status(200);
+            return gson.toJson(material);
+        } catch (NumberFormatException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", "Parâmetros devem ser números inteiros"));
         }
     }
 }

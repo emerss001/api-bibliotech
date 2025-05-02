@@ -18,8 +18,8 @@ public class Material {
     private String descricao;
     private String cadastradoPor;
 
-    public Material(String autor, String tipo, String titulo, String formato, String area, String nivel, String descricao, String cadastradoPor) {
-        this.id = null;
+    public Material(Integer id, String autor, String tipo, String titulo, String formato, String area, String nivel, String descricao, String cadastradoPor, double nota, int quantidadeAvaliacoes) {
+        this.id = id;
         this.tipo = tipo;
         this.autor = autor;
         this.titulo = titulo;
@@ -28,9 +28,22 @@ public class Material {
         this.nivel = nivel;
         this.descricao = descricao;
         this.cadastradoPor = cadastradoPor;
+        this.nota = nota;
+        this.quantidadeAvaliacoes = quantidadeAvaliacoes;
     }
 
-    public Material(int id, String titulo, String formato, String area, String descricao, String nivel) {
+    public Material(String autor, String tipo, String titulo, String formato, String area, String descricao, String nivel, String cadastradoPor) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.tipo = tipo;
+        this.formato = formato;
+        this.area = area;
+        this.descricao = descricao;
+        this.nivel = nivel;
+        this.cadastradoPor = cadastradoPor;
+    }
+
+    public Material(Integer id, String titulo, String formato, String area, String descricao, String nivel) {
         this.id = id;
         this.titulo = titulo;
         this.formato = formato;
