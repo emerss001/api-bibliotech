@@ -28,6 +28,15 @@ public class Material {
         this.cadastradoPor = cadastradoPor;
     }
 
+    public Material(int id, String titulo, String formato, String area, String descricao, String nivel) {
+        this.id = id;
+        this.titulo = titulo;
+        this.formato = formato;
+        this.area = area;
+        this.descricao = descricao;
+        this.nivel = nivel;
+    }
+
     public Integer salvar(MaterialDAO dao) {
         return dao.addMaterial(this);
     }
