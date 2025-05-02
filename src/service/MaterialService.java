@@ -26,8 +26,8 @@ public class MaterialService {
 
         if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
-        Pessoa autor = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
-        MaterialDigital materialDigital = new MaterialDigital(autor.getNome(), dto);
+        Pessoa adm = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
+        MaterialDigital materialDigital = new MaterialDigital(adm.getNome(), dto);
         materialDigital.cadastrarMaterialDigital(materialDAO);
         return materialDigital;
     }
@@ -37,8 +37,8 @@ public class MaterialService {
 
         if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
-        Pessoa autor = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
-        MaterialFisico materialFisico = new MaterialFisico(autor.getNome(), dto);
+        Pessoa adm = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
+        MaterialFisico materialFisico = new MaterialFisico(adm.getNome(), dto);
         materialFisico.cadastrarMaterialFisico(materialDAO);
         return materialFisico;
     }

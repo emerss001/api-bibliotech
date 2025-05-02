@@ -6,9 +6,9 @@ import dto.NovoMaterialFisicoDTO;
 public class MaterialFisico extends Material{
     private Integer quantidade;
 
-    public MaterialFisico(String autor, NovoMaterialFisicoDTO dto) {
-        super(autor, dto.titulo(), dto.formato(), dto.area(), String.valueOf(dto.nivel()), dto.descricao());
-        this.quantidade = 0;
+    public MaterialFisico(String adm, NovoMaterialFisicoDTO dto) {
+        super(dto.autor(), dto.titulo(), dto.formato(), dto.area(), String.valueOf(dto.nivel()), dto.descricao(),adm);
+        this.quantidade = dto.quantidade();
     }
 
     public MaterialFisico cadastrarMaterialFisico(MaterialDAO dao) {
