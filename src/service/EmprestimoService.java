@@ -26,7 +26,7 @@ public class EmprestimoService {
         if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
         Emprestimo emprestimo = new Emprestimo(dto.alunoId(), dto.materialId());
-        emprestimo.salvar(emprestimoDAO);
+        emprestimo.setId(emprestimo.salvar(emprestimoDAO));
         return emprestimo;
     }
 
