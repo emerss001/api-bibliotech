@@ -166,5 +166,21 @@ public class PessoaDAO {
         }
         return null;
     }
+
+    public static boolean pessoaValido(Integer pessoaId){
+        String sqlCommand = "SELECT 1 FROM Pessoa WHERE id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, pessoaId);
+            ResultSet rs = statement.executeQuery();
+            return rs.next();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao verificar existencia do ID da pessoa ", e);
+        }
+    }
  }
 

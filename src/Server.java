@@ -1,9 +1,13 @@
 import com.google.gson.Gson;
 import controller.AuthController;
+import controller.EmprestimoController;
 import controller.MaterialController;
+import dao.EmprestimoDAO;
 import dao.MaterialDAO;
 import dao.PessoaDAO;
+import model.material.Emprestimo;
 import service.AuthService;
+import service.EmprestimoService;
 import service.MaterialService;
 import util.FirebaseInitializer;
 
@@ -30,9 +34,11 @@ public class Server {
         final Gson gson = new Gson();
         final PessoaDAO pessoaDAO = new PessoaDAO();
         final MaterialDAO materialDAO = new MaterialDAO();
+        final EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
 
         final AuthService authService = new AuthService(pessoaDAO);
         final MaterialService materialService = new MaterialService(materialDAO, pessoaDAO);
+        final EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO,pessoaDAO);
     }
 
     private static depedenciasContainer setupDependencies() {
@@ -42,6 +48,7 @@ public class Server {
     private static void registrarControllers(depedenciasContainer dc) {
         new AuthController(dc.authService, dc.gson);
         new MaterialController(dc.materialService, dc.gson);
+        new EmprestimoController(dc.emprestimoService,dc.gson);
         // Adicione novos controllers aqui com 1 linha cada
     }
 }
