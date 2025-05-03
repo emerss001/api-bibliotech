@@ -159,7 +159,7 @@ public class PessoaDAO {
                 String nome = rsPessoa.getString("nome");
                 String senha = rsPessoa.getString("senha");
 
-                return new Pessoa(senha, nome, email, true);
+                return new Pessoa(id,senha, nome, email, true);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao buscar por email", e);

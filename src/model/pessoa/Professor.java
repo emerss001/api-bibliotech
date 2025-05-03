@@ -6,7 +6,7 @@ import dto.PessoaDTO;
 public class Professor extends Pessoa {
     private String siap;
     public Professor(PessoaDTO dto, String siap, boolean senhaJaHasheada) {
-        super(dto.senha(), dto.nome(), dto.email(), senhaJaHasheada);
+        super(0,dto.senha(), dto.nome(), dto.email(), senhaJaHasheada);
         this.siap = siap;
     }
 

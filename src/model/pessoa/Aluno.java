@@ -8,7 +8,7 @@ public class Aluno extends Pessoa {
     private int IdNecessidade;
 
     public Aluno(PessoaDTO dto, String matricula, int necessidade, boolean senhaJaHasheada) {
-        super(dto.senha(), dto.nome(), dto.email(), senhaJaHasheada);
+        super(0,dto.senha(), dto.nome(), dto.email(), senhaJaHasheada);
         this.matricula = matricula;
         this.IdNecessidade = necessidade;
     }
