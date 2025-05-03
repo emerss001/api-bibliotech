@@ -155,5 +155,21 @@ public class MaterialDAO {
         return null;
     }
 
+    public static boolean materialValido(Integer materialId){
+        String sqlCommand = "SELECT 1 FROM Material M JOIN Material_fisico MF ON M.id = MF.material_id WHERE M.id = ? AND MF.quantidade > 0";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, materialId);
+            ResultSet rs = statement.executeQuery();
+            return rs.next();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao verificar disponibilidade do material ID: " + materialId, e);
+        }
+    }
+
 
 }
