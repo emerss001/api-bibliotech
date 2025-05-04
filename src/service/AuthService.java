@@ -4,6 +4,7 @@ import dao.PessoaDAO;
 import dto.LoginDTO;
 import dto.PessoaDTO;
 import model.pessoa.Aluno;
+import model.pessoa.Bibliotecario;
 import model.pessoa.Pessoa;
 import model.pessoa.Professor;
 import util.TokenUtil;
@@ -45,6 +46,11 @@ public class AuthService {
                 Professor professor = new Professor(dto, dto.siap(), false);
                 professor.cadastrarProfessor(pessoaDAO);
                 return professor;
+
+            case BIBLIOTECARIO:
+                Bibliotecario bibliotecario = new Bibliotecario(dto, dto.codigo(), false);
+                bibliotecario.cadastrarBibliotecario(pessoaDAO);
+                return bibliotecario;
 
             default:
                 throw new IllegalArgumentException("Tipo de vínculo inválido" + dto.vinculo());

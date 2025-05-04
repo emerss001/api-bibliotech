@@ -10,6 +10,7 @@ public record PessoaDTO(
         int idNecessidade,
         String matricula,
         String siap,
+        String codigo,
         String senha
 ) {
     // Método de validação
@@ -36,7 +37,7 @@ public record PessoaDTO(
     }
 
     private boolean vinculoValido() {
-        if (vinculo != PessoaVinculo.ALUNO && vinculo != PessoaVinculo.PROFESSOR) throw new IllegalArgumentException("Vínculo inválido");
+        if (vinculo != PessoaVinculo.ALUNO && vinculo != PessoaVinculo.PROFESSOR && vinculo != PessoaVinculo.BIBLIOTECARIO) throw new IllegalArgumentException("Vínculo inválido");
         return true;
     }
 
@@ -50,6 +51,7 @@ public record PessoaDTO(
         return switch (vinculo) {
             case ALUNO -> validarAluno();
             case PROFESSOR -> validarProfessor();
+            case BIBLIOTECARIO -> validarBibliotecario();
             default -> throw new IllegalStateException("Tipo de vínculo inválido: " + vinculo);
         };
     }
@@ -64,6 +66,12 @@ public record PessoaDTO(
         if (siap == null || siap.isBlank()) throw new IllegalArgumentException("SIAP não pode ser vazio");
         return true;
     }
+
+    private boolean validarBibliotecario() {
+        if (codigo == null || codigo.isBlank()) throw new IllegalArgumentException("Código não pode ser vazio");
+        return true;
+    }
+
 
     private int maxIdNecessidade() {
         PessoaDAO pessoaDAO = new PessoaDAO();

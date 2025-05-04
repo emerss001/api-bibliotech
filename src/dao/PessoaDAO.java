@@ -3,6 +3,7 @@ package dao;
 import db.ConnectionDB;
 import exception.NullConnectionException;
 import model.pessoa.Aluno;
+import model.pessoa.Bibliotecario;
 import model.pessoa.Pessoa;
 import model.pessoa.Professor;
 import type.PessoaVinculo;
@@ -47,6 +48,25 @@ public class PessoaDAO {
 
             aluno.setId(pessoaId);
             return aluno;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Bibliotecario addBibliotecario(Bibliotecario bibliotecario, int pessoaId) {
+        String sqlCommand = "INSERT INTO Bibliotecario (pessoa_id, codigo) VALUES (?, ?)";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setString(1, String.valueOf(pessoaId));
+            statement.setString(2, bibliotecario.getCodigo());
+
+            statement.executeUpdate();
+
+            bibliotecario.setId(pessoaId);
+            return bibliotecario;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
