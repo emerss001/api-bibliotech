@@ -1,6 +1,7 @@
 package dao;
 
 import db.ConnectionDB;
+import dto.NovoEmprestimoDTO;
 import model.material.Emprestimo;
 
 import java.sql.*;
@@ -8,7 +9,7 @@ import java.sql.*;
 public class EmprestimoDAO {
 
     public Integer addEmprestimo(Emprestimo emprestimo){
-        String sqlCommand = "INSERT INTO Emprestimo (material_id, aluno_id, devolvido, renovado, staus) VALUES (?, ?, false, false, 'Pedente')";
+        String sqlCommand = "INSERT INTO Emprestimo (material_id, aluno_id) VALUES (?, ?)";
         String updateMaterial = "UPDATE Material_fisico SET disponibilidade = false WHERE material_id = ?";
 
         try (Connection connection = ConnectionDB.getConnection()) {
@@ -38,5 +39,101 @@ public class EmprestimoDAO {
             throw new RuntimeException("Erro ao criar emprestimo", e);
         }
         return null;
+    }
+
+    public void aprooveEmprestimo(Emprestimo emprestimo){
+        String sqlCommand = "UPDATE Emprestimo SET data_emprestimo = NOW(), data_devolucao_prevista = ?, status = 'Aprovado' WHERE id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setTimestamp(1, Timestamp.valueOf(emprestimo.getDataDPrevista()));
+            statement.setInt(2, emprestimo.getId());
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Nenhum empréstimo foi atualizado - ID não encontrado");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao aprovar emprestimo", e);
+        }
+    }
+
+    public void refuseEmprestimo(Emprestimo emprestimo){
+        String sqlCommand = "UPDATE Emprestimo SET status = 'Rejeitado' WHERE id = ?";
+        String sqlUpdateCommand = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = TRUE WHERE e.id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, emprestimo.getId());
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Nenhum empréstimo foi atualizado - ID não encontrado");
+            }
+
+            PreparedStatement statement2 = connection.prepareStatement(sqlUpdateCommand);
+            statement2.setInt(1, emprestimo.getId());
+            int affectedRows2 = statement2.executeUpdate();
+
+            if (affectedRows2 == 0) {
+                throw new RuntimeException("A disponibilidade do material não foi atualizada - ID não encontrado");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao rejeitar emprestimo", e);
+        }
+    }
+
+    public void returnEmprestimo(Emprestimo emprestimo){
+        String sqlCommand = "UPDATE Emprestimo SET data_devolucao_real = NOW(), status = 'Devolvido' WHERE id = ?";
+        String sqlUpdateCommand = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = TRUE WHERE e.id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, emprestimo.getId());
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Nenhum empréstimo foi atualizado - ID não encontrado");
+            }
+
+            PreparedStatement statement2 = connection.prepareStatement(sqlUpdateCommand);
+            statement2.setInt(1, emprestimo.getId());
+            int affectedRows2 = statement2.executeUpdate();
+
+            if (affectedRows2 == 0) {
+                throw new RuntimeException("A disponibilidade do material não foi atualizada - ID não encontrado");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao devolver emprestimo", e);
+        }
+    }
+
+    public void renovateEmprestimo(Emprestimo emprestimo){
+        String sqlCommand = "UPDATE Emprestimo SET data_devolucao_prevista = ?, status = 'Renovado' WHERE id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setTimestamp(1, Timestamp.valueOf(emprestimo.getDataDPrevista()));
+            statement.setInt(2, emprestimo.getId());
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Nenhum empréstimo foi atualizado - ID não encontrado");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao renovar emprestimo", e);
+        }
     }
 }

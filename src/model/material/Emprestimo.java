@@ -1,6 +1,8 @@
 package model.material;
 
 import dao.EmprestimoDAO;
+import dto.NovoEmprestimoDTO;
+import type.EmprestimoStatus;
 
 import java.sql.Timestamp;
 
@@ -9,15 +11,19 @@ public class Emprestimo {
     private Integer alunoId;
     private Integer materialId;
     private Timestamp dataEmprestimo;
-    private Timestamp dataDPrevista;
+    private String dataDPrevista;
     private Timestamp dataDReal;
-    private Boolean devolvido;
-    private Boolean renovado;
-    private String status;
+    private EmprestimoStatus status;
 
     public Emprestimo(Integer alunoId, Integer materialId){
         this.materialId = materialId;
         this.alunoId = alunoId;
+    }
+
+    public Emprestimo(NovoEmprestimoDTO dto){
+        this.id = dto.id();
+        this.dataDPrevista = dto.dataDevolucaoPrevista();
+        this.status = dto.status();
     }
 
     public Integer salvar(EmprestimoDAO dao) {
@@ -44,7 +50,7 @@ public class Emprestimo {
         return dataEmprestimo;
     }
 
-    public Timestamp getDataDPrevista() {
+    public String getDataDPrevista() {
         return dataDPrevista;
     }
 
@@ -52,15 +58,7 @@ public class Emprestimo {
         return dataDReal;
     }
 
-    public Boolean getDevolvido() {
-        return devolvido;
-    }
-
-    public Boolean getRenovado() {
-        return renovado;
-    }
-
-    public String getStatus() {
+    public EmprestimoStatus getStatus() {
         return status;
     }
 }
