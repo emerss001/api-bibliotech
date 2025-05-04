@@ -10,7 +10,7 @@ public record LoginDTO(PessoaVinculo vinculo, String identificador, String senha
     }
 
     private boolean vinculoValido() {
-        if (vinculo != PessoaVinculo.ALUNO && vinculo != PessoaVinculo.PROFESSOR) throw new IllegalArgumentException("Vínculo inválido");
+        if (vinculo != PessoaVinculo.ALUNO && vinculo != PessoaVinculo.PROFESSOR && vinculo != PessoaVinculo.BIBLIOTECARIO) throw new IllegalArgumentException("Vínculo inválido");
         return true;
     }
 

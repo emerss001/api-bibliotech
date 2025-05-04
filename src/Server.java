@@ -5,7 +5,6 @@ import controller.MaterialController;
 import dao.EmprestimoDAO;
 import dao.MaterialDAO;
 import dao.PessoaDAO;
-import model.material.Emprestimo;
 import service.AuthService;
 import service.EmprestimoService;
 import service.MaterialService;

@@ -67,14 +67,13 @@ public class MaterialDAO {
     }
 
     public MaterialFisico cadastrarMaterialFisico(MaterialFisico materialFisico, Integer idMaterial){
-        String sqlCommand = "INSERT INTO Material_fisico (material_id, quantidade) VALUES (?, ?)";
+        String sqlCommand = "INSERT INTO Material_fisico (material_id, disponibilidade) VALUES (?, true)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             statement.setString(1, String.valueOf(idMaterial));
-            statement.setInt(2, materialFisico.getQuantidade());
 
             statement.executeUpdate();
 
@@ -143,8 +142,8 @@ public class MaterialDAO {
                     return new MaterialDigital(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes, url);
                 }
 
-                String quantidade = rs.getString("quantidade");
-                return new MaterialFisico(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes, quantidade.equals("null") ? 0 : Integer.parseInt(quantidade));
+                boolean disponibilidade = rs.getBoolean("disponibilidade");
+                return new MaterialFisico(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes, disponibilidade);
             } else {
                 System.out.println("Nenhum resultado retornado pela procedure.");
             }
@@ -156,7 +155,7 @@ public class MaterialDAO {
     }
 
     public static boolean materialValido(Integer materialId){
-        String sqlCommand = "SELECT 1 FROM Material M JOIN Material_fisico MF ON M.id = MF.material_id WHERE M.id = ? AND MF.quantidade > 0";
+        String sqlCommand = "SELECT 1 FROM Material M JOIN Material_fisico MF ON M.id = MF.material_id WHERE M.id = ? AND MF.disponibilidade = true";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");

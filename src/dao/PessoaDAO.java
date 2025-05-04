@@ -3,6 +3,7 @@ package dao;
 import db.ConnectionDB;
 import exception.NullConnectionException;
 import model.pessoa.Aluno;
+import model.pessoa.Bibliotecario;
 import model.pessoa.Pessoa;
 import model.pessoa.Professor;
 import type.PessoaVinculo;
@@ -47,6 +48,25 @@ public class PessoaDAO {
 
             aluno.setId(pessoaId);
             return aluno;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Bibliotecario addBibliotecario(Bibliotecario bibliotecario, int pessoaId) {
+        String sqlCommand = "INSERT INTO Bibliotecario (pessoa_id, codigo) VALUES (?, ?)";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setString(1, String.valueOf(pessoaId));
+            statement.setString(2, bibliotecario.getCodigo());
+
+            statement.executeUpdate();
+
+            bibliotecario.setId(pessoaId);
+            return bibliotecario;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -118,15 +138,16 @@ public class PessoaDAO {
    }
 
    public Pessoa buscarPorIdentificador(PessoaVinculo userTipo, String identificador) {
-        String sqlCommand;
+        String sqlCommand = switch (userTipo) {
+            case ALUNO ->
+                    "SELECT pessoa_id, email, senha FROM Aluno join Pessoa on Aluno.pessoa_id = Pessoa.id WHERE matricula = ?";
+            case PROFESSOR ->
+                    "SELECT pessoa_id, email, senha FROM Professor join Pessoa on Professor.pessoa_id = Pessoa.id WHERE siap = ?";
+            default ->
+                    "SELECT pessoa_id, email, senha FROM Bibliotecario join Pessoa on Bibliotecario.pessoa_id = Pessoa.id WHERE codigo = ?";
+        };
 
-        if (userTipo == PessoaVinculo.ALUNO) {
-            sqlCommand = "SELECT pessoa_id, email, senha FROM Aluno join Pessoa on Aluno.pessoa_id = Pessoa.id WHERE matricula = ?";
-        } else {
-            sqlCommand = "SELECT pessoa_id, email, senha FROM Professor join Pessoa on Professor.pessoa_id = Pessoa.id WHERE siap = ?";
-        }
-
-        try (Connection connection = ConnectionDB.getConnection()) {
+       try (Connection connection = ConnectionDB.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(sqlCommand);
             stmt.setString(1, identificador);
             ResultSet rsPessoa = stmt.executeQuery();

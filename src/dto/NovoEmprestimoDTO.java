@@ -23,7 +23,10 @@ public record NovoEmprestimoDTO(
 
     private boolean materialIdValido() {
         nullIsBlank(materialId.toString(), "Id do material");
-        return MaterialDAO.materialValido(materialId);
+
+        if (MaterialDAO.materialValido(materialId))
+            return true;
+        throw new IllegalArgumentException("O material: " + materialId + " não existe, ou não está disponível");
     }
 
 }

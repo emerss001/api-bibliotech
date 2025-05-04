@@ -24,6 +24,9 @@ public class EmprestimoController {
 
     private void setupRoutes() {
         post("/protegida/emprestimos", this::criarEmprestimo);
+        //get("/protegida/emprestimos", this::listarEmprestimo);
+        //put("/protegida/emprestimos", this::atualizarEmprestimo);
+        //delete("/protegida/emprestimos", this::excluirEmprestimo);
     }
 
     private Object criarEmprestimo(Request request, Response response) {

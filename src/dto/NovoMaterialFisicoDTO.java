@@ -8,11 +8,10 @@ public record NovoMaterialFisicoDTO (
         String formato,
         String area,
         MaterialNivel nivel,
-        String descricao,
-        Integer quantidade
+        String descricao
 ) {
     public boolean valido() {
-        return tituloValido() && autorValido() && formatoValido() && areaValido() && nivelValido() && quantidadeValido();
+        return tituloValido() && autorValido() && formatoValido() && areaValido() && nivelValido();
     }
 
     private void nullIsBlank(String s, String nomeCampo) {
@@ -51,10 +50,5 @@ public record NovoMaterialFisicoDTO (
 
     public void descricaoValida() {
         nullIsBlank(descricao, "Descrição");
-    }
-
-    private boolean quantidadeValido(){
-        nullIsBlank(quantidade.toString(), "Quantidade");
-        return quantidade >= 1;
     }
 }

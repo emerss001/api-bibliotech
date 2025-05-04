@@ -2,7 +2,8 @@ package type;
 
 public enum PessoaVinculo {
     ALUNO("Aluno"),
-    PROFESSOR("Professor");
+    PROFESSOR("Professor"),
+    BIBLIOTECARIO("Bibliotecario");
 
     private final String nomeFormatado;
 
