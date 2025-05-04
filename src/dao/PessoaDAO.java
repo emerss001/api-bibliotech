@@ -138,15 +138,16 @@ public class PessoaDAO {
    }
 
    public Pessoa buscarPorIdentificador(PessoaVinculo userTipo, String identificador) {
-        String sqlCommand;
+        String sqlCommand = switch (userTipo) {
+            case ALUNO ->
+                    "SELECT pessoa_id, email, senha FROM Aluno join Pessoa on Aluno.pessoa_id = Pessoa.id WHERE matricula = ?";
+            case PROFESSOR ->
+                    "SELECT pessoa_id, email, senha FROM Professor join Pessoa on Professor.pessoa_id = Pessoa.id WHERE siap = ?";
+            default ->
+                    "SELECT pessoa_id, email, senha FROM Bibliotecario join Pessoa on Bibliotecario.pessoa_id = Pessoa.id WHERE codigo = ?";
+        };
 
-        if (userTipo == PessoaVinculo.ALUNO) {
-            sqlCommand = "SELECT pessoa_id, email, senha FROM Aluno join Pessoa on Aluno.pessoa_id = Pessoa.id WHERE matricula = ?";
-        } else {
-            sqlCommand = "SELECT pessoa_id, email, senha FROM Professor join Pessoa on Professor.pessoa_id = Pessoa.id WHERE siap = ?";
-        }
-
-        try (Connection connection = ConnectionDB.getConnection()) {
+       try (Connection connection = ConnectionDB.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(sqlCommand);
             stmt.setString(1, identificador);
             ResultSet rsPessoa = stmt.executeQuery();
