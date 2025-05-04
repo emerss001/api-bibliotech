@@ -83,8 +83,6 @@ public class MaterialController {
             String areaConhecimento = request.queryParams("area");
             String nivel = request.queryParams("nivel");
             String descricao = request.queryParams("descricao");
-            String quantidadeStr = request.queryParams("quantidade");
-            int quantidade = quantidadeStr != null ? Integer.parseInt(quantidadeStr) : 1;
 
             Material novoMaterial = materialService.addMaterialFisico(
                     new NovoMaterialFisicoDTO(
@@ -93,8 +91,7 @@ public class MaterialController {
                             formato,
                             areaConhecimento,
                             MaterialNivel.fromString(nivel),
-                            descricao,
-                            quantidade
+                            descricao
                     ), token
             );
 

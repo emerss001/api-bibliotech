@@ -1,11 +1,9 @@
 package service;
 
 import dao.EmprestimoDAO;
-import dao.MaterialDAO;
 import dao.PessoaDAO;
 import dto.NovoEmprestimoDTO;
 import model.material.Emprestimo;
-import model.material.MaterialDigital;
 import model.pessoa.Pessoa;
 import util.TokenUtil;
 
