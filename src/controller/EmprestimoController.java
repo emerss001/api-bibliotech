@@ -9,6 +9,8 @@ import spark.Request;
 import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -25,7 +27,7 @@ public class EmprestimoController {
 
     private void setupRoutes() {
         post("/protegida/emprestimos", this::criarEmprestimo);
-        //get("/protegida/emprestimos", this::listarEmprestimo);
+        get("/protegida/emprestimos", this::listarEmprestimo);
         patch("/protegida/emprestimos", this::atualizarEmprestimo);
         delete("/protegida/emprestimos", this::excluirEmprestimo);
     }
@@ -85,10 +87,26 @@ public class EmprestimoController {
         }
     }
 
-//    private Object listarEmprestimo(Request request, Response response) {
-//
-//    }
-//
+    private Object listarEmprestimo(Request request, Response response) {
+        try {
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+            // Pegando os dados da requisição
+            JsonObject emprestimoJson = gson.fromJson(request.body(), JsonObject.class);
+
+            ArrayList<Emprestimo> lista = emprestimoService.listEmprestimo(emprestimoJson);
+
+            response.status(200);
+            return gson.toJson(lista);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            response.type("application/json");
+            response.status(500);
+
+            return gson.toJson(Map.of("error", e.getMessage()));
+        }
+    }
+
     private Object excluirEmprestimo(Request request, Response response) {
         try {
             request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));

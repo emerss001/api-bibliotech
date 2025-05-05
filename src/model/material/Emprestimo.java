@@ -10,14 +10,19 @@ public class Emprestimo {
     private Integer id;
     private Integer alunoId;
     private Integer materialId;
-    private Timestamp dataEmprestimo;
+    private String dataEmprestimo;
     private String dataDPrevista;
-    private Timestamp dataDReal;
+    private String dataDReal;
     private EmprestimoStatus status;
 
-    public Emprestimo(Integer alunoId, Integer materialId){
+    public Emprestimo(Integer alunoId, Integer materialId, Integer id, String dataEmprestimo, String dataDPrevista, String dataDReal, String status){
         this.materialId = materialId;
         this.alunoId = alunoId;
+        this.id = id;
+        this.dataEmprestimo = dataEmprestimo;
+        this.dataDPrevista = dataDPrevista;
+        this.dataDReal = dataDReal;
+        this.status = EmprestimoStatus.fromString(status);
     }
 
     public Emprestimo(NovoEmprestimoDTO dto){
@@ -46,7 +51,7 @@ public class Emprestimo {
         return materialId;
     }
 
-    public Timestamp getDataEmprestimo() {
+    public String getDataEmprestimo() {
         return dataEmprestimo;
     }
 
@@ -54,7 +59,7 @@ public class Emprestimo {
         return dataDPrevista;
     }
 
-    public Timestamp getDataDReal() {
+    public String getDataDReal() {
         return dataDReal;
     }
 

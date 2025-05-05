@@ -5,6 +5,7 @@ import dto.NovoEmprestimoDTO;
 import model.material.Emprestimo;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class EmprestimoDAO {
 
@@ -158,6 +159,39 @@ public class EmprestimoDAO {
 
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao deletar emprestimo", e);
+        }
+    }
+
+    public ArrayList<Emprestimo> readEmprestimo(String quantidade, String status, String alunoId){
+        ArrayList<Emprestimo> lista = new ArrayList<>();
+        String sqlCommand = "SELECT" +quantidade+ "FROM Emprestimo WHERE (aluno_id = ? OR ? IS NULL) AND (status = ? OR ? IS NULL)";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setString(1, alunoId);
+            statement.setString(2, alunoId);
+            statement.setString(3, status);
+            statement.setString(4, status);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()){
+                lista.add(new Emprestimo(
+                        rs.getInt("aluno_id"),
+                        rs.getInt("material_id"),
+                        rs.getInt("id"),
+                        rs.getString("data_emprestimo"),
+                        rs.getString("data_devolucao_prevista"),
+                        rs.getString("data_devolucao_real"),
+                        rs.getString("status")
+                ));
+            }
+
+            return lista;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar emprestimos", e);
         }
     }
 }
