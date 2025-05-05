@@ -28,6 +28,30 @@ public class EmprestimoService {
         return emprestimo;
     }
 
+    public void updateEmprestimo(NovoEmprestimoDTO dto){
+        if (dto == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
+
+        //if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
+
+        Emprestimo emprestimo = new Emprestimo(dto);
+
+        switch (dto.status()){
+            case APROVADO -> emprestimoDAO.aprooveEmprestimo(emprestimo);
+            case REJEITADO -> emprestimoDAO.refuseEmprestimo(emprestimo);
+            case RENOVADO -> emprestimoDAO.renovateEmprestimo(emprestimo);
+            case DEVOLVIDO -> emprestimoDAO.returnEmprestimo(emprestimo);
+        }
+    }
+
+    public void deleteEmprestimo(NovoEmprestimoDTO dto){
+        if (dto == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
+
+        //if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
+
+        Emprestimo emprestimo = new Emprestimo(dto);
+        emprestimoDAO.deleteEmprestimo(emprestimo);
+    }
+
     public Integer tokenTOId(String token){
         Pessoa aluno = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
 

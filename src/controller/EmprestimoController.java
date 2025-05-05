@@ -1,6 +1,7 @@
 package controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import model.material.Emprestimo;
 import service.EmprestimoService;
 import dto.NovoEmprestimoDTO;
@@ -25,8 +26,8 @@ public class EmprestimoController {
     private void setupRoutes() {
         post("/protegida/emprestimos", this::criarEmprestimo);
         //get("/protegida/emprestimos", this::listarEmprestimo);
-        //put("/protegida/emprestimos", this::atualizarEmprestimo);
-        //delete("/protegida/emprestimos", this::excluirEmprestimo);
+        patch("/protegida/emprestimos", this::atualizarEmprestimo);
+        delete("/protegida/emprestimos", this::excluirEmprestimo);
     }
 
     private Object criarEmprestimo(Request request, Response response) {
@@ -35,14 +36,19 @@ public class EmprestimoController {
 
             // Pegando os dados da requisição
             String token = request.headers("Authorization");
-            String materialIdSTR = request.queryParams("materialId");
+            JsonObject jsonBody = gson.fromJson(request.body(), JsonObject.class);
+            Integer materialId = jsonBody.get("materialId").getAsInt();
             Integer alunoId = emprestimoService.tokenTOId(token);
-            Integer materialId = Integer.parseInt(materialIdSTR);
 
             Emprestimo novoEmprestimo = emprestimoService.addEmprestimo(
                     new NovoEmprestimoDTO(
+                            0,
                             alunoId,
-                            materialId
+                            materialId,
+                            null,
+                            false,
+                            false,
+                            null
                     )
             );
 
@@ -50,6 +56,50 @@ public class EmprestimoController {
 
             response.status(201);
             return gson.toJson(Map.of("id", novoEmprestimo.getId()));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            response.type("application/json");
+            response.status(500);
+
+            return gson.toJson(Map.of("error", e.getMessage()));
+        }
+    }
+
+    private Object atualizarEmprestimo(Request request, Response response) {
+        try {
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+            // Pegando os dados da requisição
+            NovoEmprestimoDTO emprestimoDTO = gson.fromJson(request.body(), NovoEmprestimoDTO.class);
+
+            emprestimoService.updateEmprestimo(emprestimoDTO);
+
+            response.status(204);
+            return gson.toJson("No content");
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            response.type("application/json");
+            response.status(500);
+
+            return gson.toJson(Map.of("error", e.getMessage()));
+        }
+    }
+
+//    private Object listarEmprestimo(Request request, Response response) {
+//
+//    }
+//
+    private Object excluirEmprestimo(Request request, Response response) {
+        try {
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+            // Pegando os dados da requisição
+            NovoEmprestimoDTO emprestimoDTO = gson.fromJson(request.body(), NovoEmprestimoDTO.class);
+
+            emprestimoService.deleteEmprestimo(emprestimoDTO);
+
+            response.status(204);
+            return gson.toJson("No content");
         } catch (Exception e) {
             System.err.println(e.getMessage());
             response.type("application/json");

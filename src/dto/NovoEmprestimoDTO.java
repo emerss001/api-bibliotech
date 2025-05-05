@@ -2,10 +2,18 @@ package dto;
 
 import dao.MaterialDAO;
 import dao.PessoaDAO;
+import type.EmprestimoStatus;
+
+import java.util.Date;
 
 public record NovoEmprestimoDTO(
+        Integer id,
         Integer alunoId,
-        Integer materialId
+        Integer materialId,
+        String dataDevolucaoPrevista,
+        boolean devolvido,
+        boolean renovado,
+        EmprestimoStatus status
 ) {
 
     public boolean valido() {
