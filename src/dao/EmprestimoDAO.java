@@ -136,4 +136,28 @@ public class EmprestimoDAO {
             throw new RuntimeException("Erro ao renovar emprestimo", e);
         }
     }
+
+    public void deleteEmprestimo(Emprestimo emprestimo){
+        String sqlCommand = "DELETE FROM Emprestimo WHERE id = ?";
+        String sqlUpdateCommand = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = TRUE WHERE e.id = ? AND e.status IN ('Aprovado','Pendente','Renovado')";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
+
+            PreparedStatement statement2 = connection.prepareStatement(sqlUpdateCommand);
+            statement2.setInt(1, emprestimo.getId());
+            int affectedRows2 = statement2.executeUpdate();
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, emprestimo.getId());
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Nenhum empréstimo foi deletado - ID não encontrado");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao deletar emprestimo", e);
+        }
+    }
 }

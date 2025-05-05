@@ -96,7 +96,7 @@ public class EmprestimoController {
             // Pegando os dados da requisição
             NovoEmprestimoDTO emprestimoDTO = gson.fromJson(request.body(), NovoEmprestimoDTO.class);
 
-            emprestimoService.updateEmprestimo(emprestimoDTO);
+            emprestimoService.deleteEmprestimo(emprestimoDTO);
 
             response.status(204);
             return gson.toJson("No content");

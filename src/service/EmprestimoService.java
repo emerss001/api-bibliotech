@@ -43,6 +43,15 @@ public class EmprestimoService {
         }
     }
 
+    public void deleteEmprestimo(NovoEmprestimoDTO dto){
+        if (dto == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
+
+        //if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
+
+        Emprestimo emprestimo = new Emprestimo(dto);
+        emprestimoDAO.deleteEmprestimo(emprestimo);
+    }
+
     public Integer tokenTOId(String token){
         Pessoa aluno = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
 
