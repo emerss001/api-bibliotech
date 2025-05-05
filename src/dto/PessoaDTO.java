@@ -36,7 +36,7 @@ public record PessoaDTO(
         return pessoaDAO.emailExiste(email);
     }
 
-    private boolean vinculoValido() {
+    boolean vinculoValido() {
         if (vinculo != PessoaVinculo.ALUNO && vinculo != PessoaVinculo.PROFESSOR && vinculo != PessoaVinculo.BIBLIOTECARIO) throw new IllegalArgumentException("Vínculo inválido");
         return true;
     }

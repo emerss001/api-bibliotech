@@ -42,7 +42,7 @@ public class MaterialDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao criar material", e);
+            throw new RuntimeException("Erro ao criar material: " + e.getMessage());
         }
         return null;
     }
