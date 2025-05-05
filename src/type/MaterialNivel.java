@@ -17,7 +17,7 @@ public enum MaterialNivel {
 
     public static MaterialNivel fromString(String nivel) {
         try {
-            return MaterialNivel.valueOf(nivel.toUpperCase());
+            return MaterialNivel.valueOf(nivel);
         } catch (IllegalArgumentException e) {
             // Depois tenta bater com o nome formatado (tipo "Básico")
             for (MaterialNivel materialNivel : MaterialNivel.values()) {
