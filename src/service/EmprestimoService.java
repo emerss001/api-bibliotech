@@ -1,5 +1,6 @@
 package service;
 
+import com.google.gson.JsonObject;
 import dao.EmprestimoDAO;
 import dao.PessoaDAO;
 import dto.NovoEmprestimoDTO;
@@ -7,6 +8,8 @@ import model.material.Emprestimo;
 import model.pessoa.Pessoa;
 import util.TokenUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class EmprestimoService {
@@ -23,7 +26,7 @@ public class EmprestimoService {
 
         if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
-        Emprestimo emprestimo = new Emprestimo(dto.alunoId(), dto.materialId());
+        Emprestimo emprestimo = new Emprestimo(dto);
         emprestimo.setId(emprestimo.salvar(emprestimoDAO));
         return emprestimo;
     }
@@ -50,6 +53,17 @@ public class EmprestimoService {
 
         Emprestimo emprestimo = new Emprestimo(dto);
         emprestimoDAO.deleteEmprestimo(emprestimo);
+    }
+
+
+    public ArrayList<Emprestimo> listEmprestimo(JsonObject json){
+        String quantidade = json.get("quantidade").getAsString() != null ? json.get("quantidade").getAsString() : "*";
+        String status = json.get("status").getAsString();
+        String alunoId = json.get("alunoId").getAsString();
+
+        System.out.println(quantidade+"\n"+status+"\n"+alunoId);
+
+        return emprestimoDAO.readEmprestimo(quantidade,status,alunoId);
     }
 
     public Integer tokenTOId(String token){
