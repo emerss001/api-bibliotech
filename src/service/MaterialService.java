@@ -9,6 +9,8 @@ import model.material.MaterialDigital;
 import model.material.MaterialFisico;
 import model.pessoa.Pessoa;
 import util.TokenUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,15 +36,15 @@ public class MaterialService {
         return materialDigital;
     }
 
-    public Material addMaterialFisico(NovoMaterialFisicoDTO dto, String token) {
+    public ArrayList<Integer> addMaterialFisico(NovoMaterialFisicoDTO dto, String token) {
         if (dto == null) throw new IllegalArgumentException("Dados do material inválidos");
 
         if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
         Pessoa adm = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
         MaterialFisico materialFisico = new MaterialFisico(adm.getNome(), dto, TIPO_FISICO);
-        materialFisico.cadastrarMaterialFisico(materialDAO);
-        return materialFisico;
+
+        return materialFisico.cadastrarMaterialFisico(materialDAO,dto.quantidade());
     }
 
     public List<Material> buscarTodosMateriais(int limiteInferior, int limiteSuperior) {
