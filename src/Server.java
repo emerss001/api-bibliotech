@@ -12,7 +12,6 @@ import service.CatalogoService;
 import service.EmprestimoService;
 import service.MaterialService;
 import util.FirebaseInitializer;
-
 import static spark.Spark.*;
 
 public class Server {
