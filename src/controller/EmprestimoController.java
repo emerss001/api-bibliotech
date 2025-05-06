@@ -38,9 +38,9 @@ public class EmprestimoController {
 
             // Pegando os dados da requisição
             String token = request.headers("Authorization");
+            Integer alunoId = emprestimoService.tokenTOId(token);
             JsonObject jsonBody = gson.fromJson(request.body(), JsonObject.class);
             Integer materialId = jsonBody.get("materialId").getAsInt();
-            Integer alunoId = emprestimoService.tokenTOId(token);
 
             Emprestimo novoEmprestimo = emprestimoService.addEmprestimo(
                     new NovoEmprestimoDTO(

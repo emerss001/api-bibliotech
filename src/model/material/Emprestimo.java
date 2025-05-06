@@ -4,8 +4,6 @@ import dao.EmprestimoDAO;
 import dto.NovoEmprestimoDTO;
 import type.EmprestimoStatus;
 
-import java.sql.Timestamp;
-
 public class Emprestimo {
     private Integer id;
     private Integer alunoId;
