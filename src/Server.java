@@ -20,6 +20,7 @@ public class Server {
         // 1. Configuração mínima do servidor
         FirebaseInitializer.initialize();
         port(8888);
+        enableCORS();
         after((req, res) -> res.type("application/json"));
 
         // 2. Centraliza o setup das dependências
@@ -55,5 +56,24 @@ public class Server {
         new EmprestimoController(dc.emprestimoService,dc.gson);
         new CatalogoController(dc.catalogoService,dc.gson);
         // Adicione novos controllers aqui com 1 linha cada
+    }
+
+    private static void enableCORS() {
+        options("/*", ((request, response) -> {
+            String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
+            if (accessControlRequestHeaders != null) response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+
+            String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
+            if (accessControlRequestMethod != null) response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+
+            return "OK";
+
+        }));
+
+        before((request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*"); // Ou restrinja, ex: http://localhost:3000
+            response.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+            response.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+        });
     }
 }
