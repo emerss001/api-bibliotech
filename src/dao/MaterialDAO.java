@@ -17,7 +17,7 @@ import java.util.List;
 public class MaterialDAO {
 
     public Integer addMaterial(Material material) {
-        String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao, cadastrado_por, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material_id, area_conhecimento_id, nivel_conhecimento, descricao, cadastrado_por, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
@@ -26,8 +26,8 @@ public class MaterialDAO {
             PreparedStatement statement = connection.prepareStatement(sqlCommand, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, material.getAutor());
             statement.setString(2, material.getTitulo());
-            statement.setString(3, material.getFormato());
-            statement.setString(4, material.getArea());
+            statement.setInt(3, material.getFormato());
+            statement.setInt(4, material.getArea());
             statement.setString(5, material.getNivel());
             statement.setString(6, material.getDescricao());
             statement.setString(7, material.getCadastradoPor());
@@ -66,7 +66,7 @@ public class MaterialDAO {
         }
     }
 
-    public MaterialFisico cadastrarMaterialFisico(MaterialFisico materialFisico, Integer idMaterial){
+    public void cadastrarMaterialFisico(MaterialFisico materialFisico, Integer idMaterial){
         String sqlCommand = "INSERT INTO Material_fisico (material_id, disponibilidade) VALUES (?, true)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
@@ -78,7 +78,6 @@ public class MaterialDAO {
             statement.executeUpdate();
 
             materialFisico.setId(idMaterial);
-            return materialFisico;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -100,8 +99,8 @@ public class MaterialDAO {
 
                 int id = rs.getInt("id");
                 String titulo = rs.getString("titulo");
-                String formato = rs.getString("formato_material");
-                String area = rs.getString("area_conhecimento");
+                Integer formato = rs.getInt("formato_material");
+                Integer area = rs.getInt("area_conhecimento");
                 String descricao = rs.getString("descricao");
                 String nivel = rs.getString("nivel_conhecimento");
 
@@ -129,8 +128,8 @@ public class MaterialDAO {
                 String autor = rs.getString("autor");
                 String tipo = rs.getString("tipo");
                 String titulo = rs.getString("titulo");
-                String formato = rs.getString("formato_material");
-                String area = rs.getString("area_conhecimento");
+                Integer formato = rs.getInt("formato_material");
+                Integer area = rs.getInt("area_conhecimento");
                 String nivel = rs.getString("nivel_conhecimento");
                 String descricao = rs.getString("descricao");
                 String cadastradoPor = rs.getString("cadastrado_por");

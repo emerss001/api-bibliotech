@@ -9,8 +9,8 @@ public class Material {
     private String tipo;
     private String autor;
     private String titulo;
-    private String formato;
-    private String area;
+    private Integer formato;
+    private Integer area;
     private String nivel;
     private double nota;
     private Timestamp adicionado;
@@ -18,7 +18,7 @@ public class Material {
     private String descricao;
     private String cadastradoPor;
 
-    public Material(Integer id, String autor, String tipo, String titulo, String formato, String area, String nivel, String descricao, String cadastradoPor, double nota, int quantidadeAvaliacoes) {
+    public Material(Integer id, String autor, String tipo, String titulo, Integer formato, Integer area, String nivel, String descricao, String cadastradoPor, double nota, int quantidadeAvaliacoes) {
         this.id = id;
         this.tipo = tipo;
         this.autor = autor;
@@ -32,7 +32,7 @@ public class Material {
         this.quantidadeAvaliacoes = quantidadeAvaliacoes;
     }
 
-    public Material(String autor, String tipo, String titulo, String formato, String area, String descricao, String nivel, String cadastradoPor) {
+    public Material(String autor, String tipo, String titulo, Integer formato, Integer area, String descricao, String nivel, String cadastradoPor) {
         this.titulo = titulo;
         this.autor = autor;
         this.tipo = tipo;
@@ -43,7 +43,7 @@ public class Material {
         this.cadastradoPor = cadastradoPor;
     }
 
-    public Material(Integer id, String titulo, String formato, String area, String descricao, String nivel) {
+    public Material(Integer id, String titulo, Integer formato, Integer area, String descricao, String nivel) {
         this.id = id;
         this.titulo = titulo;
         this.formato = formato;
@@ -56,11 +56,11 @@ public class Material {
         return dao.addMaterial(this);
     }
 
-    public String getFormato() {
+    public Integer getFormato() {
         return formato;
     }
 
-    public String getArea() {
+    public Integer getArea() {
         return area;
     }
 

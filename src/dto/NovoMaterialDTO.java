@@ -7,8 +7,8 @@ import javax.servlet.http.Part;
 public record NovoMaterialDTO (
         String titulo,
         String autor,
-        String formato,
-        String area,
+        Integer formato,
+        Integer area,
         MaterialNivel nivel,
         String descricao,
         Part arquivo
@@ -35,12 +35,12 @@ public record NovoMaterialDTO (
     }
 
     private boolean formatoValido() {
-        nullIsBlank(formato, "Formato");
+        nullIsBlank(formato.toString(), "Formato");
         return true;
     }
 
     private boolean areaValido() {
-        nullIsBlank(area, "Area");
+        nullIsBlank(area.toString(), "Area");
         return true;
     }
 
