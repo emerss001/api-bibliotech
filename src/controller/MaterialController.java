@@ -12,6 +12,7 @@ import type.MaterialNivel;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +43,8 @@ public class MaterialController {
             String token = request.headers("Authorization");
             String titulo = request.queryParams("titulo");
             String autor = request.queryParams("autor");
-            String formato = request.queryParams("formato");
-            String area = request.queryParams("area");
+            Integer formato = Integer.parseInt(request.queryParams("formato"));
+            Integer area = Integer.parseInt(request.queryParams("area"));
             String nivel = request.queryParams("nivel");
             String descricao = request.queryParams("descricao");
             Part arquivo = request.raw().getPart("arquivo");
@@ -79,26 +80,28 @@ public class MaterialController {
             String token = request.headers("Authorization");
             String titulo = request.queryParams("titulo");
             String autor = request.queryParams("autor");
-            String formato = request.queryParams("formato");
-            String areaConhecimento = request.queryParams("area");
+            Integer formato = Integer.parseInt(request.queryParams("formato"));
+            Integer areaConhecimento = Integer.parseInt(request.queryParams("area"));
             String nivel = request.queryParams("nivel");
             String descricao = request.queryParams("descricao");
+            Integer quantidade = Integer.parseInt(request.queryParams("quantidade"));
 
-            Material novoMaterial = materialService.addMaterialFisico(
+            ArrayList<Integer> novoMaterialList = materialService.addMaterialFisico(
                     new NovoMaterialFisicoDTO(
                             titulo,
                             autor,
                             formato,
                             areaConhecimento,
                             MaterialNivel.fromString(nivel),
-                            descricao
+                            descricao,
+                            quantidade
                     ), token
             );
 
-            if (novoMaterial == null) throw new RuntimeException();
+            if (novoMaterialList == null) throw new RuntimeException();
 
             response.status(201);
-            return gson.toJson(Map.of("id", novoMaterial.getId()));
+            return gson.toJson(Map.of("id", novoMaterialList));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             response.type("application/json");

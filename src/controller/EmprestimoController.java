@@ -9,6 +9,8 @@ import spark.Request;
 import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -25,7 +27,7 @@ public class EmprestimoController {
 
     private void setupRoutes() {
         post("/protegida/emprestimos", this::criarEmprestimo);
-        //get("/protegida/emprestimos", this::listarEmprestimo);
+        get("/protegida/emprestimos", this::listarEmprestimo);
         patch("/protegida/emprestimos", this::atualizarEmprestimo);
         delete("/protegida/emprestimos", this::excluirEmprestimo);
     }
@@ -36,9 +38,9 @@ public class EmprestimoController {
 
             // Pegando os dados da requisição
             String token = request.headers("Authorization");
+            Integer alunoId = emprestimoService.tokenTOId(token);
             JsonObject jsonBody = gson.fromJson(request.body(), JsonObject.class);
             Integer materialId = jsonBody.get("materialId").getAsInt();
-            Integer alunoId = emprestimoService.tokenTOId(token);
 
             Emprestimo novoEmprestimo = emprestimoService.addEmprestimo(
                     new NovoEmprestimoDTO(
@@ -46,8 +48,6 @@ public class EmprestimoController {
                             alunoId,
                             materialId,
                             null,
-                            false,
-                            false,
                             null
                     )
             );
@@ -85,18 +85,34 @@ public class EmprestimoController {
         }
     }
 
-//    private Object listarEmprestimo(Request request, Response response) {
-//
-//    }
-//
+    private Object listarEmprestimo(Request request, Response response) {
+        try {
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+            // Pegando os dados da requisição
+            JsonObject emprestimoJson = gson.fromJson(request.body(), JsonObject.class);
+
+            ArrayList<Emprestimo> lista = emprestimoService.listEmprestimo(emprestimoJson);
+
+            response.status(200);
+            return gson.toJson(lista);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            response.type("application/json");
+            response.status(500);
+
+            return gson.toJson(Map.of("error", e.getMessage()));
+        }
+    }
+
     private Object excluirEmprestimo(Request request, Response response) {
         try {
             request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
             // Pegando os dados da requisição
-            NovoEmprestimoDTO emprestimoDTO = gson.fromJson(request.body(), NovoEmprestimoDTO.class);
+            JsonObject json = gson.fromJson(request.body(), JsonObject.class);
 
-            emprestimoService.deleteEmprestimo(emprestimoDTO);
+            emprestimoService.deleteEmprestimo(json.get("id").getAsInt());
 
             response.status(204);
             return gson.toJson("No content");

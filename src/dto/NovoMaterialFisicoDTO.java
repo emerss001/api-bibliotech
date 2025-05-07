@@ -5,13 +5,14 @@ import type.MaterialNivel;
 public record NovoMaterialFisicoDTO (
         String titulo,
         String autor,
-        String formato,
-        String area,
+        Integer formato,
+        Integer area,
         MaterialNivel nivel,
-        String descricao
+        String descricao,
+        Integer quantidade
 ) {
     public boolean valido() {
-        return tituloValido() && autorValido() && formatoValido() && areaValido() && nivelValido();
+        return tituloValido() && autorValido() && formatoValido() && areaValido() && nivelValido() && quantidadeValido();
     }
 
     private void nullIsBlank(String s, String nomeCampo) {
@@ -31,12 +32,12 @@ public record NovoMaterialFisicoDTO (
     }
 
     private boolean formatoValido() {
-        nullIsBlank(formato, "Formato");
+        nullIsBlank(formato.toString(), "Formato");
         return true;
     }
 
     private boolean areaValido() {
-        nullIsBlank(area, "Area");
+        nullIsBlank(area.toString(), "Area");
         return true;
     }
 
@@ -50,5 +51,10 @@ public record NovoMaterialFisicoDTO (
 
     public void descricaoValida() {
         nullIsBlank(descricao, "Descrição");
+    }
+
+    private boolean quantidadeValido(){
+        nullIsBlank(quantidade.toString(), "Quantidade");
+        return quantidade > 0;
     }
 }
