@@ -10,7 +10,7 @@ public class MaterialFisico extends Material{
     private Integer quantidade;
 
     public MaterialFisico(String adm, NovoMaterialFisicoDTO dto, String tipo) {
-        super(dto.autor(), tipo, dto.titulo(), dto.formato(), dto.area(), dto.descricao(), String.valueOf(dto.nivel()), adm);
+        super(dto.autor(), tipo, dto.titulo(), dto.formato(), dto.area(), dto.descricao(), dto.nivel().getDisplayName(), adm);
         this.disponibilidade = true;
         this.quantidade = dto.quantidade();
     }

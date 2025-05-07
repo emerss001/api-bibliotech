@@ -17,7 +17,7 @@ import java.util.List;
 public class MaterialDAO {
 
     public Integer addMaterial(Material material) {
-        String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material_id, area_conhecimento_id, nivel_conhecimento, descricao, cadastrado_por, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao, cadastrado_por, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
@@ -102,9 +102,11 @@ public class MaterialDAO {
                 Integer formato = rs.getInt("formato_material");
                 Integer area = rs.getInt("area_conhecimento");
                 String descricao = rs.getString("descricao");
+                double nota = rs.getDouble("nota");
+                int quantidadeAvaliacoes = rs.getInt("quantidade_avaliacao");
                 String nivel = rs.getString("nivel_conhecimento");
 
-                materiais.add(new Material(id, titulo, formato, area, descricao, nivel));
+                materiais.add(new Material(id, titulo, formato, area, descricao, nivel, nota, quantidadeAvaliacoes));
             }
 
         } catch (SQLException e) {

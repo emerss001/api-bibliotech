@@ -14,6 +14,8 @@ services:
       - "3308:3306"
     volumes:
       - bibliotech_mysql_data:/var/lib/mysql
+    command: --log-bin-trust-function-creators=1
+
 
 volumes:
   bibliotech_mysql_data:
