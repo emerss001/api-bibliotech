@@ -8,7 +8,7 @@ public class MaterialDigital extends Material {
     private String url;
 
     public MaterialDigital(String adm, NovoMaterialDTO dto, String tipo) {
-        super(dto.autor(), tipo, dto.titulo(), dto.formato(), dto.area(), String.valueOf(dto.nivel()), dto.descricao(),adm);
+        super(dto.autor(), tipo, dto.titulo(), dto.formato(), dto.area(), dto.nivel().getDisplayName(), dto.descricao(),adm);
         this.url = FirebaseUpload.upload(dto.arquivo());
     }
 

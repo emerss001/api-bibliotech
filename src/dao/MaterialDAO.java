@@ -20,7 +20,7 @@ public class MaterialDAO {
         String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao, cadastrado_por, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
-            if (connection == null) return null;
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             // Configura para retornar o ID gerado
             PreparedStatement statement = connection.prepareStatement(sqlCommand, Statement.RETURN_GENERATED_KEYS);

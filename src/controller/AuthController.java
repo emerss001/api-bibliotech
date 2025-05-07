@@ -3,6 +3,7 @@ package controller;
 import com.google.gson.Gson;
 import dto.LoginDTO;
 import dto.PessoaDTO;
+import exception.DataConflictException;
 import model.pessoa.Pessoa;
 import service.AuthService;
 import spark.Request;
@@ -54,10 +55,13 @@ public class AuthController {
         } catch (IllegalArgumentException e) {
             response.status(400);
             return gson.toJson(Map.of("error", e.getMessage())); // Formato padronizado
+        } catch (DataConflictException e) {
+            response.status(409);
+            return gson.toJson(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             response.status(500);
-            return gson.toJson(Map.of("error", "Erro interno no servidor")); // Não expõe detalhes internos
+            return gson.toJson(Map.of("error", "Erro interno no servidor"));
         }
     }
     private void rotaProtegida(Request request, Response response) {
