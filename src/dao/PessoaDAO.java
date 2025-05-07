@@ -1,6 +1,6 @@
 package dao;
 
-import db.ConnectionDB2;
+import db.ConnectionDB;
 import exception.NullConnectionException;
 import model.pessoa.Aluno;
 import model.pessoa.Bibliotecario;
@@ -17,7 +17,7 @@ public class PessoaDAO {
     public Professor addProfessor(Professor professor,  int pessoaId) {
         String sqlCommand = "INSERT INTO Professor (pessoa_id, siap) VALUES (?, ?)";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -36,7 +36,7 @@ public class PessoaDAO {
     public Aluno addAluno(Aluno aluno, int pessoaId) {
         String sqlCommand = "INSERT INTO Aluno (pessoa_id, matricula, id_necessidade) VALUES (?, ?, ?)";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -56,7 +56,7 @@ public class PessoaDAO {
     public Bibliotecario addBibliotecario(Bibliotecario bibliotecario, int pessoaId) {
         String sqlCommand = "INSERT INTO Bibliotecario (pessoa_id, codigo) VALUES (?, ?)";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -75,7 +75,7 @@ public class PessoaDAO {
    public int addPessoa(Pessoa novaPessoa) {
        String sqlCommand = "INSERT INTO Pessoa (nome, email, senha) VALUES (?, ?, ?)";
 
-       try (Connection connection = ConnectionDB2.getConnection()) {
+       try (Connection connection = ConnectionDB.getConnection()) {
            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
            PreparedStatement statement = connection.prepareStatement(sqlCommand, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -102,7 +102,7 @@ public class PessoaDAO {
    public int getMaxIdNecessidade() {
         String sqlCommand = "SELECT MAX(id) FROM Necessidade";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -121,7 +121,7 @@ public class PessoaDAO {
    public boolean emailExiste(String email) {
 	   String sqlCommand = "SELECT COUNT(*) FROM Pessoa WHERE email = ?";
 
-       try (Connection connection = ConnectionDB2.getConnection()){
+       try (Connection connection = ConnectionDB.getConnection()){
            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
            PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -147,7 +147,7 @@ public class PessoaDAO {
                     "SELECT pessoa_id, email, senha FROM Bibliotecario join Pessoa on Bibliotecario.pessoa_id = Pessoa.id WHERE codigo = ?";
         };
 
-       try (Connection connection = ConnectionDB2.getConnection()) {
+       try (Connection connection = ConnectionDB.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(sqlCommand);
             stmt.setString(1, identificador);
             ResultSet rsPessoa = stmt.executeQuery();
@@ -170,7 +170,7 @@ public class PessoaDAO {
     public Pessoa buscarPorEmail(String email) {
         String sqlPessoa = "SELECT * FROM Pessoa WHERE email = ?";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(sqlPessoa);
             stmt.setString(1, email);
             ResultSet rsPessoa = stmt.executeQuery();
@@ -191,7 +191,7 @@ public class PessoaDAO {
     public static boolean pessoaValido(Integer pessoaId){
         String sqlCommand = "SELECT 1 FROM Pessoa WHERE id = ?";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);

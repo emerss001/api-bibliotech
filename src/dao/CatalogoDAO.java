@@ -1,6 +1,6 @@
 package dao;
 
-import db.ConnectionDB2;
+import db.ConnectionDB;
 import dto.CatalogoDTO;
 
 import java.sql.Connection;
@@ -15,7 +15,7 @@ public class CatalogoDAO {
         String sqlCommand = "SELECT * FROM Area_conhecimento";
         List<CatalogoDTO> areas = new ArrayList<>();
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             ResultSet rs = statement.executeQuery();
 
@@ -35,7 +35,7 @@ public class CatalogoDAO {
         String sqlCommand = "SELECT * FROM Necessidade";
         List<CatalogoDTO> areas = new ArrayList<>();
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             ResultSet rs = statement.executeQuery();
 
@@ -55,7 +55,7 @@ public class CatalogoDAO {
         String sqlCommand = "SELECT * FROM Formato_material";
         List<CatalogoDTO> areas = new ArrayList<>();
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             ResultSet rs = statement.executeQuery();
 

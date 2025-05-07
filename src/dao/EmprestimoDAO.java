@@ -1,6 +1,6 @@
 package dao;
 
-import db.ConnectionDB2;
+import db.ConnectionDB;
 import model.material.Emprestimo;
 
 import java.sql.*;
@@ -12,7 +12,7 @@ public class EmprestimoDAO {
         String sqlCommand = "INSERT INTO Emprestimo (material_id, aluno_id) VALUES (?, ?)";
         String updateMaterial = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = FALSE WHERE e.id = ?";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
 
             // Configura para retornar o ID gerado
@@ -44,7 +44,7 @@ public class EmprestimoDAO {
     public void aprooveEmprestimo(Emprestimo emprestimo){
         String sqlCommand = "UPDATE Emprestimo SET data_emprestimo = NOW(), data_devolucao_prevista = ?, status = 'Aprovado' WHERE id = ?";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -65,7 +65,7 @@ public class EmprestimoDAO {
         String sqlCommand = "UPDATE Emprestimo SET status = 'Rejeitado' WHERE id = ?";
         String sqlUpdateCommand = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = TRUE WHERE e.id = ?";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -93,7 +93,7 @@ public class EmprestimoDAO {
         String sqlCommand = "UPDATE Emprestimo SET data_devolucao_real = NOW(), status = 'Devolvido' WHERE id = ?";
         String sqlUpdateCommand = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = TRUE WHERE e.id = ?";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -120,7 +120,7 @@ public class EmprestimoDAO {
     public void renovateEmprestimo(Emprestimo emprestimo){
         String sqlCommand = "UPDATE Emprestimo SET data_devolucao_prevista = ?, status = 'Renovado' WHERE id = ?";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -141,7 +141,7 @@ public class EmprestimoDAO {
         String sqlCommand = "DELETE FROM Emprestimo WHERE id = ?";
         String sqlUpdateCommand = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = TRUE WHERE e.id = ? AND e.status IN ('Aprovado','Pendente','Renovado')";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement2 = connection.prepareStatement(sqlUpdateCommand);
@@ -169,7 +169,7 @@ public class EmprestimoDAO {
             sqlCommand.append("LIMIT ").append(quantidade);
         }
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand.toString());

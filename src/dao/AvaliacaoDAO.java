@@ -1,9 +1,7 @@
 package dao;
 
-import com.google.gson.JsonObject;
-import db.ConnectionDB2;
+import db.ConnectionDB;
 import model.material.Avaliacao;
-import model.material.Emprestimo;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +10,7 @@ public class AvaliacaoDAO {
     public Integer addAvaliacao(Avaliacao avaliacao) {
         String sqlCommand = "INSERT INTO Avaliacao (material_id, aluno_id, nota, avaliacao, data) VALUES (?, ?, ?, ?, NOW())";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
 
             // Configura para retornar o ID gerado
@@ -39,7 +37,7 @@ public class AvaliacaoDAO {
     public void removeAvaliacao(Integer id) {
         String sqlCommand = "DELETE FROM Avaliacao WHERE id = ?";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             // Configura para retornar o ID gerado
@@ -58,7 +56,7 @@ public class AvaliacaoDAO {
         ArrayList<Avaliacao> lista = new ArrayList<>();
         String sqlCommand = "SELECT * FROM Avaliacao WHERE material_id = ?";
 
-        try (Connection connection = ConnectionDB2.getConnection()) {
+        try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
