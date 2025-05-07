@@ -18,9 +18,9 @@ public class CatalogoController {
         setupRoutes();
     }
     private void setupRoutes() {
-        get("/protegida/catalogo/areas-conhecimento", this::getAreaConhecimento);
-        get("/protegida/catalogo/formatos-materiais", this::getFormatoMateriais);
-        get("/protegida/catalogo/necessidades", this::getNecessidades);
+        get("/catalogo/areas-conhecimento", this::getAreaConhecimento);
+        get("/catalogo/formatos-materiais", this::getFormatoMateriais);
+        get("/catalogo/necessidades", this::getNecessidades);
     }
 
     private Object getAreaConhecimento(Request request, Response response) {
