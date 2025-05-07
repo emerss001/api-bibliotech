@@ -9,7 +9,6 @@ import model.pessoa.Pessoa;
 import util.TokenUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class EmprestimoService {
@@ -34,7 +33,7 @@ public class EmprestimoService {
     public void updateEmprestimo(NovoEmprestimoDTO dto){
         if (dto == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
 
-        //if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
+        if (!dto.validoUpdate()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
         Emprestimo emprestimo = new Emprestimo(dto);
 
@@ -46,22 +45,17 @@ public class EmprestimoService {
         }
     }
 
-    public void deleteEmprestimo(NovoEmprestimoDTO dto){
-        if (dto == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
+    public void deleteEmprestimo(Integer id){
+        if (id == null || id < 1) throw new IllegalArgumentException("Id inválido");
 
-        //if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
-
-        Emprestimo emprestimo = new Emprestimo(dto);
-        emprestimoDAO.deleteEmprestimo(emprestimo);
+        emprestimoDAO.deleteEmprestimo(id);
     }
 
 
     public ArrayList<Emprestimo> listEmprestimo(JsonObject json){
-        String quantidade = json.get("quantidade").getAsString() != null ? json.get("quantidade").getAsString() : "*";
-        String status = json.get("status").getAsString();
-        String alunoId = json.get("alunoId").getAsString();
-
-        System.out.println(quantidade+"\n"+status+"\n"+alunoId);
+        String quantidade = json.has("quantidade") && !json.get("quantidade").getAsString().isEmpty() ? json.get("quantidade").getAsString() : null;
+        String status = json.has("status") && !json.get("status").getAsString().isEmpty() ? json.get("status").getAsString() : null;
+        String alunoId = json.has("alunoId") && !json.get("alunoId").getAsString().isEmpty() ? json.get("alunoId").getAsString() : null;
 
         return emprestimoDAO.readEmprestimo(quantidade,status,alunoId);
     }
