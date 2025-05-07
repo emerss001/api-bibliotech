@@ -137,6 +137,45 @@ public class PessoaDAO {
        return false;
    }
 
+   public boolean matriculaExiste(String matricula) {
+        String sqlCommand = "SELECT COUNT(*) FROM Aluno WHERE matricula = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setString(1, matricula);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+   }
+
+    public boolean siapExiste(String siap) {
+        String sqlCommand = "SELECT COUNT(*) FROM Professor WHERE siap = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setString(1, siap);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
    public Pessoa buscarPorIdentificador(PessoaVinculo userTipo, String identificador) {
         String sqlCommand = switch (userTipo) {
             case ALUNO ->

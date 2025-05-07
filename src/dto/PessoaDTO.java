@@ -1,6 +1,7 @@
 package dto;
 
 import dao.PessoaDAO;
+import exception.DataConflictException;
 import type.PessoaVinculo;
 
 public record PessoaDTO(
@@ -14,6 +15,7 @@ public record PessoaDTO(
         String senha
 ) {
     // Método de validação
+    private static final PessoaDAO pessoaDAO = new PessoaDAO();
     public boolean valido() {
         return nomeValido() && emailValido() && vinculoValido() && senhaValida();
     }
@@ -27,13 +29,8 @@ public record PessoaDTO(
     private boolean emailValido() {
         if (email == null || email.isBlank()) throw new IllegalArgumentException("O email não pode ser vazio");
         if (!email.matches("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$")) throw new IllegalArgumentException("Email inválido");
-        if (emailExistente()) throw new IllegalArgumentException("O email já esta cadastrado");
+        if (pessoaDAO.emailExiste(email)) throw new DataConflictException("O email já esta cadastrado");
         return true;
-    }
-
-    private boolean emailExistente() {
-        PessoaDAO pessoaDAO = new PessoaDAO();
-        return pessoaDAO.emailExiste(email);
     }
 
     boolean vinculoValido() {
@@ -59,11 +56,13 @@ public record PessoaDTO(
     private boolean validarAluno() {
         if (matricula == null || matricula.isBlank()) throw new IllegalArgumentException("Matrícula não pode ser vazia");
         if (idNecessidade < 1 || idNecessidade > maxIdNecessidade()) throw new IllegalArgumentException("ID de necessidade inválido");
+        if (pessoaDAO.matriculaExiste(matricula)) throw new DataConflictException("A matricula já está cadastrada");
         return true;
     }
 
     private boolean validarProfessor() {
         if (siap == null || siap.isBlank()) throw new IllegalArgumentException("SIAP não pode ser vazio");
+        if (pessoaDAO.siapExiste(siap)) throw new DataConflictException("SIAP já cadastrado");
         return true;
     }
 

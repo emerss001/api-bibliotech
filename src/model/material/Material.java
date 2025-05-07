@@ -32,7 +32,7 @@ public class Material {
         this.quantidadeAvaliacoes = quantidadeAvaliacoes;
     }
 
-    public Material(String autor, String tipo, String titulo, Integer formato, Integer area, String descricao, String nivel, String cadastradoPor) {
+    public Material(String autor, String tipo, String titulo, String formato, String area, String nivel, String descricao, String cadastradoPor) {
         this.titulo = titulo;
         this.autor = autor;
         this.tipo = tipo;
