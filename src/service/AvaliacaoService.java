@@ -1,5 +1,6 @@
 package service;
 
+import com.google.gson.JsonObject;
 import dao.AvaliacaoDAO;
 import dao.PessoaDAO;
 import dto.AvaliacaoDTO;
@@ -7,6 +8,7 @@ import model.material.Avaliacao;
 import model.pessoa.Pessoa;
 import util.TokenUtil;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class AvaliacaoService {
@@ -26,6 +28,21 @@ public class AvaliacaoService {
         Avaliacao avaliacao = new Avaliacao(dto);
         avaliacao.setId(avaliacao.salvar(avaliacaoDAO));
         return avaliacao;
+    }
+
+    public void removeAvaliacao(JsonObject json){
+        if (json == null) throw new IllegalArgumentException("Dados da avaliação inválidos");
+
+        Integer id = json.has("id") && json.get("id").getAsInt() > 0 ? json.get("id").getAsInt() : null;
+
+        avaliacaoDAO.removeAvaliacao(id);
+    }
+
+    public ArrayList<Avaliacao> readAvaliacao(JsonObject json){
+        if (json == null) throw new IllegalArgumentException("Dados da avaliação inválidos");
+        Integer id = json.has("materialId") && json.get("materialId").getAsInt() > 0 ? json.get("materialId").getAsInt() : null;
+
+        return avaliacaoDAO.readAvaliacao(id);
     }
 
     public Integer tokenTOId(String token){
