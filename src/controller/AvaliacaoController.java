@@ -10,6 +10,7 @@ import spark.Request;
 import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
+import java.util.ArrayList;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -26,8 +27,8 @@ public class AvaliacaoController {
 
     private void setupRoutes() {
         post("/protegida/avaliacoes", this::criarAvaliacao);
-        //get("/protegida/avaliacoes", this::listarAvaliacao);
-        //delete("/protegida/avaliacoes", this::excluirAvaliacao);
+        get("/protegida/avaliacoes", this::listarAvaliacao);
+        delete("/protegida/avaliacoes", this::excluirAvaliacao);
     }
 
     private Object criarAvaliacao(Request request, Response response) {
@@ -64,14 +65,43 @@ public class AvaliacaoController {
 
     }
 
-//    private Object listarAvaliacao(Request request, Response response) {
-//
-//
-//    }
-//
-//    private Object excluirAvaliacao(Request request, Response response) {
-//
-//
-//    }
+    private Object listarAvaliacao(Request request, Response response) {
+        try {
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+            // Pegando os dados da requisição
+            JsonObject json = gson.fromJson(request.body(), JsonObject.class);
+            ArrayList<Avaliacao> lista = avaliacaoService.readAvaliacao(json);
+
+            response.status(200);
+            return gson.toJson(Map.of("id", lista));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            response.type("application/json");
+            response.status(500);
+
+            return gson.toJson(Map.of("error", e.getMessage()));
+        }
+
+    }
+
+    private Object excluirAvaliacao(Request request, Response response) {
+        try {
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+            // Pegando os dados da requisição
+            JsonObject json = gson.fromJson(request.body(), JsonObject.class);
+            avaliacaoService.removeAvaliacao(json);
+
+            response.status(204);
+            return gson.toJson(Map.of("id", ""));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            response.type("application/json");
+            response.status(500);
+
+            return gson.toJson(Map.of("error", e.getMessage()));
+        }
+    }
 
 }

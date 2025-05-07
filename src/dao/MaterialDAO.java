@@ -1,6 +1,6 @@
 package dao;
 
-import db.ConnectionDB;
+import db.ConnectionDB2;
 import exception.NullConnectionException;
 import model.material.Material;
 import model.material.MaterialDigital;
@@ -19,7 +19,7 @@ public class MaterialDAO {
     public Integer addMaterial(Material material) {
         String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material_id, area_conhecimento_id, nivel_conhecimento, descricao, cadastrado_por, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = ConnectionDB.getConnection()) {
+        try (Connection connection = ConnectionDB2.getConnection()) {
             if (connection == null) return null;
 
             // Configura para retornar o ID gerado
@@ -50,7 +50,7 @@ public class MaterialDAO {
     public MaterialDigital cadastrarMaterialDigital(MaterialDigital materialDigital, Integer idMaterial) {
         String sqlCommand = "INSERT INTO Material_digital (material_id, link) VALUES (?, ?)";
 
-        try (Connection connection = ConnectionDB.getConnection()) {
+        try (Connection connection = ConnectionDB2.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -69,7 +69,7 @@ public class MaterialDAO {
     public void cadastrarMaterialFisico(MaterialFisico materialFisico, Integer idMaterial){
         String sqlCommand = "INSERT INTO Material_fisico (material_id, disponibilidade) VALUES (?, true)";
 
-        try (Connection connection = ConnectionDB.getConnection()) {
+        try (Connection connection = ConnectionDB2.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -87,7 +87,7 @@ public class MaterialDAO {
         String sqlCommand = "SELECT * FROM Material LIMIT ?, ?";
         List<Material> materiais = new ArrayList<>();
 
-        try (Connection connection = ConnectionDB.getConnection()) {
+        try (Connection connection = ConnectionDB2.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -117,7 +117,7 @@ public class MaterialDAO {
     public Material buscarDetalhesMaterial(int idMaterial) {
         String sqlCommand = "CALL GetMaterialCompleto(?)";
 
-        try (Connection connection = ConnectionDB.getConnection()) {
+        try (Connection connection = ConnectionDB2.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
@@ -156,7 +156,7 @@ public class MaterialDAO {
     public static boolean materialValido(Integer materialId){
         String sqlCommand = "SELECT 1 FROM Material_fisico WHERE material_id = ? ";
 
-        try (Connection connection = ConnectionDB.getConnection()) {
+        try (Connection connection = ConnectionDB2.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
