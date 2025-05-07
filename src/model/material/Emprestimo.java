@@ -25,6 +25,8 @@ public class Emprestimo {
 
     public Emprestimo(NovoEmprestimoDTO dto){
         this.id = dto.id();
+        this.materialId = dto.materialId();
+        this.alunoId = dto.alunoId();
         this.dataDPrevista = dto.dataDevolucaoPrevista();
         this.status = dto.status();
     }

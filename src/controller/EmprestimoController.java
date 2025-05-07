@@ -48,8 +48,6 @@ public class EmprestimoController {
                             alunoId,
                             materialId,
                             null,
-                            false,
-                            false,
                             null
                     )
             );
@@ -112,9 +110,9 @@ public class EmprestimoController {
             request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
             // Pegando os dados da requisição
-            NovoEmprestimoDTO emprestimoDTO = gson.fromJson(request.body(), NovoEmprestimoDTO.class);
+            JsonObject json = gson.fromJson(request.body(), JsonObject.class);
 
-            emprestimoService.deleteEmprestimo(emprestimoDTO);
+            emprestimoService.deleteEmprestimo(json.get("id").getAsInt());
 
             response.status(204);
             return gson.toJson("No content");

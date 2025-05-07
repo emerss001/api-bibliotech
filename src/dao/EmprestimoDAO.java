@@ -1,7 +1,6 @@
 package dao;
 
 import db.ConnectionDB;
-import dto.NovoEmprestimoDTO;
 import model.material.Emprestimo;
 
 import java.sql.*;
@@ -11,7 +10,7 @@ public class EmprestimoDAO {
 
     public Integer addEmprestimo(Emprestimo emprestimo){
         String sqlCommand = "INSERT INTO Emprestimo (material_id, aluno_id) VALUES (?, ?)";
-        String updateMaterial = "UPDATE Material_fisico SET disponibilidade = false WHERE material_id = ?";
+        String updateMaterial = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = FALSE WHERE e.id = ?";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
@@ -138,7 +137,7 @@ public class EmprestimoDAO {
         }
     }
 
-    public void deleteEmprestimo(Emprestimo emprestimo){
+    public void deleteEmprestimo(Integer id){
         String sqlCommand = "DELETE FROM Emprestimo WHERE id = ?";
         String sqlUpdateCommand = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = TRUE WHERE e.id = ? AND e.status IN ('Aprovado','Pendente','Renovado')";
 
@@ -146,11 +145,11 @@ public class EmprestimoDAO {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement2 = connection.prepareStatement(sqlUpdateCommand);
-            statement2.setInt(1, emprestimo.getId());
+            statement2.setInt(1, id);
             int affectedRows2 = statement2.executeUpdate();
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
-            statement.setInt(1, emprestimo.getId());
+            statement.setInt(1, id);
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -164,12 +163,16 @@ public class EmprestimoDAO {
 
     public ArrayList<Emprestimo> readEmprestimo(String quantidade, String status, String alunoId){
         ArrayList<Emprestimo> lista = new ArrayList<>();
-        String sqlCommand = "SELECT" +quantidade+ "FROM Emprestimo WHERE (aluno_id = ? OR ? IS NULL) AND (status = ? OR ? IS NULL)";
+        StringBuilder sqlCommand = new StringBuilder("SELECT * FROM Emprestimo WHERE (aluno_id = ? OR ? IS NULL) AND (status = ? OR ? IS NULL) ");
+
+        if (quantidade != null){
+            sqlCommand.append("LIMIT ").append(quantidade);
+        }
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
-            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            PreparedStatement statement = connection.prepareStatement(sqlCommand.toString());
             statement.setString(1, alunoId);
             statement.setString(2, alunoId);
             statement.setString(3, status);
@@ -191,7 +194,7 @@ public class EmprestimoDAO {
             return lista;
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar emprestimos", e);
+            throw new RuntimeException("Erro ao listar emprestimos, verifique se a chave quantidade não excede o número de empréstimos", e);
         }
     }
 }

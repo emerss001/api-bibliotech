@@ -154,7 +154,7 @@ public class MaterialDAO {
     }
 
     public static boolean materialValido(Integer materialId){
-        String sqlCommand = "SELECT 1 FROM Material M JOIN Material_fisico MF ON M.id = MF.material_id WHERE M.id = ? AND MF.disponibilidade = true";
+        String sqlCommand = "SELECT 1 FROM Material_fisico WHERE material_id = ? ";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");

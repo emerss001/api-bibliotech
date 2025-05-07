@@ -35,3 +35,4 @@ testeJava.java
 project.sql
 /firebase
 /firebase/api-bibliotech-firebase.json
+/src/db/ConnectionDB2.java
