@@ -32,7 +32,7 @@ public class Material {
         this.quantidadeAvaliacoes = quantidadeAvaliacoes;
     }
 
-    public Material(String autor, String tipo, String titulo, String formato, String area, String nivel, String descricao, String cadastradoPor) {
+    public Material(String autor, String tipo, String titulo, Integer formato, Integer area, String descricao, String nivel, String cadastradoPor) {
         this.titulo = titulo;
         this.autor = autor;
         this.tipo = tipo;
@@ -43,13 +43,15 @@ public class Material {
         this.cadastradoPor = cadastradoPor;
     }
 
-    public Material(Integer id, String titulo, Integer formato, Integer area, String descricao, String nivel) {
+    public Material(Integer id, String titulo, Integer formato, Integer area, String descricao, String nivel, double nota, int quantidadeAvaliacoes) {
         this.id = id;
         this.titulo = titulo;
         this.formato = formato;
         this.area = area;
         this.descricao = descricao;
         this.nivel = nivel;
+        this.nota = nota;
+        this.quantidadeAvaliacoes = quantidadeAvaliacoes;
     }
 
     public Integer salvar(MaterialDAO dao) {
