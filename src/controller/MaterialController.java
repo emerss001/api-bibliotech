@@ -1,6 +1,7 @@
 package controller;
 
 import com.google.gson.Gson;
+import dto.MateriaisFiltrosDTO;
 import dto.NovoMaterialDTO;
 import dto.NovoMaterialFisicoDTO;
 import model.material.Material;
@@ -114,10 +115,11 @@ public class MaterialController {
         try {
             String inferiorParam = request.queryParams("limiteInferior");
             String superiorParam = request.queryParams("limiteSuperior");
+            MateriaisFiltrosDTO filtros = gson.fromJson(request.body(), MateriaisFiltrosDTO.class);
 
             if (inferiorParam == null || superiorParam == null) return gson.toJson(Map.of("error", "Parâmetros 'limiteInferior' e 'limiteSuperior' são obrigatórios"));
 
-            List<Material> materiais = materialService.buscarTodosMateriais(Integer.parseInt(inferiorParam), Integer.parseInt(superiorParam));
+            List<Material> materiais = materialService.buscarTodosMateriais(Integer.parseInt(inferiorParam), Integer.parseInt(superiorParam), filtros);
 
             response.status(200);
             return gson.toJson(materiais);

@@ -1,6 +1,7 @@
 package dao;
 
 import db.ConnectionDB;
+import dto.MateriaisFiltrosDTO;
 import exception.NullConnectionException;
 import model.material.Material;
 import model.material.MaterialDigital;
@@ -83,16 +84,43 @@ public class MaterialDAO {
         }
     }
 
-    public List<Material> buscarTodosMateriais(int limiteInferior, int limiteSuperior) {
-        String sqlCommand = "SELECT * FROM Material LIMIT ?, ?";
+    public List<Material> buscarTodosMateriais(int limiteInferior, int limiteSuperior, MateriaisFiltrosDTO filtros) {
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM Material WHERE 1 = 1 ");
+        List<Object> parametros = new ArrayList<>();
+
+        if (filtros.hasTipo()) {
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("tipo", filtros.tipo().size()));
+            parametros.addAll(filtros.tipo());
+        }
+
+        if (filtros.hasNivel()) {
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("nivel_conhecimento", filtros.nivel_conhecimento().size()));
+            parametros.addAll(filtros.nivel_conhecimento());
+        }
+
+        if (filtros.hasFormato()) {
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("formato_material", filtros.formato_material().size()));
+            parametros.addAll(filtros.formato_material());
+        }
+
+        if (filtros.hasArea()) {
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("area_conhecimento", filtros.area_conhecimento().size()));
+            parametros.addAll(filtros.area_conhecimento());
+        }
+
+        sqlBuilder.append(" LIMIT ?, ?");
+        parametros.add(limiteInferior);
+        parametros.add(limiteSuperior);
+
         List<Material> materiais = new ArrayList<>();
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
-            PreparedStatement statement = connection.prepareStatement(sqlCommand);
-            statement.setInt(1, limiteInferior);
-            statement.setInt(2, limiteSuperior);
+            PreparedStatement statement = connection.prepareStatement(sqlBuilder.toString());
+            for (int i = 0; i < parametros.size(); i++) {
+                statement.setObject(i + 1, parametros.get(i));
+            }
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
