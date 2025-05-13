@@ -1,6 +1,7 @@
 package dao;
 
 import db.ConnectionDB;
+import dto.ListarMateriaisDTO;
 import dto.MateriaisFiltrosDTO;
 import exception.NullConnectionException;
 import model.material.Material;
@@ -84,35 +85,49 @@ public class MaterialDAO {
         }
     }
 
-    public List<Material> buscarTodosMateriais(int limiteInferior, int limiteSuperior, MateriaisFiltrosDTO filtros) {
-        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM Material WHERE 1 = 1 ");
+    public List<ListarMateriaisDTO> buscarTodosMateriais(int limiteInferior, int limiteSuperior, MateriaisFiltrosDTO filtros) {
+        StringBuilder sqlBuilder = new StringBuilder("""
+                SELECT
+                    m.id,
+                        Formato_material.nome as formato,
+                        Area_conhecimento.nome as area,
+                        m.titulo,
+                        m.cadastrado_por,
+                        m.descricao,
+                        m.tipo,
+                        m.nivel_conhecimento
+                FROM Material as m
+                JOIN Formato_material ON Formato_material.id = m.formato_material
+                JOIN Area_conhecimento ON Area_conhecimento.id = m.area_conhecimento WHERE 1 = 1\s""");
         List<Object> parametros = new ArrayList<>();
 
         if (filtros.hasTipo()) {
-            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("tipo", filtros.tipo().size()));
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("m.tipo", filtros.tipo().size()));
             parametros.addAll(filtros.tipo());
         }
 
         if (filtros.hasNivel()) {
-            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("nivel_conhecimento", filtros.nivel_conhecimento().size()));
-            parametros.addAll(filtros.nivel_conhecimento());
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("nivel_conhecimento", filtros.nivel().size()));
+            parametros.addAll(filtros.nivel());
         }
 
         if (filtros.hasFormato()) {
-            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("formato_material", filtros.formato_material().size()));
-            parametros.addAll(filtros.formato_material());
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("formato_material", filtros.formato().size()));
+            parametros.addAll(filtros.formato());
         }
 
         if (filtros.hasArea()) {
-            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("area_conhecimento", filtros.area_conhecimento().size()));
-            parametros.addAll(filtros.area_conhecimento());
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("area_conhecimento", filtros.area().size()));
+            parametros.addAll(filtros.area());
         }
 
         sqlBuilder.append(" LIMIT ?, ?");
         parametros.add(limiteInferior);
         parametros.add(limiteSuperior);
 
-        List<Material> materiais = new ArrayList<>();
+        System.out.println(sqlBuilder);
+
+        List<ListarMateriaisDTO> materiais = new ArrayList<>();
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
@@ -126,15 +141,15 @@ public class MaterialDAO {
             while (rs.next()) {
 
                 int id = rs.getInt("id");
+                String cadastrado_por = rs.getString("cadastrado_por");
                 String titulo = rs.getString("titulo");
-                Integer formato = rs.getInt("formato_material");
-                Integer area = rs.getInt("area_conhecimento");
+                String formato = rs.getString("formato");
+                String area = rs.getString("area");
                 String descricao = rs.getString("descricao");
-                double nota = rs.getDouble("nota");
-                int quantidadeAvaliacoes = rs.getInt("quantidade_avaliacao");
                 String nivel = rs.getString("nivel_conhecimento");
+                String tipo = rs.getString("tipo");
 
-                materiais.add(new Material(id, titulo, formato, area, descricao, nivel, nota, quantidadeAvaliacoes));
+                materiais.add(new ListarMateriaisDTO(id, cadastrado_por, titulo, formato, area, descricao, nivel, tipo));
             }
 
         } catch (SQLException e) {

@@ -4,9 +4,9 @@ import java.util.List;
 
 public record MateriaisFiltrosDTO(
         List<String> tipo,
-        List<String> nivel_conhecimento,
-        List<Integer> formato_material,
-        List<Integer> area_conhecimento
+        List<String> nivel,
+        List<Integer> formato,
+        List<Integer> area
 ) {
 
     public boolean hasTipo() {
@@ -14,15 +14,15 @@ public record MateriaisFiltrosDTO(
     }
 
     public boolean hasNivel() {
-        return nivel_conhecimento != null && !nivel_conhecimento.isEmpty();
+        return nivel != null && !nivel.isEmpty();
     }
 
     public boolean hasFormato() {
-        return formato_material != null && !formato_material.isEmpty();
+        return formato != null && !formato.isEmpty();
     }
 
     public boolean hasArea() {
-        return area_conhecimento != null && !area_conhecimento.isEmpty();
+        return area != null && !area.isEmpty();
     }
 
     // Retorna o trecho de WHERE para um campo específico
