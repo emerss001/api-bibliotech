@@ -1,6 +1,7 @@
 package dao;
 
 import db.ConnectionDB;
+import dto.AvaliacaoResponseDTO;
 import model.material.Avaliacao;
 
 import java.sql.*;
@@ -52,9 +53,9 @@ public class AvaliacaoDAO {
         }
     }
 
-    public ArrayList<Avaliacao> readAvaliacao(Integer id) {
-        ArrayList<Avaliacao> lista = new ArrayList<>();
-        String sqlCommand = "SELECT * FROM Avaliacao WHERE material_id = ?";
+    public ArrayList<AvaliacaoResponseDTO> readAvaliacao(Integer id) {
+        ArrayList<AvaliacaoResponseDTO> lista = new ArrayList<>();
+        String sqlCommand = "SELECT a.id, p.nome AS aluno, a.nota, a.avaliacao, a.data FROM Avaliacao AS a JOIN Pessoa AS p ON p.id = a.aluno_id WHERE a.material_id = ?";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
@@ -64,10 +65,9 @@ public class AvaliacaoDAO {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()){
-                lista.add(new Avaliacao(
+                lista.add(new AvaliacaoResponseDTO(
                         rs.getInt("id"),
-                        rs.getInt("aluno_id"),
-                        rs.getInt("material_id"),
+                        rs.getString("aluno"),
                         rs.getInt("nota"),
                         rs.getString("avaliacao"),
                         rs.getString("data")
@@ -77,7 +77,7 @@ public class AvaliacaoDAO {
             return lista;
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar avaliações do empréstimos", e);
+            throw new RuntimeException("Erro ao listar avaliações do material: " + e.getMessage());
         }
     }
 }

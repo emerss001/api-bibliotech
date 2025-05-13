@@ -3,6 +3,7 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dto.AvaliacaoDTO;
+import dto.AvaliacaoResponseDTO;
 import model.material.Avaliacao;
 import service.AvaliacaoService;
 
@@ -27,7 +28,7 @@ public class AvaliacaoController {
 
     private void setupRoutes() {
         post("/protegida/avaliacoes", this::criarAvaliacao);
-        get("/protegida/avaliacoes", this::listarAvaliacao);
+        get("/protegida/avaliacoes/:materialId", this::listarAvaliacao);
         delete("/protegida/avaliacoes", this::excluirAvaliacao);
     }
 
@@ -67,14 +68,16 @@ public class AvaliacaoController {
 
     private Object listarAvaliacao(Request request, Response response) {
         try {
-            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+            int materialId = Integer.parseInt(request.params("materialId"));
+            if (materialId <= 0) return gson.toJson(Map.of("error: ", "id inválido"));
 
-            // Pegando os dados da requisição
-            JsonObject json = gson.fromJson(request.body(), JsonObject.class);
-            ArrayList<Avaliacao> lista = avaliacaoService.readAvaliacao(json);
-
+            ArrayList<AvaliacaoResponseDTO> lista = avaliacaoService.readAvaliacao(materialId);
             response.status(200);
-            return gson.toJson(Map.of("id", lista));
+            return gson.toJson(lista);
+        } catch (NumberFormatException e) {
+            response.status(400);
+
+            return gson.toJson(Map.of("error", "ID inválido. O identificador deve ser um número."));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             response.type("application/json");

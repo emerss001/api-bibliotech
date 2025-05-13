@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import dao.AvaliacaoDAO;
 import dao.PessoaDAO;
 import dto.AvaliacaoDTO;
+import dto.AvaliacaoResponseDTO;
 import model.material.Avaliacao;
 import model.pessoa.Pessoa;
 import util.TokenUtil;
@@ -38,11 +39,10 @@ public class AvaliacaoService {
         avaliacaoDAO.removeAvaliacao(id);
     }
 
-    public ArrayList<Avaliacao> readAvaliacao(JsonObject json){
-        if (json == null) throw new IllegalArgumentException("Dados da avaliação inválidos");
-        Integer id = json.has("materialId") && json.get("materialId").getAsInt() > 0 ? json.get("materialId").getAsInt() : null;
+    public ArrayList<AvaliacaoResponseDTO> readAvaliacao(Integer materialId){
+        if (materialId == null || materialId < 0) throw new IllegalArgumentException("Dados da avaliação inválidos");
 
-        return avaliacaoDAO.readAvaliacao(id);
+        return avaliacaoDAO.readAvaliacao(materialId);
     }
 
     public Integer tokenTOId(String token){
