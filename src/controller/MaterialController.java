@@ -1,6 +1,7 @@
 package controller;
 
 import com.google.gson.Gson;
+import dto.ListarMateriaisDTO;
 import dto.MateriaisFiltrosDTO;
 import dto.NovoMaterialDTO;
 import dto.NovoMaterialFisicoDTO;
@@ -14,6 +15,7 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +32,16 @@ public class MaterialController {
     }
 
     private void setupRoutes() {
+        options("/protegida/materials", (req, res) -> {
+            res.status(200);
+            return "";
+        });
+
+        options("/protegida/materials/*", (req, res) -> {
+            res.status(200);
+            return "";
+        });
+
         get("/protegida/materials", this::listarMateriais);
         get("/protegida/materials/:id", this::buscarDetalhesMaterial);
         post("/protegida/materials/material-digital", this::criarMaterialDigital);
@@ -115,11 +127,23 @@ public class MaterialController {
         try {
             String inferiorParam = request.queryParams("limiteInferior");
             String superiorParam = request.queryParams("limiteSuperior");
-            MateriaisFiltrosDTO filtros = gson.fromJson(request.body(), MateriaisFiltrosDTO.class);
+
+            String[] tipoArr = request.queryParamsValues("tipo");
+            String[] nivelArr = request.queryParamsValues("nivel");
+            String[] formatoArr = request.queryParamsValues("formato");
+            String[] areaArr = request.queryParamsValues("area");
+
+
+            MateriaisFiltrosDTO filtros = new MateriaisFiltrosDTO(
+                    tipoArr != null ? Arrays.asList(tipoArr) : List.of(),
+                    nivelArr != null ? Arrays.asList(nivelArr) : List.of(),
+                    formatoArr != null ? Arrays.stream(formatoArr).map(Integer::parseInt).toList() : List.of(),
+                    areaArr != null ? Arrays.stream(areaArr).map(Integer::parseInt).toList() : List.of()
+            );
 
             if (inferiorParam == null || superiorParam == null) return gson.toJson(Map.of("error", "Parâmetros 'limiteInferior' e 'limiteSuperior' são obrigatórios"));
 
-            List<Material> materiais = materialService.buscarTodosMateriais(Integer.parseInt(inferiorParam), Integer.parseInt(superiorParam), filtros);
+            List<ListarMateriaisDTO> materiais = materialService.buscarTodosMateriais(Integer.parseInt(inferiorParam), Integer.parseInt(superiorParam), filtros);
 
             response.status(200);
             return gson.toJson(materiais);

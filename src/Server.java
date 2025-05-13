@@ -43,8 +43,8 @@ public class Server {
     }
 
     private static void registrarControllers(depedenciasContainer dc) {
-        new AuthController(dc.authService, dc.gson);
         new MaterialController(dc.materialService, dc.gson);
+        new AuthController(dc.authService, dc.gson);
         new EmprestimoController(dc.emprestimoService,dc.gson);
         new CatalogoController(dc.catalogoService,dc.gson);
         new AvaliacaoController(dc.avaliacaoService,dc.gson);
@@ -52,21 +52,29 @@ public class Server {
     }
 
     private static void enableCORS() {
-        options("/*", ((request, response) -> {
+        options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
-            if (accessControlRequestHeaders != null) response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+            if (accessControlRequestHeaders != null) {
+                response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+            }
 
             String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
-            if (accessControlRequestMethod != null) response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+            if (accessControlRequestMethod != null) {
+                response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+            }
 
             return "OK";
-
-        }));
+        });
 
         before((request, response) -> {
-            response.header("Access-Control-Allow-Origin", "*"); // Ou restrinja, ex: http://localhost:3000
-            response.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-            response.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+            response.header("Access-Control-Allow-Origin", "*");
+            response.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            response.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+
+            // Para requisições OPTIONS, retorne imediatamente
+            if (request.requestMethod().equals("OPTIONS")) {
+                response.status(200);
+                halt();
+            }
         });
-    }
-}
+    }}

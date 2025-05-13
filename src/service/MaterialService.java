@@ -2,6 +2,7 @@ package service;
 
 import dao.MaterialDAO;
 import dao.PessoaDAO;
+import dto.ListarMateriaisDTO;
 import dto.MateriaisFiltrosDTO;
 import dto.NovoMaterialDTO;
 import dto.NovoMaterialFisicoDTO;
@@ -48,7 +49,7 @@ public class MaterialService {
         return materialFisico.cadastrarMaterialFisico(materialDAO,dto.quantidade());
     }
 
-    public List<Material> buscarTodosMateriais(int limiteInferior, int limiteSuperior, MateriaisFiltrosDTO filtros) {
+    public List<ListarMateriaisDTO> buscarTodosMateriais(int limiteInferior, int limiteSuperior, MateriaisFiltrosDTO filtros) {
         int diferenca = limiteSuperior - limiteInferior;
         if (limiteInferior < 0 || limiteSuperior <= 0 || diferenca != 10) throw new IllegalArgumentException("Limites de busca de dados inválidos");
 
