@@ -28,7 +28,7 @@ public record AvaliacaoDTO(
     private boolean materialIdValido() {
         nullIsBlank(materialId.toString(), "Id do material");
 
-        if (MaterialDAO.materialValido(materialId))
+        if (MaterialDAO.materialValidoAvaliacao(materialId))
             return true;
         throw new IllegalArgumentException("O material: " + materialId + " não existe, ou não está disponível");
     }
