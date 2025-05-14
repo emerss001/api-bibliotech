@@ -1,10 +1,12 @@
 package dao;
 
 import db.ConnectionDB;
+import dto.EmprestimoFiltroDTO;
 import model.material.Emprestimo;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EmprestimoDAO {
 
@@ -161,22 +163,36 @@ public class EmprestimoDAO {
         }
     }
 
-    public ArrayList<Emprestimo> readEmprestimo(String quantidade, String status, String alunoId){
+    public ArrayList<Emprestimo> readEmprestimo(EmprestimoFiltroDTO dto){
         ArrayList<Emprestimo> lista = new ArrayList<>();
-        StringBuilder sqlCommand = new StringBuilder("SELECT * FROM Emprestimo WHERE (aluno_id = ? OR ? IS NULL) AND (status = ? OR ? IS NULL) ");
+        //StringBuilder sqlCommand = new StringBuilder("SELECT * FROM Emprestimo WHERE (aluno_id = ? OR ? IS NULL) AND (status = ? OR ? IS NULL) ");
+        StringBuilder sqlCommand = new StringBuilder("SELECT * FROM Emprestimo WHERE 1 = 1\s ");
 
-        if (quantidade != null){
-            sqlCommand.append("LIMIT ").append(quantidade);
+        List<Object> parametros = new ArrayList<>();
+
+        if (dto.hasAlunoId()){
+            sqlCommand.append(EmprestimoFiltroDTO.buildInClause("aluno_id", dto.alunoId().size()));
+            parametros.addAll(dto.alunoId());
+        }
+
+        if (dto.hasStatus()){
+            sqlCommand.append(EmprestimoFiltroDTO.buildInClause("status", dto.status().size()));
+            parametros.addAll(dto.status());
+        }
+
+        if (dto.quantidade() != null){
+            sqlCommand.append("LIMIT ").append(dto.quantidade());
         }
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand.toString());
-            statement.setString(1, alunoId);
-            statement.setString(2, alunoId);
-            statement.setString(3, status);
-            statement.setString(4, status);
+
+            for (int i = 0; i < parametros.size(); i++) {
+                statement.setObject(i + 1, parametros.get(i));
+            }
+
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()){
