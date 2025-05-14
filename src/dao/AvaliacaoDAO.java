@@ -55,7 +55,7 @@ public class AvaliacaoDAO {
 
     public ArrayList<AvaliacaoResponseDTO> readAvaliacao(Integer id) {
         ArrayList<AvaliacaoResponseDTO> lista = new ArrayList<>();
-        String sqlCommand = "SELECT a.id, p.nome AS aluno, a.nota, a.avaliacao, a.data FROM Avaliacao AS a JOIN Pessoa AS p ON p.id = a.aluno_id WHERE a.material_id = ?";
+        String sqlCommand = "SELECT a.id, p.nome AS aluno, a.nota, a.avaliacao, a.data FROM Avaliacao AS a JOIN Pessoa AS p ON p.id = a.aluno_id WHERE a.material_id = ? order by a.data desc";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
