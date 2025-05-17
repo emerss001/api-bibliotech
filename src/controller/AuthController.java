@@ -64,10 +64,11 @@ public class AuthController {
             return gson.toJson(Map.of("error", "Erro interno no servidor"));
         }
     }
+
     private void rotaProtegida(Request request, Response response) {
         String token = request.headers("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {
-            halt(401, "Token não informado");
+            halt(401, gson.toJson(Map.of("Error", "Token não informado")));
         }
 
         try {
@@ -76,4 +77,5 @@ public class AuthController {
             halt(401, gson.toJson(Map.of("error", e.getMessage())));
         }
     }
+
 }

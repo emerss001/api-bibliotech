@@ -29,6 +29,11 @@ public class Pessoa {
         this.senhaHash = senha;
     }
 
+    // Construtor usado na rota de busca por detalhes de uma material
+    public Pessoa(String nome) {
+        this.nome = nome;
+    }
+
     private void validarDados(String senha, String nome, String email) {
         if (senha == null || senha.trim().isEmpty()) {
             throw new IllegalArgumentException("Senha não pode ser vazia");

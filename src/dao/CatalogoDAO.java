@@ -2,6 +2,7 @@ package dao;
 
 import db.ConnectionDB;
 import dto.CatalogoDTO;
+import model.catalogo.Catalogo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -70,6 +71,38 @@ public class CatalogoDAO {
         }
 
         return areas;
+    }
+
+    public Catalogo catalogoExiste(Integer id, String classe) {
+        boolean isFormato = classe.equals("formato");
+        String sqlCommand = "";
+
+        if (isFormato) {
+            sqlCommand = "SELECT * FROM Formato_material WHERE id = ?";
+        } else {
+            sqlCommand = "SELECT * FROM Area_conhecimento WHERE id = ?";
+        }
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int idCatalogo = resultSet.getInt("id");
+                String nome = resultSet.getString("nome");
+                if (isFormato) {
+                    String tipo = resultSet.getString("tipo");
+                    return new Catalogo(idCatalogo, nome, tipo);
+                }
+
+                return new Catalogo(idCatalogo, nome);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao catálogo: " + e.getMessage());
+        }
+
+        return null;
     }
 
 }

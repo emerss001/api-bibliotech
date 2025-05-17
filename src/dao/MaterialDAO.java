@@ -1,12 +1,15 @@
 package dao;
 
 import db.ConnectionDB;
-import dto.ListarMateriaisDTO;
-import dto.MateriaisFiltrosDTO;
+import dto.material.ListarMateriaisDTO;
+import dto.material.MateriaisFiltrosDTO;
 import exception.NullConnectionException;
+import model.catalogo.Catalogo;
 import model.material.Material;
 import model.material.MaterialDigital;
 import model.material.MaterialFisico;
+import model.pessoa.Pessoa;
+import type.MaterialNivel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,11 +31,11 @@ public class MaterialDAO {
             PreparedStatement statement = connection.prepareStatement(sqlCommand, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, material.getAutor());
             statement.setString(2, material.getTitulo());
-            statement.setInt(3, material.getFormato());
-            statement.setInt(4, material.getArea());
+            statement.setInt(3, material.getFormato().getId());
+            statement.setInt(4, material.getArea().getId());
             statement.setString(5, material.getNivel());
             statement.setString(6, material.getDescricao());
-            statement.setString(7, material.getCadastradoPor());
+            statement.setInt(7, material.getCadastradoPor().getId());
             statement.setString(8, material.getTipo());
             int affectedRows = statement.executeUpdate();
 
@@ -89,16 +92,18 @@ public class MaterialDAO {
         StringBuilder sqlBuilder = new StringBuilder("""
                 SELECT
                     m.id,
-                        Formato_material.nome as formato,
-                        Area_conhecimento.nome as area,
-                        m.titulo,
-                        m.cadastrado_por,
-                        m.descricao,
-                        m.tipo,
-                        m.nivel_conhecimento
+                    fm.nome as formato,
+                    ar.nome as area,
+                    m.titulo,
+                    p.nome as cadastrado_por,
+                    m.descricao,
+                    m.tipo,
+                    m.nivel_conhecimento
                 FROM Material as m
-                JOIN Formato_material ON Formato_material.id = m.formato_material
-                JOIN Area_conhecimento ON Area_conhecimento.id = m.area_conhecimento WHERE 1 = 1\s""");
+                         JOIN Formato_material as fm ON fm.id = m.formato_material
+                         JOIN Area_conhecimento as ar ON ar.id = m.area_conhecimento
+                         JOIN Pessoa AS p on p.id = m.cadastrado_por
+                WHERE 1 = 1""");
         List<Object> parametros = new ArrayList<>();
 
         if (filtros.hasTipo()) {
@@ -169,12 +174,14 @@ public class MaterialDAO {
             statement.setInt(1, idMaterial);
 
             ResultSet rs = statement.executeQuery();
+//            if (!rs.next()) throw new RuntimeException("Não foi encontrado material com o id " + idMaterial);
+
             if (rs.next()) {
                 String autor = rs.getString("autor");
                 String tipo = rs.getString("tipo");
                 String titulo = rs.getString("titulo");
-                Integer formato = rs.getInt("formato_material");
-                Integer area = rs.getInt("area_conhecimento");
+                String formato = rs.getString("formato_material");
+                String area = rs.getString("area_conhecimento");
                 String nivel = rs.getString("nivel_conhecimento");
                 String descricao = rs.getString("descricao");
                 String cadastradoPor = rs.getString("cadastrado_por");
@@ -183,17 +190,25 @@ public class MaterialDAO {
 
                 if (tipo.equals("Digital")) {
                     String url = rs.getString("link");
-                    return new MaterialDigital(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes, url);
+                    Material material = new MaterialDigital(idMaterial, autor, tipo, titulo, MaterialNivel.fromString(nivel), descricao, nota, quantidadeAvaliacoes, url);
+                    material.setFormato(new Catalogo(null, formato));
+                    material.setArea(new Catalogo(null, area));
+                    material.setCadastradoPor(new Pessoa(cadastradoPor));
+
+                    return material;
                 }
 
                 boolean disponibilidade = rs.getBoolean("disponibilidade");
-                return new MaterialFisico(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes, disponibilidade);
-            } else {
-                System.out.println("Nenhum resultado retornado pela procedure.");
+                Material material = new MaterialFisico(idMaterial, autor, tipo, titulo, MaterialNivel.fromString(nivel), descricao, nota, quantidadeAvaliacoes, disponibilidade);
+                material.setFormato(new Catalogo(null, formato));
+                material.setArea(new Catalogo(null, area));
+                material.setCadastradoPor(new Pessoa(cadastradoPor));
+
+                return material;
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
         return null;
     }
@@ -209,7 +224,7 @@ public class MaterialDAO {
             ResultSet rs = statement.executeQuery();
             return rs.next();
 
-        } catch (SQLException e) {
+        } catch (SQLException | RuntimeException e) {
             throw new RuntimeException("Erro ao verificar disponibilidade do material ID: " + materialId, e);
         }
     }
