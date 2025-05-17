@@ -30,6 +30,7 @@ public class EmprestimoController {
 
     private void setupRoutes() {
         post("/protegida/emprestimos", this::criarEmprestimo);
+        patch("/protegida/emprestimos/aprovar", this::aprovarEmprestimo);
         get("/protegida/emprestimos", this::listarEmprestimo);
         patch("/protegida/emprestimos", this::atualizarEmprestimo);
         delete("/protegida/emprestimos", this::excluirEmprestimo);
@@ -60,10 +61,22 @@ public class EmprestimoController {
         }
     }
 
+    private Object aprovarEmprestimo(Request request, Response response) {
+        try {
+            Integer emprestimoId = Integer.valueOf(request.queryParams("emprestimoId"));
+
+            emprestimoService.aprovarEmprestimo(emprestimoId);
+
+            response.status(200);
+            return gson.toJson("Empréstimo aprovado");
+        } catch (NumberFormatException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", "id do empréstimo inválido"));
+        }
+    }
+
     private Object atualizarEmprestimo(Request request, Response response) {
         try {
-            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-
             // Pegando os dados da requisição
             NovoEmprestimoDTO emprestimoDTO = gson.fromJson(request.body(), NovoEmprestimoDTO.class);
 
