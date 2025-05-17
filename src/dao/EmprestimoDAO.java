@@ -1,7 +1,9 @@
 package dao;
 
 import db.ConnectionDB;
+import exception.NullConnectionException;
 import model.material.Emprestimo;
+import model.material.MaterialFisico;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,8 +11,9 @@ import java.util.ArrayList;
 public class EmprestimoDAO {
 
     public Integer addEmprestimo(Emprestimo emprestimo){
+//        System.out.println("materialId: " + emprestimo.getMaterialId() + " alunoId: " + emprestimo.getAlunoId());
         String sqlCommand = "INSERT INTO Emprestimo (material_id, aluno_id) VALUES (?, ?)";
-        String updateMaterial = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = FALSE WHERE e.id = ?";
+        String updateMaterial = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.id = e.material_id SET mf.disponibilidade = FALSE WHERE e.id = ?";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
@@ -36,7 +39,7 @@ public class EmprestimoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao criar emprestimo", e);
+            throw new RuntimeException("Erro ao criar emprestimo " + e.getMessage());
         }
         return null;
     }

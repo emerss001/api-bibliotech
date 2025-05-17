@@ -1,5 +1,7 @@
 package type;
 
+import java.util.Arrays;
+
 public enum MaterialNivel {
     BASICO("Básico"),
     INTERMEDIARIO("Intermediário"),
@@ -8,7 +10,7 @@ public enum MaterialNivel {
     private final String nomeFormatado;
 
     MaterialNivel(String nomeFormatado) {
-        this.nomeFormatado = nomeFormatado;
+        this.nomeFormatado  = nomeFormatado;
     }
 
     public String getDisplayName() {

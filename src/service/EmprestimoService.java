@@ -2,6 +2,7 @@ package service;
 
 import com.google.gson.JsonObject;
 import dao.EmprestimoDAO;
+import dao.MaterialDAO;
 import dao.PessoaDAO;
 import dto.NovoEmprestimoDTO;
 import model.material.Emprestimo;
@@ -20,19 +21,21 @@ public class EmprestimoService {
         this.pessoaDAO = Objects.requireNonNull(pessoaDAO, "DAO dos usuários não pode ser nulo");
     }
 
-    public Emprestimo addEmprestimo(NovoEmprestimoDTO dto){
-        if (dto == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
+    public Emprestimo addEmprestimo(Integer alunoId, Integer materialId){
+        if (alunoId == null || materialId == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
 
-        if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
+        if (!MaterialDAO.materialValido(materialId)) throw new IllegalArgumentException("Máterial não existe");
 
-        Emprestimo emprestimo = new Emprestimo(dto);
+        Integer materialFisicoId = MaterialDAO.getDisponibilidade(materialId);
+        if (materialFisicoId == null) throw new IllegalArgumentException("Máterial não tem disponibilidade");
+
+        Emprestimo emprestimo = new Emprestimo(alunoId, materialFisicoId);
         emprestimo.setId(emprestimo.salvar(emprestimoDAO));
         return emprestimo;
     }
 
     public void updateEmprestimo(NovoEmprestimoDTO dto){
         if (dto == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
-
         if (!dto.validoUpdate()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
         Emprestimo emprestimo = new Emprestimo(dto);

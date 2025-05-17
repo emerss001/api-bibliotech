@@ -94,9 +94,7 @@ public class MaterialController {
             String token = request.headers("Authorization");
             NovoMaterialFisicoDTO material = gson.fromJson(request.body(), NovoMaterialFisicoDTO.class);
 
-
             ArrayList<Integer> novoMaterialList = materialService.addMaterialFisico(material, token);
-
             if (novoMaterialList == null) throw new RuntimeException();
 
             response.status(201);
