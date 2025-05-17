@@ -46,15 +46,14 @@ public class EmprestimoDAO {
         return null;
     }
 
-    public void aprooveEmprestimo(Emprestimo emprestimo){
-        String sqlCommand = "UPDATE Emprestimo SET data_emprestimo = NOW(), data_devolucao_prevista = ?, status = 'Aprovado' WHERE id = ?";
+    public void aprooveEmprestimo(Integer emprestimo){
+        String sqlCommand = "UPDATE Emprestimo SET data_emprestimo = NOW(), data_devolucao_prevista = date_add(now(), interval 7 day ), status = 'Aprovado' WHERE id = ?";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
-            statement.setTimestamp(1, Timestamp.valueOf(emprestimo.getDataDPrevista()));
-            statement.setInt(2, emprestimo.getId());
+            statement.setInt(1, emprestimo);
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -62,7 +61,7 @@ public class EmprestimoDAO {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao aprovar emprestimo", e);
+            throw new RuntimeException("Erro ao aprovar emprestimo" + e.getMessage());
         }
     }
 

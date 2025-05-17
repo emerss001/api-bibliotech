@@ -35,6 +35,11 @@ public class EmprestimoService {
         return emprestimo;
     }
 
+    public void aprovarEmprestimo(Integer emprestimoId) {
+        if (emprestimoId == null || emprestimoId <= 0) throw new IllegalArgumentException("O id não pode ser vazio");
+        emprestimoDAO.aprooveEmprestimo(emprestimoId);
+    }
+
     public void updateEmprestimo(NovoEmprestimoDTO dto){
         if (dto == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
         if (!dto.validoUpdate()) throw new IllegalArgumentException("Dados obrigatórios não informados");
@@ -42,7 +47,7 @@ public class EmprestimoService {
         Emprestimo emprestimo = new Emprestimo(dto);
 
         switch (dto.status()){
-            case APROVADO -> emprestimoDAO.aprooveEmprestimo(emprestimo);
+//            case APROVADO -> emprestimoDAO.aprooveEmprestimo(emprestimo);
             case REJEITADO -> emprestimoDAO.refuseEmprestimo(emprestimo);
             case RENOVADO -> emprestimoDAO.renovateEmprestimo(emprestimo);
             case DEVOLVIDO -> emprestimoDAO.returnEmprestimo(emprestimo);
