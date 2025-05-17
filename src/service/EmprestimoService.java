@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import dao.EmprestimoDAO;
 import dao.MaterialDAO;
 import dao.PessoaDAO;
+import dto.EmprestimoFiltroDTO;
 import dto.NovoEmprestimoDTO;
 import model.material.Emprestimo;
 import model.pessoa.Pessoa;
@@ -55,12 +56,9 @@ public class EmprestimoService {
     }
 
 
-    public ArrayList<Emprestimo> listEmprestimo(JsonObject json){
-        String quantidade = json.has("quantidade") && !json.get("quantidade").getAsString().isEmpty() ? json.get("quantidade").getAsString() : null;
-        String status = json.has("status") && !json.get("status").getAsString().isEmpty() ? json.get("status").getAsString() : null;
-        String alunoId = json.has("alunoId") && !json.get("alunoId").getAsString().isEmpty() ? json.get("alunoId").getAsString() : null;
+    public ArrayList<Emprestimo> listEmprestimo(EmprestimoFiltroDTO dto){
 
-        return emprestimoDAO.readEmprestimo(quantidade,status,alunoId);
+        return emprestimoDAO.readEmprestimo(dto);
     }
 
     public Integer tokenTOId(String token){

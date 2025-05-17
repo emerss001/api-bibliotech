@@ -2,6 +2,7 @@ package controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import dto.EmprestimoFiltroDTO;
 import model.material.Emprestimo;
 import service.EmprestimoService;
 import dto.NovoEmprestimoDTO;
@@ -9,6 +10,7 @@ import spark.Request;
 import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,9 +85,17 @@ public class EmprestimoController {
             request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
             // Pegando os dados da requisição
-            JsonObject emprestimoJson = gson.fromJson(request.body(), JsonObject.class);
+            Integer quantidadeArr = request.queryParams("quantidade") != null ? Integer.parseInt(request.queryParams("quantidade")) : null;
+            String[] statusArr = request.queryParamsValues("status");
+            String[] alunoIdArr = request.queryParamsValues("alunoId");
 
-            ArrayList<Emprestimo> lista = emprestimoService.listEmprestimo(emprestimoJson);
+            ArrayList<Emprestimo> lista = emprestimoService.listEmprestimo(
+                    new EmprestimoFiltroDTO(
+                        quantidadeArr,
+                        statusArr != null ? Arrays.asList(statusArr) : List.of(),
+                        alunoIdArr != null ? Arrays.asList(alunoIdArr) : List.of()
+                    )
+            );
 
             response.status(200);
             return gson.toJson(lista);
