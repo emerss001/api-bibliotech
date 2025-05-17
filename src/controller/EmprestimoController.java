@@ -37,28 +37,20 @@ public class EmprestimoController {
 
     private Object criarEmprestimo(Request request, Response response) {
         try {
-            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-
-            // Pegando os dados da requisição
             String token = request.headers("Authorization");
-            Integer alunoId = emprestimoService.tokenTOId(token);
-            JsonObject jsonBody = gson.fromJson(request.body(), JsonObject.class);
-            Integer materialId = jsonBody.get("materialId").getAsInt();
 
-            Emprestimo novoEmprestimo = emprestimoService.addEmprestimo(
-                    new NovoEmprestimoDTO(
-                            0,
-                            alunoId,
-                            materialId,
-                            null,
-                            null
-                    )
-            );
+            Integer alunoId = emprestimoService.tokenTOId(token);
+            Integer materialId = Integer.valueOf(request.queryParams("materialId"));
+
+            Emprestimo novoEmprestimo = emprestimoService.addEmprestimo(alunoId, materialId);
 
             if (novoEmprestimo == null) throw new RuntimeException();
 
             response.status(201);
             return gson.toJson(Map.of("id", novoEmprestimo.getId()));
+        } catch (NumberFormatException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", "Id do material inválido"));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             response.type("application/json");

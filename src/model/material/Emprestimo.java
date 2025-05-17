@@ -13,6 +13,11 @@ public class Emprestimo {
     private String dataDReal;
     private EmprestimoStatus status;
 
+    public Emprestimo(Integer alunoId, Integer materialId) {
+        this.alunoId = alunoId;
+        this.materialId = materialId;
+    }
+
     public Emprestimo(Integer alunoId, Integer materialId, Integer id, String dataEmprestimo, String dataDPrevista, String dataDReal, String status){
         this.materialId = materialId;
         this.alunoId = alunoId;

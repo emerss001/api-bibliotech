@@ -245,5 +245,24 @@ public class MaterialDAO {
         }
     }
 
+    public static Integer getDisponibilidade(Integer materialId) {
+        String sqlCommand = "SELECT m.id FROM Material_fisico as mf JOIN Material as m ON m.id = mf.material_id WHERE m.id = ? AND mf.disponibilidade = 1 LIMIT 1";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, materialId);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return null;
+    }
+
 
 }
