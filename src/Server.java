@@ -32,7 +32,7 @@ public class Server {
         final AvaliacaoDAO avaliacaoDAO = new AvaliacaoDAO();
 
         final AuthService authService = new AuthService(pessoaDAO);
-        final MaterialService materialService = new MaterialService(materialDAO, pessoaDAO);
+        final MaterialService materialService = new MaterialService(materialDAO, pessoaDAO, catalogoDAO);
         final EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO,pessoaDAO);
         final CatalogoService catalogoService = new CatalogoService(catalogoDAO);
         final AvaliacaoService avaliacaoService = new AvaliacaoService(avaliacaoDAO,pessoaDAO);

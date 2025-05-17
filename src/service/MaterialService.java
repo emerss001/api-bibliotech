@@ -1,11 +1,13 @@
 package service;
 
+import dao.CatalogoDAO;
 import dao.MaterialDAO;
 import dao.PessoaDAO;
-import dto.ListarMateriaisDTO;
-import dto.MateriaisFiltrosDTO;
-import dto.NovoMaterialDTO;
-import dto.NovoMaterialFisicoDTO;
+import dto.material.ListarMateriaisDTO;
+import dto.material.MateriaisFiltrosDTO;
+import dto.material.NovoMaterialDTO;
+import dto.material.NovoMaterialFisicoDTO;
+import model.catalogo.Catalogo;
 import model.material.Material;
 import model.material.MaterialDigital;
 import model.material.MaterialFisico;
@@ -19,34 +21,40 @@ import java.util.Objects;
 public class MaterialService {
     private final MaterialDAO materialDAO;
     private final PessoaDAO pessoaDAO;
+    private final CatalogoDAO catalogoDAO;
     private final String TIPO_DIGITAL = "Digital";
     private final String TIPO_FISICO = "Fisico";
 
-    public MaterialService(MaterialDAO materialDAO, PessoaDAO pessoaDAO) {
+    public MaterialService(MaterialDAO materialDAO, PessoaDAO pessoaDAO, CatalogoDAO catalogoDAO) {
         this.materialDAO = Objects.requireNonNull(materialDAO, "DAO dos materiais não pode ser nulo");
         this.pessoaDAO = Objects.requireNonNull(pessoaDAO, "DAO dos usuários não pode ser nulo");
+        this.catalogoDAO = Objects.requireNonNull(catalogoDAO, "DAO dos catálogos não pode ser nulo");
     }
 
     public Material addMaterialDigital(NovoMaterialDTO dto, String token) {
         if (dto == null) throw new IllegalArgumentException("Dados do material inválidos");
-
         if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
-        Pessoa adm = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
-        MaterialDigital materialDigital = new MaterialDigital(adm.getNome(), dto, TIPO_DIGITAL);
-        materialDigital.cadastrarMaterialDigital(materialDAO);
-        return materialDigital;
+        Pessoa adicionadoPor = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
+        Catalogo formato = catalogoDAO.catalogoExiste(dto.formato(), "formato");
+        Catalogo area = catalogoDAO.catalogoExiste(dto.area(), "area");
+
+        MaterialDigital materialDigital = new MaterialDigital(adicionadoPor, dto, formato, area, TIPO_DIGITAL);
+
+        return materialDigital.cadastrarMaterialDigital(materialDAO);
     }
 
     public ArrayList<Integer> addMaterialFisico(NovoMaterialFisicoDTO dto, String token) {
         if (dto == null) throw new IllegalArgumentException("Dados do material inválidos");
-
         if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
-        Pessoa adm = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
-        MaterialFisico materialFisico = new MaterialFisico(adm.getNome(), dto, TIPO_FISICO);
+        Pessoa adicionadoPor = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
+        Catalogo formato = catalogoDAO.catalogoExiste(dto.formato(), "formato");
+        Catalogo area = catalogoDAO.catalogoExiste(dto.area(), "area");
 
-        return materialFisico.cadastrarMaterialFisico(materialDAO,dto.quantidade());
+        MaterialFisico materialFisico = new MaterialFisico(adicionadoPor, dto, formato, area, TIPO_FISICO);
+
+        return materialFisico.cadastrarMaterialFisico(materialDAO);
     }
 
     public List<ListarMateriaisDTO> buscarTodosMateriais(int limiteInferior, int limiteSuperior, MateriaisFiltrosDTO filtros) {

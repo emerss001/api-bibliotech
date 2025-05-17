@@ -1,10 +1,10 @@
 package controller;
 
 import com.google.gson.Gson;
-import dto.ListarMateriaisDTO;
-import dto.MateriaisFiltrosDTO;
-import dto.NovoMaterialDTO;
-import dto.NovoMaterialFisicoDTO;
+import dto.material.ListarMateriaisDTO;
+import dto.material.MateriaisFiltrosDTO;
+import dto.material.NovoMaterialDTO;
+import dto.material.NovoMaterialFisicoDTO;
 import model.material.Material;
 import service.MaterialService;
 import spark.Request;
@@ -54,6 +54,7 @@ public class MaterialController {
 
             // Pegando os dados da requisição
             String token = request.headers("Authorization");
+
             String titulo = request.queryParams("titulo");
             String autor = request.queryParams("autor");
             Integer formato = Integer.parseInt(request.queryParams("formato"));
@@ -91,25 +92,10 @@ public class MaterialController {
         try {
             // Pegando os dados da requisição
             String token = request.headers("Authorization");
-            String titulo = request.queryParams("titulo");
-            String autor = request.queryParams("autor");
-            Integer formato = Integer.parseInt(request.queryParams("formato"));
-            Integer areaConhecimento = Integer.parseInt(request.queryParams("area"));
-            String nivel = request.queryParams("nivel");
-            String descricao = request.queryParams("descricao");
-            Integer quantidade = Integer.parseInt(request.queryParams("quantidade"));
+            NovoMaterialFisicoDTO material = gson.fromJson(request.body(), NovoMaterialFisicoDTO.class);
 
-            ArrayList<Integer> novoMaterialList = materialService.addMaterialFisico(
-                    new NovoMaterialFisicoDTO(
-                            titulo,
-                            autor,
-                            formato,
-                            areaConhecimento,
-                            MaterialNivel.fromString(nivel),
-                            descricao,
-                            quantidade
-                    ), token
-            );
+
+            ArrayList<Integer> novoMaterialList = materialService.addMaterialFisico(material, token);
 
             if (novoMaterialList == null) throw new RuntimeException();
 
@@ -167,11 +153,23 @@ public class MaterialController {
             if (idMaterial <= 0) return gson.toJson(Map.of("error: ", "id inválido"));
             Material material = materialService.buscarDetalhesMaterial(idMaterial);
 
+            if (material == null) {
+                response.status(404);
+                return gson.toJson(Map.of("Error", "Não foi encontrado material com o id " + idMaterial));
+            }
+
             response.status(200);
             return gson.toJson(material);
         } catch (NumberFormatException e) {
             response.status(400);
             return gson.toJson(Map.of("error", "Parâmetros devem ser números inteiros"));
+        } catch (RuntimeException e) {
+            response.status(404);
+            return gson.toJson(Map.of("Error", e.getMessage()));
+        } catch (Exception e) {
+            response.status(500);
+            System.out.println(e.getMessage());
+            return gson.toJson(Map.of("error", "Erro interno ao buscar material"));
         }
     }
 }
