@@ -1,0 +1,16 @@
+drop table Emprestimo;
+
+create table Emprestimo
+(
+    id                      int auto_increment
+        primary key,
+    material_id             int                                                                                    not null,
+    aluno_id                int                                                                                    not null,
+    data_emprestimo         datetime                                                                               null,
+    data_devolucao_prevista datetime                                                                               null,
+    data_devolucao_real     datetime                                                                               null,
+    status                  enum ('Aprovado', 'Pendente', 'Devolvido', 'Renovado', 'Rejeitado') default 'Pendente' not null,
+        foreign key (material_id) references Material_fisico (id),
+        foreign key (aluno_id) references Aluno (pessoa_id)
+);
+

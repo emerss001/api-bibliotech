@@ -29,7 +29,7 @@ public class EmprestimoController {
     }
 
     private void setupRoutes() {
-        post("/protegida/emprestimos", this::criarEmprestimo);
+        post("/protegida/emprestimos/:materialId", this::criarEmprestimo);
         patch("/protegida/emprestimos/aprovar", this::aprovarEmprestimo);
         get("/protegida/emprestimos", this::listarEmprestimo);
         patch("/protegida/emprestimos", this::atualizarEmprestimo);
@@ -39,10 +39,9 @@ public class EmprestimoController {
     private Object criarEmprestimo(Request request, Response response) {
         try {
             String token = request.headers("Authorization");
+            Integer materialId = Integer.parseInt(request.params("materialId"));
 
             Integer alunoId = emprestimoService.tokenTOId(token);
-            Integer materialId = Integer.valueOf(request.queryParams("materialId"));
-
             Emprestimo novoEmprestimo = emprestimoService.addEmprestimo(alunoId, materialId);
 
             if (novoEmprestimo == null) throw new RuntimeException();
