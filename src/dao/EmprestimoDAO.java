@@ -26,11 +26,15 @@ public class EmprestimoDAO {
             statement.setInt(2, emprestimo.getAlunoId());
             int affectedRows = statement.executeUpdate();
 
+            if (affectedRows < 0) throw new RuntimeException("Erro ao criar empréstimo");
+            ResultSet emprestimoCriado = statement.getGeneratedKeys();
+            emprestimoCriado.next();
+
             try (PreparedStatement stmtMaterial = connection.prepareStatement(updateMaterial)) {
-                stmtMaterial.setInt(1, emprestimo.getMaterialId());
+                stmtMaterial.setInt(1, emprestimoCriado.getInt(1));
                 stmtMaterial.executeUpdate();
             } catch (SQLException e) {
-                throw new RuntimeException("Erro ao atualizar a disponibilidade do material", e);
+                throw new RuntimeException("Erro ao atualizar a disponibilidade do material: " + e.getMessage());
             }
 
             if (affectedRows > 0) {
