@@ -72,7 +72,13 @@ public class AuthController {
         }
 
         try {
-            TokenUtil.validarToken(token.replace("Bearer ", ""));
+            String tipo = TokenUtil.extrairTipo(token);
+            System.out.println("Acesso autorizado para tipo: " + tipo); // apenas para debug
+
+            if (! "Bibliotecario" .equalsIgnoreCase(tipo)){
+                halt(403, gson.toJson(Map.of("error", "Acesso restrito ao bibliotecario")));
+            }
+
         } catch (Exception e) {
             halt(401, gson.toJson(Map.of("error", e.getMessage())));
         }

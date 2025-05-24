@@ -21,7 +21,8 @@ public class AuthService {
         Pessoa pessoa = pessoaDAO.buscarPorIdentificador(dto.vinculo(), dto.identificador());
 
         if (pessoa == null || !pessoa.validarSenha(dto.senha())) throw new IllegalArgumentException("Identificador ou senha inválidos");
-        return TokenUtil.gerarToken(pessoa.getEmail());
+        return TokenUtil.gerarToken(pessoa.getEmail(), pessoa.getTipo().name());
+
     }
 
     public Pessoa cadastro(PessoaDTO dto) {
