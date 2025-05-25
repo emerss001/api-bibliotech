@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import controller.*;
 import dao.*;
 import service.*;
@@ -24,7 +25,7 @@ public class Server {
 
     // Classe interna para agrupar dependências
     private static class depedenciasContainer {
-        final Gson gson = new Gson();
+        final Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
         final PessoaDAO pessoaDAO = new PessoaDAO();
         final MaterialDAO materialDAO = new MaterialDAO();
         final EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
@@ -33,7 +34,7 @@ public class Server {
 
         final AuthService authService = new AuthService(pessoaDAO);
         final MaterialService materialService = new MaterialService(materialDAO, pessoaDAO, catalogoDAO);
-        final EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO,pessoaDAO);
+        final EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, pessoaDAO, materialDAO);
         final CatalogoService catalogoService = new CatalogoService(catalogoDAO);
         final AvaliacaoService avaliacaoService = new AvaliacaoService(avaliacaoDAO,pessoaDAO);
     }

@@ -88,7 +88,7 @@ public class MaterialDAO {
         }
     }
 
-    public List<ListarMateriaisDTO> buscarTodosMateriais(int limiteInferior, int limiteSuperior, MateriaisFiltrosDTO filtros) {
+    public List<ListarMateriaisDTO> buscarTodosMateriais(MateriaisFiltrosDTO filtros) {
         StringBuilder sqlBuilder = new StringBuilder("""
                 SELECT
                     m.id,
@@ -125,13 +125,7 @@ public class MaterialDAO {
             sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("area_conhecimento", filtros.area().size()));
             parametros.addAll(filtros.area());
         }
-
-        sqlBuilder.append(" LIMIT ?, ?");
-        parametros.add(limiteInferior);
-        parametros.add(limiteSuperior);
-
-        System.out.println(sqlBuilder);
-
+        
         List<ListarMateriaisDTO> materiais = new ArrayList<>();
 
         try (Connection connection = ConnectionDB.getConnection()) {
@@ -185,7 +179,7 @@ public class MaterialDAO {
                 String nivel = rs.getString("nivel_conhecimento");
                 String descricao = rs.getString("descricao");
                 String cadastradoPor = rs.getString("cadastrado_por");
-                Double nota = rs.getDouble("nota");
+                double nota = rs.getDouble("nota");
                 int quantidadeAvaliacoes = rs.getInt("quantidade_avaliacao");
 
                 if (tipo.equals("Digital")) {
@@ -245,8 +239,8 @@ public class MaterialDAO {
         }
     }
 
-    public static Integer getDisponibilidade(Integer materialId) {
-        String sqlCommand = "SELECT m.id FROM Material_fisico as mf JOIN Material as m ON m.id = mf.material_id WHERE m.id = ? AND mf.disponibilidade = 1 LIMIT 1";
+    public Integer getDisponibilidade(Integer materialId) {
+        String sqlCommand = "SELECT mf.id FROM Material_fisico as mf JOIN Material as m ON m.id = mf.material_id WHERE m.id = ? AND mf.disponibilidade = 1 LIMIT 1";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
