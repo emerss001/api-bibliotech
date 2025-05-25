@@ -31,12 +31,14 @@ public class Server {
         final EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
         final CatalogoDAO catalogoDAO = new CatalogoDAO();
         final AvaliacaoDAO avaliacaoDAO = new AvaliacaoDAO();
+        final BibliotecarioDAO bibliotecarioDAO = new BibliotecarioDAO();
 
         final AuthService authService = new AuthService(pessoaDAO);
         final MaterialService materialService = new MaterialService(materialDAO, pessoaDAO, catalogoDAO);
         final EmprestimoService emprestimoService = new EmprestimoService(emprestimoDAO, pessoaDAO, materialDAO);
         final CatalogoService catalogoService = new CatalogoService(catalogoDAO);
         final AvaliacaoService avaliacaoService = new AvaliacaoService(avaliacaoDAO,pessoaDAO);
+        final BibliotecarioService bibliotecarioService = new BibliotecarioService(bibliotecarioDAO);
     }
 
     private static depedenciasContainer setupDependencies() {
@@ -49,6 +51,7 @@ public class Server {
         new EmprestimoController(dc.emprestimoService,dc.gson);
         new CatalogoController(dc.catalogoService,dc.gson);
         new AvaliacaoController(dc.avaliacaoService,dc.gson);
+        new BibliotecarioController(dc.bibliotecarioService, dc.gson);
         // Adicione novos controllers aqui com 1 linha cada
     }
 
