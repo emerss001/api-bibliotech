@@ -11,7 +11,6 @@ import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 public record NovoEmprestimoDTO(
-        Integer id,
         Integer alunoId,
         Integer materialId,
         String dataDevolucaoPrevista,

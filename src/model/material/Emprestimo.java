@@ -1,39 +1,45 @@
 package model.material;
 
 import dao.EmprestimoDAO;
-import dto.NovoEmprestimoDTO;
+import model.pessoa.Pessoa;
 import type.EmprestimoStatus;
+
+import java.sql.Date;
 
 public class Emprestimo {
     private Integer id;
-    private Integer alunoId;
-    private Integer materialId;
-    private String dataEmprestimo;
-    private String dataDPrevista;
-    private String dataDReal;
+    private Pessoa aluno;
+    private Material material;
+    private Date dataCriacao;
+    private Date dataAprovacao;
+    private Date dataDevolucaoPrevista;
+    private Date dataDevolucaoReal;
     private EmprestimoStatus status;
+    private String mensagem;
+    private String rejicaoMotivo;
 
-    public Emprestimo(Integer alunoId, Integer materialId) {
-        this.alunoId = alunoId;
-        this.materialId = materialId;
+    public String getMensagem() {
+        return mensagem;
     }
 
-    public Emprestimo(Integer alunoId, Integer materialId, Integer id, String dataEmprestimo, String dataDPrevista, String dataDReal, String status){
-        this.materialId = materialId;
-        this.alunoId = alunoId;
+    public Emprestimo() {}
+
+    public Emprestimo(Material material, Pessoa aluno, String mensagem) {
+        this.aluno = aluno;
+        this.material = material;
+        this.mensagem = mensagem;
+    }
+
+    public Emprestimo(Integer id, Pessoa aluno, Material material, Date dataCriacao, Date dataAprovacao, Date dataDevolucaoPrevista, Date dataDevolucaoReal, String status, String rejicaoMotivo){
         this.id = id;
-        this.dataEmprestimo = dataEmprestimo;
-        this.dataDPrevista = dataDPrevista;
-        this.dataDReal = dataDReal;
+        this.aluno = aluno;
+        this.material = material;
+        this.dataCriacao = dataCriacao;
+        this.dataAprovacao = dataAprovacao;
+        this.dataDevolucaoPrevista = dataDevolucaoPrevista;
+        this.dataDevolucaoReal = dataDevolucaoReal;
         this.status = EmprestimoStatus.fromString(status);
-    }
-
-    public Emprestimo(NovoEmprestimoDTO dto){
-        this.id = dto.id();
-        this.materialId = dto.materialId();
-        this.alunoId = dto.alunoId();
-        this.dataDPrevista = dto.dataDevolucaoPrevista();
-        this.status = dto.status();
+        this.rejicaoMotivo = rejicaoMotivo;
     }
 
     public Integer salvar(EmprestimoDAO dao) {
@@ -48,27 +54,63 @@ public class Emprestimo {
         this.id = id;
     }
 
-    public Integer getAlunoId() {
-        return alunoId;
+    public Pessoa getAluno() {
+        return aluno;
     }
 
-    public Integer getMaterialId() {
-        return materialId;
+    public void setAluno(Pessoa aluno) {
+        this.aluno = aluno;
     }
 
-    public String getDataEmprestimo() {
-        return dataEmprestimo;
+    public Material getMaterial() {
+        return material;
     }
 
-    public String getDataDPrevista() {
-        return dataDPrevista;
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
-    public String getDataDReal() {
-        return dataDReal;
+    public String getRejicaoMotivo() {
+        return rejicaoMotivo;
+    }
+
+    public Date getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(Date dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public Date getDataAprovacao() {
+        return dataAprovacao;
+    }
+
+    public void setDataAprovacao(Date dataAprovacao) {
+        this.dataAprovacao = dataAprovacao;
+    }
+
+    public Date getDataDevolucaoPrevista() {
+        return dataDevolucaoPrevista;
+    }
+
+    public void setDataDevolucaoPrevista(Date dataDevolucaoPrevista) {
+        this.dataDevolucaoPrevista = dataDevolucaoPrevista;
+    }
+
+    public Date getDataDevolucaoReal() {
+        return dataDevolucaoReal;
+    }
+
+    public void setDataDevolucaoReal(Date dataDevolucaoReal) {
+        this.dataDevolucaoReal = dataDevolucaoReal;
     }
 
     public EmprestimoStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(EmprestimoStatus status) {
+        this.status = status;
     }
 }
