@@ -14,7 +14,7 @@ public class TokenUtil {
     private static final String ISSUER = "api-bibliotech-java";
 
 //     metodo para gerar token JWT
-    public static String gerarToken(String email) {
+    public static String gerarToken(String email, String tipoVinculo) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY_JWT);
         return JWT.create()
                 .withIssuer(ISSUER)
@@ -36,7 +36,7 @@ public class TokenUtil {
         }
     }
 
-    // método para extrair email do usuário
+    // metodo para extrair email do usuário
     public static String extrairEmail(String token) {
         if (token == null || token.trim().isEmpty()) {
             throw new IllegalArgumentException("Token é nulo ou vazio");
