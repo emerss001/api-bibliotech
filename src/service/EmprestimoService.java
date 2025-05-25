@@ -54,7 +54,6 @@ public class EmprestimoService {
 
     public void rejeitarEmprestimo(Integer emprestimoId, String mensagem) {
         if (emprestimoId == null || emprestimoId <= 0) throw new IllegalArgumentException("O id não pode ser vazio");
-        if (mensagem == null) throw new IllegalArgumentException("A mensagem de rejeição ser vazio");
         if (mensagem.length() > 255) throw new IllegalArgumentException("A mensagem não pode ter mais de 255 caracteres");
 
         emprestimoDAO.refuseEmprestimo(emprestimoId, mensagem);
