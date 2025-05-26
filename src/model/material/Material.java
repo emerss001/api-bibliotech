@@ -21,6 +21,10 @@ public class Material {
     private String descricao;
     private Pessoa cadastradoPor;
 
+    public Material() {
+
+    }
+
     // construtor usado na criação de um novo material
     public Material(String titulo, String autor, MaterialNivel nivel, String descricao, Pessoa cadastradoPor, Catalogo formato, Catalogo area, String tipo) {
         this.titulo = titulo;

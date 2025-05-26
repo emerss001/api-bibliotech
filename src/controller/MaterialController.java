@@ -109,9 +109,6 @@ public class MaterialController {
 
     private Object listarMateriais(Request request, Response response) {
         try {
-            String inferiorParam = request.queryParams("limiteInferior");
-            String superiorParam = request.queryParams("limiteSuperior");
-
             String[] tipoArr = request.queryParamsValues("tipo");
             String[] nivelArr = request.queryParamsValues("nivel");
             String[] formatoArr = request.queryParamsValues("formato");
@@ -125,9 +122,8 @@ public class MaterialController {
                     areaArr != null ? Arrays.stream(areaArr).map(Integer::parseInt).toList() : List.of()
             );
 
-            if (inferiorParam == null || superiorParam == null) return gson.toJson(Map.of("error", "Parâmetros 'limiteInferior' e 'limiteSuperior' são obrigatórios"));
 
-            List<ListarMateriaisDTO> materiais = materialService.buscarTodosMateriais(Integer.parseInt(inferiorParam), Integer.parseInt(superiorParam), filtros);
+            List<ListarMateriaisDTO> materiais = materialService.buscarTodosMateriais(filtros);
 
             response.status(200);
             return gson.toJson(materiais);

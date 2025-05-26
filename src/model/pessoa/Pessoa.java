@@ -11,6 +11,10 @@ public class Pessoa {
     private String nome;
     private String email;
 
+    public Pessoa() {
+
+    }
+
     public Pessoa(int id, String senha, String nome, String email, boolean senhaJaHasheada) {
         if (!senhaJaHasheada) {
             validarDados(senha, nome, email);
@@ -80,5 +84,9 @@ public class Pessoa {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }

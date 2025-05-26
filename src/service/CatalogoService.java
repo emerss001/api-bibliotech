@@ -11,6 +11,7 @@ public class CatalogoService {
     public CatalogoService(CatalogoDAO dao) {
         this.catalogoDAO = dao;
     }
+
     public List<CatalogoDTO> getAreaConhecimento() {
         return catalogoDAO.getAreaConhecimento();
     }

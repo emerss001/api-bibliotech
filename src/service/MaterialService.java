@@ -57,13 +57,11 @@ public class MaterialService {
         return materialFisico.cadastrarMaterialFisico(materialDAO);
     }
 
-    public List<ListarMateriaisDTO> buscarTodosMateriais(int limiteInferior, int limiteSuperior, MateriaisFiltrosDTO filtros) {
-        int diferenca = limiteSuperior - limiteInferior;
-        if (limiteInferior < 0 || limiteSuperior <= 0 || diferenca != 10) throw new IllegalArgumentException("Limites de busca de dados inválidos");
+    public List<ListarMateriaisDTO> buscarTodosMateriais(MateriaisFiltrosDTO filtros) {
 
         if (filtros == null) filtros = new MateriaisFiltrosDTO(List.of(), List.of(), List.of(), List.of());
 
-        return materialDAO.buscarTodosMateriais(limiteInferior, limiteSuperior, filtros);
+        return materialDAO.buscarTodosMateriais(filtros);
     }
 
     public Material buscarDetalhesMaterial(int idMaterial) {
