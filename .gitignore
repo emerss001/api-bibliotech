@@ -30,10 +30,3 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-testeJava.java
-.env
-project.sql
-/firebase
-/firebase/api-bibliotech-firebase.json
-/src/db/ConnectionDB2.java
-/src/db/migrations/010_adição_trigger_avaliação
