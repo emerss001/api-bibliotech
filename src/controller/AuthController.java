@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import dto.LoginDTO;
 import dto.PessoaDTO;
 import exception.DataConflictException;
+import exception.TokenInvalidoException;
 import model.pessoa.Pessoa;
 import service.AuthService;
 import spark.Filter;
@@ -11,6 +12,7 @@ import spark.Request;
 import spark.Response;
 import util.TokenUtil;
 import static spark.Spark.*;
+import java.util.Arrays;
 import java.util.Map;
 
 public class AuthController {
@@ -28,8 +30,8 @@ public class AuthController {
         post("/cadastro", this::cadastro);
         before("/protegida/*", this::rotaProtegida);
 
-        // Prefixo admin para BIBLIOTECARIO e PROFESSOR
-        before("/admin/*", verificarTipos("BIBLIOTECARIO", "PROFESSOR"));
+        // Prefixo admin para BIBLIOTECARIO
+        before("/admin/*", verificarTipos("BIBLIOTECARIO"));
 
         // Rotas específicas por tipo
         before("/professor/*", verificarTipos("PROFESSOR"));
@@ -47,8 +49,11 @@ public class AuthController {
 
             response.status(200);
             return gson.toJson(Map.of("token", token));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             response.status(400);
+            return gson.toJson(Map.of("error", e.getMessage()));
+        } catch (RuntimeException e) {
+            response.status(403);
             return gson.toJson(Map.of("error", e.getMessage()));
         }
     }
@@ -77,31 +82,27 @@ public class AuthController {
         }
     }
 
-    public static Filter verificarTipos(String... tiposPermitidos) {
+    public Filter verificarTipos(String... tiposPermitidos) {
         return (request, response) -> {
             String token = request.headers("Authorization");
             if (token == null || token.isBlank() || !token.startsWith("Bearer ")) {
                 halt(401, new Gson().toJson(Map.of("error", "Token ausente ou mal formatado")));
             }
 
-            token = token.replace("Bearer ", "");
             try {
-                TokenUtil.validarToken(token); // Lança exceção se inválido
+                TokenUtil.validarToken(token.replace("Bearer ", ""));
                 String tipoUsuario = TokenUtil.extrairTipo(token);
 
-                boolean autorizado = false;
-                for (String tipo : tiposPermitidos) {
-                    if (tipo.equalsIgnoreCase(tipoUsuario)) {
-                        autorizado = true;
-                        break;
-                    }
-                }
+                boolean autorizado = Arrays.stream(tiposPermitidos)
+                        .anyMatch(tipo -> tipo.equalsIgnoreCase(tipoUsuario));
 
                 if (!autorizado) {
-                    halt(403, new Gson().toJson(Map.of("error", "Acesso negado para o tipo de usuário")));
+                    response.status(403);
+                    halt(403, gson.toJson(Map.of("error", "Acesso negado para o tipo de usuário")));
                 }
-            } catch (Exception e) {
-                halt(401, new Gson().toJson(Map.of("error", "Token inválido ou expirado")));
+            } catch (TokenInvalidoException e) {
+                System.out.println(e.getMessage());
+                halt(401, gson.toJson(Map.of("error", "Token inválido ou expirado")));
             }
         };
     }

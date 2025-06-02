@@ -18,11 +18,12 @@ public class AuthService {
 
     public String autenticar(LoginDTO dto) {
         dto.valido();
+
         Pessoa pessoa = pessoaDAO.buscarPorIdentificador(dto.vinculo(), dto.identificador());
-
         if (pessoa == null || !pessoa.validarSenha(dto.senha())) throw new IllegalArgumentException("Identificador ou senha inválidos");
-        return TokenUtil.gerarToken(pessoa.getEmail(), pessoa.getTipo().name());
+        if (!pessoaDAO.usuarioAprovado(pessoa.getId())) throw new RuntimeException("Este usuário ainda não teve seu cadastro aprovado");
 
+        return TokenUtil.gerarToken(pessoa.getEmail(), dto.vinculo());
     }
 
     public Pessoa cadastro(PessoaDTO dto) {

@@ -46,6 +46,7 @@ public class MaterialController {
         get("/protegida/materials/:id", this::buscarDetalhesMaterial);
         post("/protegida/materials/material-digital", this::criarMaterialDigital);
         post("/protegida/materials/material-fisico", this::criarMaterialFisico);
+        patch("/protegida/materials/atualizar-uso/:id", this::atualizarUso);
     }
 
     private Object criarMaterialDigital(Request request, Response response) {
@@ -164,6 +165,18 @@ public class MaterialController {
             response.status(500);
             System.out.println(e.getMessage());
             return gson.toJson(Map.of("error", "Erro interno ao buscar material"));
+        }
+    }
+
+    private Object atualizarUso(Request request, Response response) {
+        try {
+            int idMaterial = Integer.parseInt(request.params("id"));
+            materialService.atualizarUsoMaterial(idMaterial);
+
+            response.status(200);
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
