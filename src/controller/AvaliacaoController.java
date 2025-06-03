@@ -34,9 +34,6 @@ public class AvaliacaoController {
 
     private Object criarAvaliacao(Request request, Response response) {
         try {
-            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-
-            // Pegando os dados da requisição
             String token = request.headers("Authorization");
             Integer alunoId = avaliacaoService.tokenTOId(token);
             JsonObject json = gson.fromJson(request.body(), JsonObject.class);

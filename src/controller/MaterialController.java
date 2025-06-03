@@ -63,6 +63,7 @@ public class MaterialController {
             String nivel = request.queryParams("nivel");
             String descricao = request.queryParams("descricao");
             Part arquivo = request.raw().getPart("arquivo");
+            Part capa = request.raw().getPart("capa");
 
             Material novoMaterial = materialService.addMaterialDigital(
                     new NovoMaterialDTO(
@@ -72,7 +73,8 @@ public class MaterialController {
                             area,
                             MaterialNivel.fromString(nivel),
                             descricao,
-                            arquivo
+                            arquivo,
+                            capa
                     ), token
             );
 
@@ -91,11 +93,23 @@ public class MaterialController {
 
     private Object criarMaterialFisico(Request request, Response response) {
         try {
-            // Pegando os dados da requisição
-            String token = request.headers("Authorization");
-            NovoMaterialFisicoDTO material = gson.fromJson(request.body(), NovoMaterialFisicoDTO.class);
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
-            ArrayList<Integer> novoMaterialList = materialService.addMaterialFisico(material, token);
+            String token = request.headers("Authorization");
+            String titulo = request.queryParams("titulo");
+            String autor = request.queryParams("autor");
+            Integer formato = Integer.parseInt(request.queryParams("formato"));
+            Integer area = Integer.parseInt(request.queryParams("area"));
+            String nivel = request.queryParams("nivel");
+            String descricao = request.queryParams("descricao");
+            int quantidade = Integer.parseInt(request.queryParams("quantidade"));
+            Part capa = request.raw().getPart("capa");
+
+            // Pegando os dados da requisição
+            ArrayList<Integer> novoMaterialList = materialService.addMaterialFisico(new NovoMaterialFisicoDTO(
+                    titulo, autor, formato, area, MaterialNivel.fromString(nivel), descricao, quantidade, capa
+            ), token);
+
             if (novoMaterialList == null) throw new RuntimeException();
 
             response.status(201);

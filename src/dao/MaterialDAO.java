@@ -18,7 +18,7 @@ import java.util.List;
 public class MaterialDAO {
 
     public Integer addMaterial(Material material) {
-        String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao, cadastrado_por, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao, cadastrado_por, tipo, capaUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
@@ -33,6 +33,7 @@ public class MaterialDAO {
             statement.setString(6, material.getDescricao());
             statement.setInt(7, material.getCadastradoPor().getId());
             statement.setString(8, material.getTipo());
+            statement.setString(9, material.getCapa());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows > 0) {
@@ -94,12 +95,13 @@ public class MaterialDAO {
                     p.nome as cadastrado_por,
                     m.descricao,
                     m.tipo,
-                    m.nivel_conhecimento
+                    m.nivel_conhecimento,
+                    m.capaUrl
                 FROM Material as m
                          JOIN Formato_material as fm ON fm.id = m.formato_material
                          JOIN Area_conhecimento as ar ON ar.id = m.area_conhecimento
                          JOIN Pessoa AS p on p.id = m.cadastrado_por
-                WHERE 1 = 1""");
+                WHERE 1 = 1 AND m.listado = true""");
         List<Object> parametros = new ArrayList<>();
 
         if (filtros.hasTipo()) {
@@ -145,8 +147,9 @@ public class MaterialDAO {
                 String descricao = rs.getString("descricao");
                 String nivel = rs.getString("nivel_conhecimento");
                 String tipo = rs.getString("tipo");
+                String capa = rs.getString("capaUrl");
 
-                materiais.add(new ListarMateriaisDTO(id, cadastrado_por, titulo, formato, area, descricao, nivel, tipo));
+                materiais.add(new ListarMateriaisDTO(id, cadastrado_por, titulo, formato, area, descricao, nivel, tipo, capa));
             }
 
         } catch (SQLException e) {
@@ -180,10 +183,11 @@ public class MaterialDAO {
                 Date adicionado = rs.getDate("adicionado_em");
                 double nota = rs.getDouble("nota");
                 int quantidadeAvaliacoes = rs.getInt("quantidade_avaliacao");
+                String capaUrl = rs.getString("capaUrl");
 
                 if (tipo.equals("Digital")) {
                     String url = rs.getString("link");
-                    Material material = new MaterialDigital(idMaterial, autor, tipo, titulo, MaterialNivel.fromString(nivel), descricao, nota, quantidadeAvaliacoes, url);
+                    Material material = new MaterialDigital(idMaterial, autor, tipo, titulo, MaterialNivel.fromString(nivel), descricao, nota, quantidadeAvaliacoes, url, capaUrl);
                     material.setFormato(new Catalogo(null, formato));
                     material.setArea(new Catalogo(null, area));
                     material.setCadastradoPor(new Pessoa(cadastradoPor));
@@ -193,7 +197,7 @@ public class MaterialDAO {
                 }
 
                 boolean disponibilidade = rs.getBoolean("disponibilidade");
-                Material material = new MaterialFisico(idMaterial, autor, tipo, titulo, MaterialNivel.fromString(nivel), descricao, nota, quantidadeAvaliacoes, disponibilidade);
+                Material material = new MaterialFisico(idMaterial, autor, tipo, titulo, MaterialNivel.fromString(nivel), descricao, nota, quantidadeAvaliacoes, disponibilidade, capaUrl);
                 material.setFormato(new Catalogo(null, formato));
                 material.setArea(new Catalogo(null, area));
                 material.setCadastradoPor(new Pessoa(cadastradoPor));
@@ -274,6 +278,4 @@ public class MaterialDAO {
             throw new RuntimeException(e);
         }
     }
-
-
 }

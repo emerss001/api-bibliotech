@@ -15,7 +15,7 @@ import java.util.List;
 public class EmprestimoDAO {
 
     public Integer addEmprestimo(Emprestimo emprestimo){
-        String sqlCommand = "INSERT INTO Emprestimo (material_id, aluno_id, rejicao_motivo) VALUES (?, ?, ?)";
+        String sqlCommand = "INSERT INTO Emprestimo (material_id, aluno_id, mensagem) VALUES (?, ?, ?)";
         String updateMaterial = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.id = e.material_id SET mf.disponibilidade = FALSE WHERE e.id = ?";
 
         try (Connection connection = ConnectionDB.getConnection()) {

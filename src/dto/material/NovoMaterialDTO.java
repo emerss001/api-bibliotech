@@ -12,12 +12,13 @@ public record NovoMaterialDTO (
         Integer area,
         MaterialNivel nivel,
         String descricao,
-        Part arquivo
+        Part arquivo,
+        Part capa
 ) {
     private static final CatalogoDAO catalogoDAO = new CatalogoDAO();
     // Método de validação
     public boolean valido() {
-        return tituloValido() && autorValido() && formatoValido() && areaValido() && nivelValido() && arquivoValido();
+        return tituloValido() && autorValido() && formatoValido() && areaValido() && nivelValido() && descricaoValida() && arquivoValido();
     }
 
     private void nullIsBlank(String s, String nomeCampo) {
@@ -56,8 +57,9 @@ public record NovoMaterialDTO (
         return true;
     }
 
-    public void descricaoValida() {
+    public boolean descricaoValida() {
         nullIsBlank(descricao, "Descrição");
+        return true;
     }
 
     private boolean arquivoValido() {

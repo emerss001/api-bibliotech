@@ -13,15 +13,15 @@ public class MaterialFisico extends Material{
     private Integer quantidade;
 
     // Construtor usando na rota de cração de um novo material
-    public MaterialFisico(Pessoa adicionadoPor, NovoMaterialFisicoDTO dto, Catalogo formato, Catalogo area, String tipo) {
-        super(dto.titulo(), dto.autor(), dto.nivel(), dto.descricao(), adicionadoPor, formato, area, tipo);
+    public MaterialFisico(Pessoa adicionadoPor, NovoMaterialFisicoDTO dto, Catalogo formato, Catalogo area, String capaUrl, String tipo) {
+        super(dto.titulo(), dto.autor(), dto.nivel(), dto.descricao(), adicionadoPor, formato, area, tipo, capaUrl);
         this.disponibilidade = true;
         this.quantidade = dto.quantidade();
     }
 
     // Construtor usado na rota de buscar detalhes de um material
-    public MaterialFisico(Integer id, String autor, String tipo, String titulo, MaterialNivel nivel, String descricao, double nota, int quantidadeAvaliacoes, boolean disponibilidade) {
-        super(id, autor, tipo, titulo, nivel, descricao, nota, quantidadeAvaliacoes);
+    public MaterialFisico(Integer id, String autor, String tipo, String titulo, MaterialNivel nivel, String descricao, double nota, int quantidadeAvaliacoes, boolean disponibilidade, String capaUrl) {
+        super(id, autor, tipo, titulo, nivel, descricao, nota, quantidadeAvaliacoes, capaUrl);
         this.disponibilidade = disponibilidade;
     }
 

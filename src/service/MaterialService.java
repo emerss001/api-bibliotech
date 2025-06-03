@@ -12,6 +12,7 @@ import entity.material.Material;
 import entity.material.MaterialDigital;
 import entity.material.MaterialFisico;
 import entity.pessoa.Pessoa;
+import util.FirebaseUpload;
 import util.TokenUtil;
 
 import java.util.ArrayList;
@@ -39,7 +40,10 @@ public class MaterialService {
         Catalogo formato = catalogoDAO.catalogoExiste(dto.formato(), "formato");
         Catalogo area = catalogoDAO.catalogoExiste(dto.area(), "area");
 
-        MaterialDigital materialDigital = new MaterialDigital(adicionadoPor, dto, formato, area, TIPO_DIGITAL);
+        String arquivoUrl = FirebaseUpload.upload(dto.arquivo());
+        String capaUrl = FirebaseUpload.upload(dto.capa());
+
+        MaterialDigital materialDigital = new MaterialDigital(adicionadoPor, dto, formato, area, arquivoUrl, capaUrl, TIPO_DIGITAL);
 
         return materialDigital.cadastrarMaterialDigital(materialDAO);
     }
@@ -52,7 +56,8 @@ public class MaterialService {
         Catalogo formato = catalogoDAO.catalogoExiste(dto.formato(), "formato");
         Catalogo area = catalogoDAO.catalogoExiste(dto.area(), "area");
 
-        MaterialFisico materialFisico = new MaterialFisico(adicionadoPor, dto, formato, area, TIPO_FISICO);
+        String capaUrl = FirebaseUpload.upload(dto.capa());
+        MaterialFisico materialFisico = new MaterialFisico(adicionadoPor, dto, formato, area, capaUrl, TIPO_FISICO);
 
         return materialFisico.cadastrarMaterialFisico(materialDAO);
     }

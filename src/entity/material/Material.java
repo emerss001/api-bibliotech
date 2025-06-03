@@ -22,13 +22,14 @@ public class Material {
     private Pessoa cadastradoPor;
     private int uso;
     private boolean listado;
+    private String capa;
 
     public Material() {
 
     }
 
     // construtor usado na criação de um novo material
-    public Material(String titulo, String autor, MaterialNivel nivel, String descricao, Pessoa cadastradoPor, Catalogo formato, Catalogo area, String tipo) {
+    public Material(String titulo, String autor, MaterialNivel nivel, String descricao, Pessoa cadastradoPor, Catalogo formato, Catalogo area, String tipo, String capa) {
         this.titulo = titulo;
         this.autor = autor;
         this.nivel = nivel;
@@ -37,10 +38,11 @@ public class Material {
         this.formato = formato;
         this.area = area;
         this.tipo = tipo;
+        this.capa = capa;
     }
 
     // Construtor usado na busca por detalhes de uma material
-    public Material(Integer id, String autor, String tipo, String titulo, MaterialNivel nivel, String descricao, double nota, int quantidadeAvaliacoes) {
+    public Material(Integer id, String autor, String tipo, String titulo, MaterialNivel nivel, String descricao, double nota, int quantidadeAvaliacoes, String capa) {
         this.id = id;
         this.autor = autor;
         this.tipo = tipo;
@@ -49,8 +51,13 @@ public class Material {
         this.descricao = descricao;
         this.nota = nota;
         this.quantidadeAvaliacoes = quantidadeAvaliacoes;
+        this.capa = capa;
     }
 
+
+    public String getCapa() {
+        return capa;
+    }
 
     public Integer salvar(MaterialDAO dao) {
         return dao.addMaterial(this);
