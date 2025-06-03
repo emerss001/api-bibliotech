@@ -58,12 +58,6 @@ public class EmprestimoService {
         emprestimoDAO.refuseEmprestimo(emprestimoId, mensagem);
     }
 
-    public void devolverEmprestimo(Integer emprestimoId) {
-        if (emprestimoId == null || emprestimoId <= 0) throw new IllegalArgumentException("O id não pode ser vazio");
-
-        emprestimoDAO.returnEmprestimo(emprestimoId);
-    }
-
     public void deleteEmprestimo(Integer id){
         if (id == null || id < 1) throw new IllegalArgumentException("Id inválido");
 

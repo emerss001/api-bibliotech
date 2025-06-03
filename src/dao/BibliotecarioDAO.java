@@ -7,6 +7,7 @@ import entity.catalogo.Catalogo;
 import entity.material.Material;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,99 @@ public class BibliotecarioDAO {
             return emprestimos;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public List<EmprestimosPendentesDTO> buscarEmprestimosAndamento() {
+        String sqlCommand = """
+    SELECT
+        e.id,
+        m.titulo,
+        fm.nome AS formato_material,
+        e.data_devolucao_prevista,
+        p.nome,
+        p.email,
+        n.nome AS necessidade,
+        e.mensagem
+    FROM Emprestimo AS e
+    JOIN Material_fisico AS mf ON e.material_id = mf.id
+    JOIN Material AS m ON m.id = mf.material_id
+    JOIN Formato_material AS fm ON fm.id = m.formato_material
+    JOIN Pessoa AS p ON p.id = e.aluno_id
+    JOIN Aluno AS a ON a.pessoa_id = e.aluno_id
+    JOIN Necessidade AS n ON n.id = a.id_necessidade
+    WHERE e.status = 'Aprovado' or e.status = 'Renovado';
+    """;
+        List<EmprestimosPendentesDTO> emprestimos = new ArrayList<>();
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String titulo = rs.getString("titulo");
+                String formatoMaterial = rs.getString("formato_material");
+                Date dataCriacao = rs.getDate("data_devolucao_prevista");
+                String solicitanteNome = rs.getString("nome");
+                String solicitanteEmail = rs.getString("email");
+                String solicitanteNecessidade = rs.getString("necessidade");
+                String solicitanteJustificativa = rs.getString("mensagem");
+
+                emprestimos.add(new EmprestimosPendentesDTO(id, titulo, formatoMaterial, dataCriacao, solicitanteNome, solicitanteEmail, solicitanteNecessidade, solicitanteJustificativa));
+            }
+
+            return emprestimos;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void returnEmprestimo(Integer emprestimo){
+        String sqlCommand = "UPDATE Emprestimo SET data_devolucao_real = NOW(), status = 'Devolvido' WHERE id = ?";
+        String sqlUpdateCommand = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.id = e.material_id SET mf.disponibilidade = TRUE WHERE e.id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, emprestimo);
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Nenhum empréstimo foi atualizado - ID não encontrado");
+            }
+
+            PreparedStatement statement2 = connection.prepareStatement(sqlUpdateCommand);
+            statement2.setInt(1, emprestimo);
+            int affectedRows2 = statement2.executeUpdate();
+
+            if (affectedRows2 == 0) {
+                throw new RuntimeException("A disponibilidade do material não foi atualizada - ID não encontrado");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao devolver emprestimo", e);
+        }
+    }
+
+    public void renovarEmprestimo(Integer emprestimo, LocalDate dataDevolucao){
+        String sqlCommand = "UPDATE Emprestimo SET Bibliotech.Emprestimo.data_devolucao_prevista = ?, status = 'Renovado' WHERE id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setDate(1, java.sql.Date.valueOf(dataDevolucao));
+            statement.setInt(2, emprestimo);
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Nenhum empréstimo foi atualizado - ID não encontrado");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao aprovar emprestimo" + e.getMessage());
         }
     }
 
