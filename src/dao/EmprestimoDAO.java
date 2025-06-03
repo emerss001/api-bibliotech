@@ -2,10 +2,10 @@ package dao;
 
 import db.ConnectionDB;
 import exception.NullConnectionException;
-import model.catalogo.Catalogo;
-import model.material.Emprestimo;
-import model.material.Material;
-import model.pessoa.Pessoa;
+import entity.catalogo.Catalogo;
+import entity.material.Emprestimo;
+import entity.material.Material;
+import entity.pessoa.Pessoa;
 
 import java.sql.*;
 import java.time.LocalDate;

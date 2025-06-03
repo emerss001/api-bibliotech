@@ -2,10 +2,10 @@ package dao;
 
 import db.ConnectionDB;
 import exception.NullConnectionException;
-import model.pessoa.Aluno;
-import model.pessoa.Bibliotecario;
-import model.pessoa.Pessoa;
-import model.pessoa.Professor;
+import entity.pessoa.Aluno;
+import entity.pessoa.Bibliotecario;
+import entity.pessoa.Pessoa;
+import entity.pessoa.Professor;
 import type.PessoaVinculo;
 
 import java.sql.Connection;

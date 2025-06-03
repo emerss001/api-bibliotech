@@ -4,11 +4,11 @@ import db.ConnectionDB;
 import dto.material.ListarMateriaisDTO;
 import dto.material.MateriaisFiltrosDTO;
 import exception.NullConnectionException;
-import model.catalogo.Catalogo;
-import model.material.Material;
-import model.material.MaterialDigital;
-import model.material.MaterialFisico;
-import model.pessoa.Pessoa;
+import entity.catalogo.Catalogo;
+import entity.material.Material;
+import entity.material.MaterialDigital;
+import entity.material.MaterialFisico;
+import entity.pessoa.Pessoa;
 import type.MaterialNivel;
 
 import java.sql.*;

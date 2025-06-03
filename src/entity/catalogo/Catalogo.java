@@ -1,4 +1,4 @@
-package model.catalogo;
+package entity.catalogo;
 
 public class Catalogo {
     private Integer id;

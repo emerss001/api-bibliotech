@@ -2,8 +2,7 @@ package controller;
 
 import com.google.gson.Gson;
 import dto.bibliotecario.*;
-import model.material.Material;
-import model.pessoa.Aluno;
+import entity.material.Material;
 import service.BibliotecarioService;
 import spark.Request;
 import spark.Response;

@@ -1,12 +1,11 @@
-package model.material;
+package entity.material;
 
 import dao.MaterialDAO;
-import model.catalogo.Catalogo;
-import model.pessoa.Pessoa;
+import entity.catalogo.Catalogo;
+import entity.pessoa.Pessoa;
 import type.MaterialNivel;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 public class Material {
     private Integer id;

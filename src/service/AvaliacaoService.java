@@ -5,8 +5,8 @@ import dao.AvaliacaoDAO;
 import dao.PessoaDAO;
 import dto.AvaliacaoDTO;
 import dto.AvaliacaoResponseDTO;
-import model.material.Avaliacao;
-import model.pessoa.Pessoa;
+import entity.material.Avaliacao;
+import entity.pessoa.Pessoa;
 import util.TokenUtil;
 
 import java.util.ArrayList;

@@ -3,20 +3,15 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dto.EmprestimoFiltroDTO;
-import model.material.Emprestimo;
+import entity.material.Emprestimo;
 import service.EmprestimoService;
-import dto.NovoEmprestimoDTO;
 import spark.Request;
 import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
-import java.lang.reflect.Array;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

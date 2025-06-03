@@ -2,7 +2,7 @@ package dao;
 
 import db.ConnectionDB;
 import dto.CatalogoDTO;
-import model.catalogo.Catalogo;
+import entity.catalogo.Catalogo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

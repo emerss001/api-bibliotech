@@ -1,7 +1,7 @@
-package model.material;
+package entity.material;
 
 import dao.EmprestimoDAO;
-import model.pessoa.Pessoa;
+import entity.pessoa.Pessoa;
 import type.EmprestimoStatus;
 
 import java.sql.Date;

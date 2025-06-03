@@ -5,7 +5,7 @@ import dto.LoginDTO;
 import dto.PessoaDTO;
 import exception.DataConflictException;
 import exception.TokenInvalidoException;
-import model.pessoa.Pessoa;
+import entity.pessoa.Pessoa;
 import service.AuthService;
 import spark.Filter;
 import spark.Request;

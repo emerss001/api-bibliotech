@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dto.AvaliacaoDTO;
 import dto.AvaliacaoResponseDTO;
-import model.material.Avaliacao;
+import entity.material.Avaliacao;
 import service.AvaliacaoService;
 
 import spark.Request;

@@ -5,7 +5,7 @@ import dto.material.ListarMateriaisDTO;
 import dto.material.MateriaisFiltrosDTO;
 import dto.material.NovoMaterialDTO;
 import dto.material.NovoMaterialFisicoDTO;
-import model.material.Material;
+import entity.material.Material;
 import service.MaterialService;
 import spark.Request;
 import spark.Response;

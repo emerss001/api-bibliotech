@@ -1,12 +1,10 @@
-package model.material;
+package entity.material;
 
 import dao.MaterialDAO;
-import dto.material.NovoMaterialDTO;
 import dto.material.NovoMaterialFisicoDTO;
-import model.catalogo.Catalogo;
-import model.pessoa.Pessoa;
+import entity.catalogo.Catalogo;
+import entity.pessoa.Pessoa;
 import type.MaterialNivel;
-import util.FirebaseUpload;
 
 import java.util.ArrayList;
 

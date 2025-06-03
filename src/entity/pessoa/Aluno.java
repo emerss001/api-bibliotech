@@ -1,4 +1,4 @@
-package model.pessoa;
+package entity.pessoa;
 
 import dao.PessoaDAO;
 import dto.PessoaDTO;

@@ -2,7 +2,7 @@ package dao;
 
 import db.ConnectionDB;
 import dto.AvaliacaoResponseDTO;
-import model.material.Avaliacao;
+import entity.material.Avaliacao;
 
 import java.sql.*;
 import java.util.ArrayList;

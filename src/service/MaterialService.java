@@ -7,11 +7,11 @@ import dto.material.ListarMateriaisDTO;
 import dto.material.MateriaisFiltrosDTO;
 import dto.material.NovoMaterialDTO;
 import dto.material.NovoMaterialFisicoDTO;
-import model.catalogo.Catalogo;
-import model.material.Material;
-import model.material.MaterialDigital;
-import model.material.MaterialFisico;
-import model.pessoa.Pessoa;
+import entity.catalogo.Catalogo;
+import entity.material.Material;
+import entity.material.MaterialDigital;
+import entity.material.MaterialFisico;
+import entity.pessoa.Pessoa;
 import util.TokenUtil;
 
 import java.util.ArrayList;

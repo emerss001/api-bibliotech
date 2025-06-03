@@ -3,8 +3,8 @@ package dao;
 import db.ConnectionDB;
 import dto.bibliotecario.*;
 import exception.NullConnectionException;
-import model.catalogo.Catalogo;
-import model.material.Material;
+import entity.catalogo.Catalogo;
+import entity.material.Material;
 
 import java.sql.*;
 import java.util.ArrayList;

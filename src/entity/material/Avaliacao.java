@@ -1,4 +1,4 @@
-package model.material;
+package entity.material;
 
 import dao.AvaliacaoDAO;
 import dto.AvaliacaoDTO;

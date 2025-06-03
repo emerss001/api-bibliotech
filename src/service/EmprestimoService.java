@@ -1,20 +1,14 @@
 package service;
 
-import com.google.gson.JsonObject;
 import dao.EmprestimoDAO;
 import dao.MaterialDAO;
 import dao.PessoaDAO;
-import dto.EmprestimoFiltroDTO;
-import dto.NovoEmprestimoDTO;
-import model.material.Emprestimo;
-import model.material.Material;
-import model.pessoa.Aluno;
-import model.pessoa.Pessoa;
+import entity.material.Emprestimo;
+import entity.material.Material;
+import entity.pessoa.Pessoa;
 import util.TokenUtil;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 

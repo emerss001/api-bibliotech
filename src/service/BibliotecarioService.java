@@ -2,7 +2,7 @@ package service;
 
 import dao.BibliotecarioDAO;
 import dto.bibliotecario.*;
-import model.material.Material;
+import entity.material.Material;
 
 import java.util.List;
 
