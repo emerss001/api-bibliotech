@@ -2,6 +2,8 @@ package dto.material;
 
 import type.MaterialNivel;
 
+import javax.servlet.http.Part;
+
 public record NovoMaterialFisicoDTO (
         String titulo,
         String autor,
@@ -9,10 +11,11 @@ public record NovoMaterialFisicoDTO (
         Integer area,
         MaterialNivel nivel,
         String descricao,
-        Integer quantidade
+        Integer quantidade,
+        Part capa
 ) {
     public boolean valido() {
-        return tituloValido() && autorValido() && formatoValido() && areaValido() && nivelValido() && quantidadeValido();
+        return tituloValido() && autorValido() && formatoValido() && areaValido() && nivelValido() && descricaoValida() && quantidadeValido();
     }
 
     private void nullIsBlank(String s, String nomeCampo) {
@@ -49,8 +52,9 @@ public record NovoMaterialFisicoDTO (
         return true;
     }
 
-    public void descricaoValida() {
+    public boolean descricaoValida() {
         nullIsBlank(descricao, "Descrição");
+        return true;
     }
 
     private boolean quantidadeValido(){

@@ -11,14 +11,14 @@ public class MaterialDigital extends Material {
     private String url;
 
     // Usado na rota de criação de um novo material
-    public MaterialDigital(Pessoa adicionadoPor, NovoMaterialDTO dto, Catalogo formato, Catalogo area, String tipo) {
-        super(dto.titulo(), dto.autor(), dto.nivel(), dto.descricao(), adicionadoPor, formato, area, tipo);
-        this.url = FirebaseUpload.upload(dto.arquivo());
+    public MaterialDigital(Pessoa adicionadoPor, NovoMaterialDTO dto, Catalogo formato, Catalogo area, String url, String capaUrl, String tipo) {
+        super(dto.titulo(), dto.autor(), dto.nivel(), dto.descricao(), adicionadoPor, formato, area, tipo, capaUrl);
+        this.url = url;
     }
 
     // Usado na rota que busca os detalhes de um material
-    public MaterialDigital(Integer id, String autor, String tipo, String titulo, MaterialNivel nivel, String descricao, double nota, int quantidadeAvaliacoes, String url) {
-        super(id, autor, tipo, titulo, nivel, descricao, nota, quantidadeAvaliacoes);
+    public MaterialDigital(Integer id, String autor, String tipo, String titulo, MaterialNivel nivel, String descricao, double nota, int quantidadeAvaliacoes, String url, String capaUrl) {
+        super(id, autor, tipo, titulo, nivel, descricao, nota, quantidadeAvaliacoes, capaUrl);
         this.url = url;
     }
 

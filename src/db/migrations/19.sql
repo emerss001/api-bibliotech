@@ -1,0 +1,1 @@
+alter table Material add column capaUrl varchar(255) null;

@@ -10,6 +10,13 @@ import java.util.ArrayList;
 public class AvaliacaoDAO {
     public Integer addAvaliacao(Avaliacao avaliacao) {
         String sqlCommand = "INSERT INTO Avaliacao (material_id, aluno_id, nota, avaliacao, data) VALUES (?, ?, ?, ?, NOW())";
+        String updateMatrial = """
+    UPDATE Material
+    SET
+        nota = COALESCE((SELECT AVG(nota) FROM Avaliacao WHERE material_id = ?), 0),
+        quantidade_avaliacao = COALESCE(quantidade_avaliacao, 0) + 1
+    WHERE id = ?;
+    """;
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
@@ -25,6 +32,11 @@ public class AvaliacaoDAO {
             if (affectedRows > 0) {
                 try (ResultSet rs = statement.getGeneratedKeys()) {
                     if (rs.next()) {
+                        PreparedStatement materialUpdate = connection.prepareStatement(updateMatrial);
+                        materialUpdate.setInt(1, avaliacao.getMaterialId());
+                        materialUpdate.setInt(2, avaliacao.getMaterialId());
+                        materialUpdate.executeUpdate();
+
                         return rs.getInt(1);    // retorna o ID gerado
                     }
                 }
