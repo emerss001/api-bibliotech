@@ -1,11 +1,9 @@
 package controller;
 
 import com.google.gson.Gson;
-import dto.bibliotecario.CadastrosPendentesDTO;
-import dto.bibliotecario.EmprestimosPendentesDTO;
-import dto.bibliotecario.MetricasDTO;
-import dto.bibliotecario.MetricasMaterias;
+import dto.bibliotecario.*;
 import model.material.Material;
+import model.pessoa.Aluno;
 import service.BibliotecarioService;
 import spark.Request;
 import spark.Response;
@@ -37,6 +35,11 @@ public class BibliotecarioController {
         delete("/admin/excluir-material/:idMaterial", this::excluirMaterialAdmin);
         patch("/admin/ocultar-material/:idMaterial", this::ocultarMaterial);
         patch("/admin/listar-material/:idMaterial", this::listarMaterial);
+
+        get("/admin/metricas-alunos", this::getMetricasAlunos);
+        get("admin/buscar-alunos", this::listarAlunos);
+        patch("admin/suspender-aluno/:idAluno", this::suspenderAluno);
+        patch("admin/ativar-aluno/:idAluno", this::ativarAluno);
     }
 
     private Object getEmprestimosPendentes(Request request, Response response) {
@@ -158,8 +161,6 @@ public class BibliotecarioController {
 
             response.status(200);
             return gson.toJson("Material ocultado com sucesso");
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -178,4 +179,55 @@ public class BibliotecarioController {
             throw new RuntimeException(e);
         }
     }
+
+    // Alunos
+    private Object getMetricasAlunos(Request request, Response response) {
+        try {
+            MetricasAlunos usuarios = bibliotecarioService.buscarMetricasAlunos();
+
+            response.status(200);
+            return gson.toJson(usuarios);
+        } catch (Exception e) {
+            response.status(500);
+            return gson.toJson(Map.of("error", e.getMessage()));
+        }
+    }
+
+    private Object listarAlunos(Request request, Response response) {
+        try {
+            List<AlunosCadastradosDTO> alunos = bibliotecarioService.buscarALunos();
+
+            response.status(200);
+            return gson.toJson(alunos);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Object suspenderAluno(Request request, Response response) {
+        try {
+            int idAluno = Integer.parseInt(request.params("idAluno"));
+            bibliotecarioService.suspenderALuno(idAluno);
+
+            response.status(200);
+            return gson.toJson("Aluno suspenso com sucesso");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Object ativarAluno(Request request, Response response) {
+        try {
+            int idAluno = Integer.parseInt(request.params("idAluno"));
+            bibliotecarioService.ativarALuno(idAluno);
+
+            response.status(200);
+            return gson.toJson("Aluno ativado com sucesso");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

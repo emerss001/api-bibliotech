@@ -1,10 +1,7 @@
 package dao;
 
 import db.ConnectionDB;
-import dto.bibliotecario.CadastrosPendentesDTO;
-import dto.bibliotecario.EmprestimosPendentesDTO;
-import dto.bibliotecario.MetricasDTO;
-import dto.bibliotecario.MetricasMaterias;
+import dto.bibliotecario.*;
 import exception.NullConnectionException;
 import model.catalogo.Catalogo;
 import model.material.Material;
@@ -360,5 +357,116 @@ public class BibliotecarioDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public MetricasAlunos buscarMetricasAlunos() {
+        String sqlCommand = """
+    
+                SELECT
+        COUNT(*) AS total_alunos,
+        SUM(CASE WHEN suspenso = 0 THEN 1 ELSE 0 END) AS alunos_ativos,
+        SUM(CASE WHEN suspenso = 1 THEN 1 ELSE 0 END) AS alunos_suspensos
+    FROM Aluno
+    join Pessoa on Aluno.pessoa_id = Pessoa.id
+    where Pessoa.aprovado = true;
+    """;
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                int totalAlunos = rs.getInt("total_alunos");
+                int ativos = rs.getInt("alunos_ativos");
+                int suspensos = rs.getInt("alunos_suspensos");
+
+                return new MetricasAlunos(totalAlunos, ativos, suspensos);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public List<AlunosCadastradosDTO> buscarAlunos() {
+        String sqlCommand = """
+    SELECT
+        p.id,
+        p.nome,
+        p.email,
+        a.matricula,
+        n.nome AS necessidade,
+        a.suspenso,
+        COUNT(e.id) AS total_emprestimos,
+        SUM(CASE WHEN e.status = 'Devolvido' THEN 1 ELSE 0 END) AS emprestimos_devolvidos
+    FROM Aluno a
+    JOIN Pessoa p ON a.pessoa_id = p.id
+    JOIN Necessidade n ON n.id = a.id_necessidade
+    LEFT JOIN Emprestimo e ON e.aluno_id = a.pessoa_id
+    WHERE p.aprovado = true
+    GROUP BY p.id, p.nome, p.email, a.matricula, n.nome, a.suspenso;
+    """;
+        List<AlunosCadastradosDTO> alunos = new ArrayList<>();
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                String email = rs.getString("email");
+                String matricula = rs.getString("matricula");
+                String necessidade = rs.getString("necessidade");
+                boolean suspenso = rs.getBoolean("suspenso");
+                int totalEmprestimos = rs.getInt("total_emprestimos");
+                int emprestimosFinalizados = rs.getInt("emprestimos_devolvidos");
+
+                alunos.add(new AlunosCadastradosDTO(id, nome, email, matricula, necessidade, suspenso, totalEmprestimos, emprestimosFinalizados));
+            }
+
+            return alunos;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void suspenderALuno(Integer id) {
+        String sqlCommand = "update Aluno set suspenso = true where Aluno.pessoa_id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, id);
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected < 1) throw new RuntimeException("Nenhum aluno foi atualizado");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void ativarALuno(Integer id) {
+        String sqlCommand = "update Aluno set suspenso = false where Aluno.pessoa_id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, id);
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected < 1) throw new RuntimeException("Nenhum aluno foi atualizado");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 }
 

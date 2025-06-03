@@ -35,7 +35,9 @@ public class EmprestimoService {
             if (mensagem.length() > 255) throw new IllegalArgumentException("Mensagem deve ter no máximo 255 caracteres");
 
         }
+
         Pessoa pessoa = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
+        if (!pessoaDAO.alunoSuspenso(pessoa.getId())) throw new RuntimeException("Aluo suspenso, proibido de fazer novos empréstimos");
 
         Integer idMaterialDisponivel = materialDAO.getDisponibilidade(materialId);
         if (idMaterialDisponivel == null || idMaterialDisponivel < 0) throw new IllegalArgumentException("Máterial não tem disponibilidade");
@@ -68,20 +70,6 @@ public class EmprestimoService {
         emprestimoDAO.returnEmprestimo(emprestimoId);
     }
 
-//    public void updateEmprestimo(NovoEmprestimoDTO dto){
-//        if (dto == null) throw new IllegalArgumentException("Dados do empréstimo inválidos");
-//        if (!dto.validoUpdate()) throw new IllegalArgumentException("Dados obrigatórios não informados");
-//
-//        Emprestimo emprestimo = new Emprestimo(dto);
-//
-//        switch (dto.status()){
-////            case APROVADO -> emprestimoDAO.aprooveEmprestimo(emprestimo);
-//            case REJEITADO -> emprestimoDAO.refuseEmprestimo(emprestimo);
-//            case RENOVADO -> emprestimoDAO.renovateEmprestimo(emprestimo);
-//            case DEVOLVIDO -> emprestimoDAO.returnEmprestimo(emprestimo);
-//        }
-//    }
-
     public void deleteEmprestimo(Integer id){
         if (id == null || id < 1) throw new IllegalArgumentException("Id inválido");
 
@@ -92,12 +80,6 @@ public class EmprestimoService {
         Pessoa aluno = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
         return emprestimoDAO.getEmprestimosByAluno(aluno);
     }
-
-
-//    public ArrayList<Emprestimo> listEmprestimo(EmprestimoFiltroDTO dto){
-//
-//        return emprestimoDAO.readEmprestimo(dto);
-//    }
 
     public Integer tokenTOId(String token){
         Pessoa aluno = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
