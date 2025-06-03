@@ -32,7 +32,6 @@ public class EmprestimoController {
         post("/protegida/emprestimos/:materialId", this::criarEmprestimo);
         patch("/protegida/emprestimos/aprovar/:emprestimoId", this::aprovarEmprestimo);
         patch("/protegida/emprestimos/rejeitar/:emprestimoId", this::rejeitarEmprestimo);
-        patch("/protegida/emprestimos/devolver/:emprestimoId", this::devolverEmprestimo);
     }
 
     private Object listarEmprestimosAluno(Request request, Response response) {
@@ -112,46 +111,6 @@ public class EmprestimoController {
             throw new RuntimeException(e);
         }
     }
-
-    private Object devolverEmprestimo(Request request, Response response) {
-        try {
-            Integer emprestimoId = Integer.parseInt(request.params("emprestimoId"));
-
-            emprestimoService.devolverEmprestimo(emprestimoId);
-            response.status(200);
-            return gson.toJson("Empréstimo devolvido");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-//    private Object listarEmprestimo(Request request, Response response) {
-//        try {
-//            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-//
-//            // Pegando os dados da requisição
-//            Integer quantidadeArr = request.queryParams("quantidade") != null ? Integer.parseInt(request.queryParams("quantidade")) : null;
-//            String[] statusArr = request.queryParamsValues("status");
-//            String[] alunoIdArr = request.queryParamsValues("alunoId");
-//
-//            ArrayList<Emprestimo> lista = emprestimoService.listEmprestimo(
-//                    new EmprestimoFiltroDTO(
-//                            quantidadeArr,
-//                            statusArr != null ? Arrays.asList(statusArr) : List.of(),
-//                            alunoIdArr != null ? Arrays.asList(alunoIdArr) : List.of()
-//                    )
-//            );
-//
-//            response.status(200);
-//            return gson.toJson(lista);
-//        } catch (Exception e) {
-//            System.err.println(e.getMessage());
-//            response.type("application/json");
-//            response.status(500);
-//
-//            return gson.toJson(Map.of("error", e.getMessage()));
-//        }
-//    }
 
     private Object excluirEmprestimo(Request request, Response response) {
         try {

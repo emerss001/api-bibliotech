@@ -1,12 +1,17 @@
 package controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dto.bibliotecario.*;
 import entity.material.Material;
 import service.BibliotecarioService;
 import spark.Request;
 import spark.Response;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +29,10 @@ public class BibliotecarioController {
 
     private void setupRoutes() {
         get("/admin/emprestimos-pendentes", this::getEmprestimosPendentes);
+        get("/admin/emprestimos-andamento", this::getEmprestimosAndamento);
+        patch("/admin/emprestimos/devolver/:emprestimoId", this::devolverEmprestimo);
+        patch("/admin/emprestimos/renovar/:emprestimoId", this::renovarEmprestimo);
+
         get("/admin/cadastros-pendentes", this::getCadastrosPendentes);
         get("/admin/metricas", this::getMetricas);
         patch("/admin/aprovar-cadastro/:pessoaId", this::aprovarCadastro);
@@ -36,9 +45,9 @@ public class BibliotecarioController {
         patch("/admin/listar-material/:idMaterial", this::listarMaterial);
 
         get("/admin/metricas-alunos", this::getMetricasAlunos);
-        get("admin/buscar-alunos", this::listarAlunos);
-        patch("admin/suspender-aluno/:idAluno", this::suspenderAluno);
-        patch("admin/ativar-aluno/:idAluno", this::ativarAluno);
+        get("/admin/buscar-alunos", this::listarAlunos);
+        patch("/admin/suspender-aluno/:idAluno", this::suspenderAluno);
+        patch("/admin/ativar-aluno/:idAluno", this::ativarAluno);
     }
 
     private Object getEmprestimosPendentes(Request request, Response response) {
@@ -49,6 +58,52 @@ public class BibliotecarioController {
             return gson.toJson(emprestimos);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private Object getEmprestimosAndamento(Request request, Response response) {
+        try {
+            List<EmprestimosPendentesDTO> emprestimos = bibliotecarioService.buscarEmprestimosAndamento();
+
+            response.status(200);
+            return gson.toJson(emprestimos);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Object devolverEmprestimo(Request request, Response response) {
+        try {
+            Integer emprestimoId = Integer.parseInt(request.params("emprestimoId"));
+
+            bibliotecarioService.devolverEmprestimo(emprestimoId);
+            response.status(200);
+            return gson.toJson("Empréstimo devolvido");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Object renovarEmprestimo(Request request, Response response) {
+        try {
+            Integer emprestimoId = Integer.parseInt(request.params("emprestimoId"));
+            JsonObject json = JsonParser.parseString(request.body()).getAsJsonObject();
+            OffsetDateTime dateTime = OffsetDateTime.parse(json.get("dataDevolucao").getAsString());
+            LocalDate dataDevolucao = dateTime.toLocalDate();
+
+            bibliotecarioService.renovarEmprestimo(emprestimoId, dataDevolucao);
+
+            response.status(200);
+            return gson.toJson("Empréstimo aprovado");
+        } catch (NumberFormatException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", "id inválido"));
+        } catch (DateTimeException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", "data inválida"));
+        } catch (IllegalArgumentException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", e.getMessage()));
         }
     }
 

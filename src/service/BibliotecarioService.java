@@ -4,6 +4,7 @@ import dao.BibliotecarioDAO;
 import dto.bibliotecario.*;
 import entity.material.Material;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class BibliotecarioService {
@@ -15,6 +16,23 @@ public class BibliotecarioService {
 
     public List<EmprestimosPendentesDTO> bucarEmprestimosPendentes() {
         return bibliotecarioDAO.buscarEmprestimos();
+    }
+
+    public List<EmprestimosPendentesDTO> buscarEmprestimosAndamento() {
+        return bibliotecarioDAO.buscarEmprestimosAndamento();
+    }
+
+    public void devolverEmprestimo(Integer emprestimoId) {
+        if (emprestimoId == null || emprestimoId <= 0) throw new IllegalArgumentException("O id não pode ser vazio");
+
+        bibliotecarioDAO.returnEmprestimo(emprestimoId);
+    }
+
+    public void renovarEmprestimo(Integer emprestimoId, LocalDate dataDevolucao) {
+        if (emprestimoId == null || emprestimoId <= 0) throw new IllegalArgumentException("O id não pode ser vazio");
+        if (LocalDate.now().isAfter(dataDevolucao)) throw new IllegalArgumentException("A data não pode estar no passado");
+
+        bibliotecarioDAO.renovarEmprestimo(emprestimoId, dataDevolucao);
     }
 
     public List<CadastrosPendentesDTO> buscarCadastrosPendentes() {
