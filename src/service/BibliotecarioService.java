@@ -1,14 +1,10 @@
 package service;
 
 import dao.BibliotecarioDAO;
-import dto.bibliotecario.CadastrosPendentesDTO;
-import dto.bibliotecario.EmprestimosPendentesDTO;
-import dto.bibliotecario.MetricasDTO;
-import dto.bibliotecario.MetricasMaterias;
+import dto.bibliotecario.*;
 import model.material.Material;
 
 import java.util.List;
-import java.util.Map;
 
 public class BibliotecarioService {
     private final BibliotecarioDAO bibliotecarioDAO;
@@ -68,5 +64,27 @@ public class BibliotecarioService {
         if (id <= 0) throw new IllegalArgumentException("id inválido");
 
         bibliotecarioDAO.listarMaterial(id);
+    }
+
+    public MetricasAlunos buscarMetricasAlunos() {
+        return bibliotecarioDAO.buscarMetricasAlunos();
+    }
+
+    public List<AlunosCadastradosDTO> buscarALunos() {
+        return bibliotecarioDAO.buscarAlunos();
+    }
+
+    public void suspenderALuno(Integer id) {
+        if (id == null) throw new IllegalArgumentException("id obrigatório");
+        if (id <= 0) throw new IllegalArgumentException("id inválido");
+
+        bibliotecarioDAO.suspenderALuno(id);
+    }
+
+    public void ativarALuno(Integer id) {
+        if (id == null) throw new IllegalArgumentException("id obrigatório");
+        if (id <= 0) throw new IllegalArgumentException("id inválido");
+
+        bibliotecarioDAO.ativarALuno(id);
     }
 }

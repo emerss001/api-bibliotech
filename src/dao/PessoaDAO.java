@@ -261,5 +261,23 @@ public class PessoaDAO {
             throw new RuntimeException("Erro ao verificar existencia do ID da pessoa ", e);
         }
     }
+
+    public boolean alunoSuspenso(Integer alunoId) {
+        String sqlCommand = "SELECT 1 FROM Aluno WHERE pessoa_id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, alunoId);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) return true;
+
+            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao verificar existencia do ID da pessoa ", e);
+        }
+    }
  }
 
