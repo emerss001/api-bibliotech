@@ -31,7 +31,10 @@ public class EmprestimoService {
 
     public Emprestimo addEmprestimo(String token, Integer materialId, String mensagem){
         if (materialId == null) throw new IllegalArgumentException("id do material não pode ser nulo");
-        if (mensagem.length() > 255) throw new IllegalArgumentException("Mensagem deve ter no máximo 255 caracteres");
+        if (mensagem != null) {
+            if (mensagem.length() > 255) throw new IllegalArgumentException("Mensagem deve ter no máximo 255 caracteres");
+
+        }
         Pessoa pessoa = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
 
         Integer idMaterialDisponivel = materialDAO.getDisponibilidade(materialId);

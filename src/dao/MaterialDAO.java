@@ -11,11 +11,7 @@ import model.material.MaterialFisico;
 import model.pessoa.Pessoa;
 import type.MaterialNivel;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,6 +121,8 @@ public class MaterialDAO {
             sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("area_conhecimento", filtros.area().size()));
             parametros.addAll(filtros.area());
         }
+
+        sqlBuilder.append(" order by m.adicionado_em desc");
         
         List<ListarMateriaisDTO> materiais = new ArrayList<>();
 
@@ -179,6 +177,7 @@ public class MaterialDAO {
                 String nivel = rs.getString("nivel_conhecimento");
                 String descricao = rs.getString("descricao");
                 String cadastradoPor = rs.getString("cadastrado_por");
+                Date adicionado = rs.getDate("adicionado_em");
                 double nota = rs.getDouble("nota");
                 int quantidadeAvaliacoes = rs.getInt("quantidade_avaliacao");
 
@@ -188,6 +187,7 @@ public class MaterialDAO {
                     material.setFormato(new Catalogo(null, formato));
                     material.setArea(new Catalogo(null, area));
                     material.setCadastradoPor(new Pessoa(cadastradoPor));
+                    material.setAdicionado(adicionado);
 
                     return material;
                 }
@@ -197,6 +197,7 @@ public class MaterialDAO {
                 material.setFormato(new Catalogo(null, formato));
                 material.setArea(new Catalogo(null, area));
                 material.setCadastradoPor(new Pessoa(cadastradoPor));
+                material.setAdicionado(adicionado);
 
                 return material;
             }
@@ -256,6 +257,22 @@ public class MaterialDAO {
             throw new RuntimeException(e.getMessage());
         }
         return null;
+    }
+
+    public void atualizarUsoMaterial(Integer id) {
+        String sqlCommand = "UPDATE Material SET uso = uso + 1 WHERE id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, id);
+            int acao = statement.executeUpdate();
+
+            if (acao < 1) throw new RuntimeException("Nenhum campo atualizado");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

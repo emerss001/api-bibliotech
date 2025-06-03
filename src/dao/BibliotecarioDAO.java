@@ -4,6 +4,10 @@ import db.ConnectionDB;
 import dto.bibliotecario.CadastrosPendentesDTO;
 import dto.bibliotecario.EmprestimosPendentesDTO;
 import dto.bibliotecario.MetricasDTO;
+import dto.bibliotecario.MetricasMaterias;
+import exception.NullConnectionException;
+import model.catalogo.Catalogo;
+import model.material.Material;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -66,7 +70,7 @@ public class BibliotecarioDAO {
         CASE
             WHEN a.pessoa_id IS NOT NULL THEN 'Aluno'
             WHEN pr.pessoa_id IS NOT NULL THEN 'Professor'
-            WHEN m.pessoa_id IS NOT NULL THEN 'Moderador'
+            WHEN m.pessoa_id IS NOT NULL THEN 'Bibliotecário'
             ELSE 'Desconhecido'
         END AS vinculo,
         n.nome AS necessidade,
@@ -161,4 +165,200 @@ public class BibliotecarioDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public MetricasMaterias buscarMetricasMateriais() {
+        String sqlCommand = """
+    SELECT
+        -- Dados para o primeiro card (Total de Materiais, Físicos e Digitais)
+        (SELECT COUNT(DISTINCT m.id) FROM Material m) AS total_materiais,
+        (SELECT COUNT(DISTINCT m.id) FROM Material m WHERE m.tipo = 'Fisico') AS materiais_fisicos,
+        (SELECT COUNT(DISTINCT m.id) FROM Material m WHERE m.tipo = 'Digital') AS materiais_digitais,
+
+        -- Dados para o segundo card (Materiais Físicos Disponíveis/Indisponíveis)
+        (
+            SELECT COUNT(DISTINCT m.id)
+            FROM Material m
+            WHERE m.tipo = 'Fisico'
+              AND EXISTS (
+                SELECT 1 FROM Material_fisico mf
+                WHERE mf.material_id = m.id AND mf.disponibilidade = 1
+            )
+        ) AS disponibilidade,
+        (
+            SELECT COUNT(DISTINCT m.id)
+            FROM Material m
+            WHERE m.tipo = 'Fisico'
+              AND NOT EXISTS (
+                SELECT 1 FROM Material_fisico mf
+                WHERE mf.material_id = m.id AND mf.disponibilidade = 1
+            )
+        ) AS indisponibilidade,
+
+        -- Dados para o terceiro card (Downloads e Empréstimos)
+        (SELECT SUM(uso) FROM Material where tipo = 'Digital') AS downloads_total,
+        (SELECT sum(uso) FROM Material WHERE tipo  = 'Fisico') AS emprestimos_total,
+
+        -- Dados para o quarto card (Avaliações)
+        (SELECT AVG(nota) FROM Material WHERE nota IS NOT NULL) AS media_avaliacao,
+        (SELECT SUM(quantidade_avaliacao) FROM Material WHERE nota IS NOT NULL) AS total_avaliacoes;
+    """;
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                int totalMateriais = rs.getInt("total_materiais");
+                int materiaisFisicos = rs.getInt("materiais_fisicos");
+                int materiaisDigitais = rs.getInt("materiais_digitais");
+                int disponibilidade = rs.getInt("disponibilidade");
+                int indisponibilidade = rs.getInt("indisponibilidade");
+                int downloadsTotal = rs.getInt("downloads_total");
+                int emprestimosTotal = rs.getInt("emprestimos_total");
+                int mediaAvaliacao = rs.getInt("media_avaliacao");
+                int totalAvaliacoes = rs.getInt("total_avaliacoes");
+
+                return new MetricasMaterias(totalMateriais, materiaisFisicos, materiaisDigitais, disponibilidade, indisponibilidade, downloadsTotal, emprestimosTotal, mediaAvaliacao,totalAvaliacoes);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public List<Material> buscarMateriais() {
+        String sqlCommand = """
+    SELECT
+        m.id,
+        m.titulo,
+        m.tipo,
+        m.adicionado_em,
+        fm.nome AS formato,
+        ac.nome AS area,
+        m.autor,
+        m.nota,
+        m.quantidade_avaliacao,
+        m.uso,
+        m.listado
+    FROM
+        Material m
+    JOIN
+        Formato_material fm ON fm.id = m.formato_material
+    JOIN
+        Area_conhecimento ac ON ac.id = m.area_conhecimento;
+    """;
+        List<Material> materials = new ArrayList<>();
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String titulo = rs.getString("titulo");
+                String tipo = rs.getString("tipo");
+                Date adicionado = rs.getDate("adicionado_em");
+                String formato = rs.getString("formato");
+                String area = rs.getString("area");
+                String autor = rs.getString("autor");
+                double nota = rs.getDouble("nota");
+                int avaliacoes = rs.getInt("quantidade_avaliacao");
+                int uso = rs.getInt("uso");
+                boolean listado = rs.getBoolean("listado");
+
+                Material material = new Material();
+                material.setId(id);
+                material.setTitulo(titulo);
+                material.setTipo(tipo);
+                material.setAdicionado(adicionado);
+                material.setListado(listado);
+
+                Catalogo formatoMaterial = new Catalogo(null, formato);
+                Catalogo areaConhecimento = new Catalogo(null, area);
+
+                material.setFormato(formatoMaterial);
+                material.setArea(areaConhecimento);
+                material.setAutor(autor);
+                material.setNota(nota);
+                material.setQuantidadeAvaliacoes(avaliacoes);
+                material.setUso(uso);
+
+                materials.add(material);
+            }
+
+            return materials;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deletarMaterial(Integer id) {
+        // Primeiro verifica o tipo do material
+        String sqlCheck = "SELECT tipo FROM Material WHERE id = ?";
+        String sqlDelete = "DELETE FROM Material WHERE id = ? AND tipo = 'Digital'";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            // Verifica o tipo do material
+            PreparedStatement checkStatement = connection.prepareStatement(sqlCheck);
+            checkStatement.setInt(1, id);
+            ResultSet rs = checkStatement.executeQuery();
+
+            if (rs.next()) {
+                String tipo = rs.getString("tipo");
+                if ("Fisico".equals(tipo)) {
+                    throw new RuntimeException("Não é permitido excluir materiais físicos diretamente.");
+                }
+            } else {
+                throw new RuntimeException("Material não encontrado com o ID: " + id);
+            }
+
+            // Se não for físico, prossegue com a exclusão
+            PreparedStatement deleteStatement = connection.prepareStatement(sqlDelete);
+            deleteStatement.setInt(1, id);
+            int rowsAffected = deleteStatement.executeUpdate();
+
+            if (rowsAffected < 1) {
+                throw new RuntimeException("Nenhum material digital foi deletado (ID inválido ou já removido).");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao acessar o banco de dados: " + e.getMessage(), e);
+        }
+    }
+
+    public void ocultarMaterial(Integer id) {
+        String sqlCommand = "update Material set listado = false where id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, id);
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected < 1) throw new RuntimeException("Nenhum material foi atualizado");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void listarMaterial(Integer id) {
+        String sqlCommand = "update Material set listado = true where id = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, id);
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected < 1) throw new RuntimeException("Nenhum material foi atualizado");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+

@@ -67,4 +67,11 @@ public class MaterialService {
     public Material buscarDetalhesMaterial(int idMaterial) {
             return materialDAO.buscarDetalhesMaterial(idMaterial);
     }
+
+    public void atualizarUsoMaterial(Integer id) {
+        if (id == null) throw new IllegalArgumentException("id obrigatório");
+        if (id <= 0) throw new IllegalArgumentException("id inválido");
+
+        materialDAO.atualizarUsoMaterial(id);
+    }
 }

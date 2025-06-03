@@ -12,7 +12,9 @@ import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
 import java.lang.reflect.Array;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,7 +85,8 @@ public class EmprestimoController {
         try {
             Integer emprestimoId = Integer.parseInt(request.params("emprestimoId"));
             JsonObject json = JsonParser.parseString(request.body()).getAsJsonObject();
-            LocalDate dataDevolucao = LocalDate.parse(json.get("dataDevolucao").getAsString());
+            OffsetDateTime dateTime = OffsetDateTime.parse(json.get("dataDevolucao").getAsString());
+            LocalDate dataDevolucao = dateTime.toLocalDate();
 
             emprestimoService.aprovarEmprestimo(emprestimoId, dataDevolucao);
 
@@ -91,7 +94,13 @@ public class EmprestimoController {
             return gson.toJson("Empréstimo aprovado");
         } catch (NumberFormatException e) {
             response.status(400);
-            return gson.toJson(Map.of("error", "id do empréstimo inválido"));
+            return gson.toJson(Map.of("error", "id inválido"));
+        } catch (DateTimeException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", "data inválida"));
+        } catch (IllegalArgumentException e) {
+            response.status(400);
+            return gson.toJson(Map.of("error", e.getMessage()));
         }
     }
 

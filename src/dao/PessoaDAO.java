@@ -206,6 +206,25 @@ public class PessoaDAO {
        return null;
    }
 
+   public boolean usuarioAprovado(Integer pessoa_id) {
+        String sqlCommand = "select * from Pessoa where id = ? and aprovado = true";
+
+       try (Connection connection = ConnectionDB.getConnection()) {
+           PreparedStatement stmt = connection.prepareStatement(sqlCommand);
+           stmt.setInt(1, pessoa_id);
+           ResultSet rsPessoa = stmt.executeQuery();
+
+           if (rsPessoa.next()) {
+               return true;
+           }
+       } catch (SQLException e) {
+           System.out.println(e.getMessage());
+           throw new RuntimeException("Erro ao buscar por email", e);
+       }
+
+       return false;
+   }
+
     public Pessoa buscarPorEmail(String email) {
         String sqlPessoa = "SELECT * FROM Pessoa WHERE email = ?";
 

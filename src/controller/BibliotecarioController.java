@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import dto.bibliotecario.CadastrosPendentesDTO;
 import dto.bibliotecario.EmprestimosPendentesDTO;
 import dto.bibliotecario.MetricasDTO;
+import dto.bibliotecario.MetricasMaterias;
+import model.material.Material;
 import service.BibliotecarioService;
 import spark.Request;
 import spark.Response;
@@ -24,11 +26,17 @@ public class BibliotecarioController {
     }
 
     private void setupRoutes() {
-        get("/protegida/admin/emprestimos-pendentes", this::getEmprestimosPendentes);
-        get("/protegida/admin/cadastros-pendentes", this::getCadastrosPendentes);
-        get("/protegida/admin/metricas", this::getMetricas);
-        patch("/protegida/admin/aprovar-cadastro/:pessoaId", this::aprovarCadastro);
-        delete("/protegida/admin/rejeitar-cadastro/:pessoaId", this::rejeitarCadastro);
+        get("/admin/emprestimos-pendentes", this::getEmprestimosPendentes);
+        get("/admin/cadastros-pendentes", this::getCadastrosPendentes);
+        get("/admin/metricas", this::getMetricas);
+        patch("/admin/aprovar-cadastro/:pessoaId", this::aprovarCadastro);
+        delete("/admin/rejeitar-cadastro/:pessoaId", this::rejeitarCadastro);
+
+        get("/admin/metricas-materiais", this::getMetricasMaterias);
+        get("/admin/buscar-materiais", this::getMateriais);
+        delete("/admin/excluir-material/:idMaterial", this::excluirMaterialAdmin);
+        patch("/admin/ocultar-material/:idMaterial", this::ocultarMaterial);
+        patch("/admin/listar-material/:idMaterial", this::listarMaterial);
     }
 
     private Object getEmprestimosPendentes(Request request, Response response) {
@@ -102,5 +110,72 @@ public class BibliotecarioController {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    // materiais
+    private Object getMetricasMaterias(Request request, Response response) {
+        try {
+            MetricasMaterias metricasMaterias = bibliotecarioService.buscarMetricasMateriais();
+
+            response.status(200);
+            return gson.toJson(metricasMaterias);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Object getMateriais(Request request, Response response) {
+        try {
+            List<Material> materials = bibliotecarioService.buscarMateriais();
+
+            response.status(200);
+            return gson.toJson(materials);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Object excluirMaterialAdmin(Request request, Response response) {
+        try {
+            int idMaterial = Integer.parseInt(request.params("idMaterial"));
+
+            bibliotecarioService.excluirMaterialAdmin(idMaterial);
+
+            response.status(200);
+            return gson.toJson("Material excluido com sucesso");
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            response.status(500);
+            return gson.toJson(e.getMessage());
+        }
+    }
+
+    private Object ocultarMaterial(Request request, Response response) {
+        try {
+            int idMaterial = Integer.parseInt(request.params("idMaterial"));
+            bibliotecarioService.ocultarMaterial(idMaterial);
+
+            response.status(200);
+            return gson.toJson("Material ocultado com sucesso");
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Object listarMaterial(Request request, Response response) {
+        try {
+            int idMaterial = Integer.parseInt(request.params("idMaterial"));
+            bibliotecarioService.listarMaterial(idMaterial);
+
+            response.status(200);
+            return gson.toJson("Material listado com sucesso");
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

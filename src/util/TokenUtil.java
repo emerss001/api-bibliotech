@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import exception.TokenInvalidoException;
+import type.PessoaVinculo;
 
 import java.util.Date;
 
@@ -14,12 +15,12 @@ public class TokenUtil {
     private static final String ISSUER = "api-bibliotech-java";
 
 //     metodo para gerar token JWT
-    public static String gerarToken(String email, String tipoVinculo) {
+    public static String gerarToken(String email, PessoaVinculo tipoVinculo) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY_JWT);
         return JWT.create()
                 .withIssuer(ISSUER)
                 .withSubject(email)
-                .withClaim("tipo", tipoVinculo)
+                .withClaim("tipo", tipoVinculo.getDisplayName())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
                 .sign(algorithm); // expira em 1 hora
     }
@@ -53,11 +54,9 @@ public class TokenUtil {
 
 
             return decodedJWT.getSubject();
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        } catch (JWTVerificationException e) {
-            System.out.println("weeee");
-            throw new RuntimeException(e);
+        } catch (IllegalArgumentException | JWTVerificationException e) {
+            throw new TokenInvalidoException("Token inválido ou expirado ao extrair e-mail.");
+
         }
     }
 //   metodo para  manipular e decodificar o token JWT
@@ -73,7 +72,7 @@ public class TokenUtil {
 
             return decodedJWT.getClaim("tipo").asString();
         } catch (Exception e) {
-            throw new TokenInvalidoException("Token inválido ou expirado.");
+            throw new TokenInvalidoException("Vínculo inválido");
         }
     }
 

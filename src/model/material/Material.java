@@ -5,6 +5,7 @@ import model.catalogo.Catalogo;
 import model.pessoa.Pessoa;
 import type.MaterialNivel;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Material {
@@ -16,10 +17,12 @@ public class Material {
     private Catalogo area;
     private MaterialNivel nivel;
     private double nota;
-    private Timestamp adicionado;
+    private Date adicionado;
     private int quantidadeAvaliacoes;
     private String descricao;
     private Pessoa cadastradoPor;
+    private int uso;
+    private boolean listado;
 
     public Material() {
 
@@ -114,16 +117,9 @@ public class Material {
         this.nota = nota;
     }
 
-    public Timestamp getAdicionado() {
-        return adicionado;
-    }
 
-    public void setAdicionado(Timestamp adicionado) {
+    public void setAdicionado(Date adicionado) {
         this.adicionado = adicionado;
-    }
-
-    public int getQuantidadeAvaliacoes() {
-        return quantidadeAvaliacoes;
     }
 
     public void setQuantidadeAvaliacoes(int quantidadeAvaliacoes) {
@@ -144,5 +140,13 @@ public class Material {
 
     public void setCadastradoPor(Pessoa cadastradoPor) {
         this.cadastradoPor = cadastradoPor;
+    }
+
+    public void setUso(int uso) {
+        this.uso = uso;
+    }
+
+    public void setListado(boolean listado) {
+        this.listado = listado;
     }
 }
