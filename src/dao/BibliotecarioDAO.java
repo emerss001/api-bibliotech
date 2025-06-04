@@ -22,7 +22,8 @@ public class BibliotecarioDAO {
         p.nome,
         p.email,
         n.nome AS necessidade,
-        e.mensagem
+        e.mensagem,
+        m.capaUrl
     FROM Emprestimo AS e
     JOIN Material_fisico AS mf ON e.material_id = mf.id
     JOIN Material AS m ON m.id = mf.material_id
@@ -47,8 +48,9 @@ public class BibliotecarioDAO {
                 String solicitanteEmail = rs.getString("email");
                 String solicitanteNecessidade = rs.getString("necessidade");
                 String solicitanteJustificativa = rs.getString("mensagem");
+                String capa = rs.getString("capaUrl");
 
-                emprestimos.add(new EmprestimosPendentesDTO(id, titulo, formatoMaterial, dataCriacao, solicitanteNome, solicitanteEmail, solicitanteNecessidade, solicitanteJustificativa));
+                emprestimos.add(new EmprestimosPendentesDTO(id, titulo, formatoMaterial, dataCriacao, solicitanteNome, solicitanteEmail, solicitanteNecessidade, solicitanteJustificativa, capa));
             }
 
             return emprestimos;
@@ -67,7 +69,8 @@ public class BibliotecarioDAO {
         p.nome,
         p.email,
         n.nome AS necessidade,
-        e.mensagem
+        e.mensagem,
+        m.capaUrl
     FROM Emprestimo AS e
     JOIN Material_fisico AS mf ON e.material_id = mf.id
     JOIN Material AS m ON m.id = mf.material_id
@@ -92,8 +95,9 @@ public class BibliotecarioDAO {
                 String solicitanteEmail = rs.getString("email");
                 String solicitanteNecessidade = rs.getString("necessidade");
                 String solicitanteJustificativa = rs.getString("mensagem");
+                String capa = rs.getString("capaUrl");
 
-                emprestimos.add(new EmprestimosPendentesDTO(id, titulo, formatoMaterial, dataCriacao, solicitanteNome, solicitanteEmail, solicitanteNecessidade, solicitanteJustificativa));
+                emprestimos.add(new EmprestimosPendentesDTO(id, titulo, formatoMaterial, dataCriacao, solicitanteNome, solicitanteEmail, solicitanteNecessidade, solicitanteJustificativa, capa));
             }
 
             return emprestimos;
@@ -333,7 +337,8 @@ public class BibliotecarioDAO {
         m.nota,
         m.quantidade_avaliacao,
         m.uso,
-        m.listado
+        m.listado,
+        m.capaUrl
     FROM
         Material m
     JOIN
@@ -361,6 +366,7 @@ public class BibliotecarioDAO {
                 int avaliacoes = rs.getInt("quantidade_avaliacao");
                 int uso = rs.getInt("uso");
                 boolean listado = rs.getBoolean("listado");
+                String capa = rs.getString("capaUrl");
 
                 Material material = new Material();
                 material.setId(id);
@@ -368,6 +374,7 @@ public class BibliotecarioDAO {
                 material.setTipo(tipo);
                 material.setAdicionado(adicionado);
                 material.setListado(listado);
+                material.setCapa(capa);
 
                 Catalogo formatoMaterial = new Catalogo(null, formato);
                 Catalogo areaConhecimento = new Catalogo(null, area);

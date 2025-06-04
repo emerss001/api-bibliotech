@@ -155,4 +155,8 @@ public class Material {
     public void setListado(boolean listado) {
         this.listado = listado;
     }
+
+    public void setCapa(String capa) {
+        this.capa = capa;
+    }
 }
