@@ -101,27 +101,6 @@ public class EmprestimoDAO {
         }
     }
 
-
-//    public void renovateEmprestimo(Emprestimo emprestimo){
-//        String sqlCommand = "UPDATE Emprestimo SET data_devolucao_prevista = ?, status = 'Renovado' WHERE id = ?";
-//
-//        try (Connection connection = ConnectionDB.getConnection()) {
-//            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
-//
-//            PreparedStatement statement = connection.prepareStatement(sqlCommand);
-//            statement.setTimestamp(1, Timestamp.valueOf(emprestimo.getDataDPrevista()));
-//            statement.setInt(2, emprestimo.getId());
-//            int affectedRows = statement.executeUpdate();
-//
-//            if (affectedRows == 0) {
-//                throw new RuntimeException("Nenhum empréstimo foi atualizado - ID não encontrado");
-//            }
-//
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Erro ao renovar emprestimo", e);
-//        }
-//    }
-
     public void deleteEmprestimo(Integer id){
         String sqlCommand = "DELETE FROM Emprestimo WHERE id = ?";
         String sqlUpdateCommand = "UPDATE Material_fisico mf JOIN Emprestimo e ON mf.material_id = e.material_id SET mf.disponibilidade = TRUE WHERE e.id = ? AND e.status IN ('Aprovado','Pendente','Renovado')";
@@ -145,57 +124,6 @@ public class EmprestimoDAO {
             throw new RuntimeException("Erro ao deletar emprestimo", e);
         }
     }
-
-//    public ArrayList<Emprestimo> readEmprestimo(EmprestimoFiltroDTO dto){
-//        ArrayList<Emprestimo> lista = new ArrayList<>();
-//        //StringBuilder sqlCommand = new StringBuilder("SELECT * FROM Emprestimo WHERE (aluno_id = ? OR ? IS NULL) AND (status = ? OR ? IS NULL) ");
-//        StringBuilder sqlCommand = new StringBuilder("SELECT * FROM Emprestimo WHERE 1 = 1\s ");
-//
-//        List<Object> parametros = new ArrayList<>();
-//
-//        if (dto.hasAlunoId()){
-//            sqlCommand.append(EmprestimoFiltroDTO.buildInClause("aluno_id", dto.alunoId().size()));
-//            parametros.addAll(dto.alunoId());
-//        }
-//
-//        if (dto.hasStatus()){
-//            sqlCommand.append(EmprestimoFiltroDTO.buildInClause("status", dto.status().size()));
-//            parametros.addAll(dto.status());
-//        }
-//
-//        if (dto.quantidade() != null){
-//            sqlCommand.append("LIMIT ").append(dto.quantidade());
-//        }
-//
-//        try (Connection connection = ConnectionDB.getConnection()) {
-//            if (connection == null) throw new RuntimeException("Falha ao conectar ao banco de dados");
-//
-//            PreparedStatement statement = connection.prepareStatement(sqlCommand.toString());
-//
-//            for (int i = 0; i < parametros.size(); i++) {
-//                statement.setObject(i + 1, parametros.get(i));
-//            }
-//
-//            ResultSet rs = statement.executeQuery();
-//
-//            while (rs.next()){
-//                lista.add(new Emprestimo(
-//                        rs.getInt("aluno_id"),
-//                        rs.getInt("material_id"),
-//                        rs.getInt("id"),
-//                        rs.getString("data_emprestimo"),
-//                        rs.getString("data_devolucao_prevista"),
-//                        rs.getString("data_devolucao_real"),
-//                        rs.getString("status")
-//                ));
-//            }
-//
-//            return lista;
-//
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Erro ao listar emprestimos, verifique se a chave quantidade não excede o número de empréstimos", e);
-//        }
-//    }
 
     public List<Emprestimo> getEmprestimosByAluno(Pessoa aluno) {
         String sqlCommand = """

@@ -46,7 +46,7 @@ public class MaterialController {
         get("/protegida/materials/:id", this::buscarDetalhesMaterial);
         post("/protegida/materials/material-digital", this::criarMaterialDigital);
         post("/protegida/materials/material-fisico", this::criarMaterialFisico);
-        patch("/protegida/materials/atualizar-uso/:id", this::atualizarUso);
+        patch("/materials/atualizar-uso/:id", this::atualizarUso);
     }
 
     private Object criarMaterialDigital(Request request, Response response) {
@@ -64,6 +64,8 @@ public class MaterialController {
             String descricao = request.queryParams("descricao");
             Part arquivo = request.raw().getPart("arquivo");
             Part capa = request.raw().getPart("capa");
+
+            System.out.println(capa);
 
             Material novoMaterial = materialService.addMaterialDigital(
                     new NovoMaterialDTO(

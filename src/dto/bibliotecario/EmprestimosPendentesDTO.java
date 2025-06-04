@@ -10,5 +10,6 @@ public record EmprestimosPendentesDTO(
         String solicitanteNome,
         String solicitanteEmail,
         String solicitanteNecessidade,
-        String solicitanteJustificativa) {
+        String solicitanteJustificativa,
+        String capaUrl) {
 }

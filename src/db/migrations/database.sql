@@ -46,7 +46,7 @@ INSERT INTO `Aluno` VALUES (2,'2024001',2,1),(5,'ksjfsf',2,1),(20,'5454hjl',1,0)
 UNLOCK TABLES;
 
 --
--- Table structure for table `Area_conhecimento`
+-- Table structure for table `Area_conhecimento`••••••••••
 --
 
 DROP TABLE IF EXISTS `Area_conhecimento`;

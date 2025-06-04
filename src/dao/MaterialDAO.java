@@ -167,9 +167,7 @@ public class MaterialDAO {
 
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             statement.setInt(1, idMaterial);
-
             ResultSet rs = statement.executeQuery();
-//            if (!rs.next()) throw new RuntimeException("Não foi encontrado material com o id " + idMaterial);
 
             if (rs.next()) {
                 String autor = rs.getString("autor");

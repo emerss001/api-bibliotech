@@ -41,7 +41,8 @@ public class MaterialService {
         Catalogo area = catalogoDAO.catalogoExiste(dto.area(), "area");
 
         String arquivoUrl = FirebaseUpload.upload(dto.arquivo());
-        String capaUrl = FirebaseUpload.upload(dto.capa());
+        String capaUrl = "";
+        if (dto.capa() != null) capaUrl = FirebaseUpload.upload(dto.capa());
 
         MaterialDigital materialDigital = new MaterialDigital(adicionadoPor, dto, formato, area, arquivoUrl, capaUrl, TIPO_DIGITAL);
 
