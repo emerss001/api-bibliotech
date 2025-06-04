@@ -11,6 +11,10 @@ public class Pessoa {
     private String nome;
     private String email;
 
+    public Pessoa() {
+
+    }
+
     public Pessoa(int id, String senha, String nome, String email, boolean senhaJaHasheada) {
         if (!senhaJaHasheada) {
             validarDados(senha, nome, email);
@@ -27,6 +31,11 @@ public class Pessoa {
         this.id = id;
         this.email = email;
         this.senhaHash = senha;
+    }
+
+    // Construtor usado na rota de busca por detalhes de uma material
+    public Pessoa(String nome) {
+        this.nome = nome;
     }
 
     private void validarDados(String senha, String nome, String email) {
@@ -75,5 +84,9 @@ public class Pessoa {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }

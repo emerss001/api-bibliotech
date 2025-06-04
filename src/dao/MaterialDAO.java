@@ -1,10 +1,15 @@
 package dao;
 
 import db.ConnectionDB;
+import dto.material.ListarMateriaisDTO;
+import dto.material.MateriaisFiltrosDTO;
 import exception.NullConnectionException;
+import model.catalogo.Catalogo;
 import model.material.Material;
 import model.material.MaterialDigital;
 import model.material.MaterialFisico;
+import model.pessoa.Pessoa;
+import type.MaterialNivel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,17 +25,17 @@ public class MaterialDAO {
         String sqlCommand = "INSERT INTO Material (autor, titulo, formato_material, area_conhecimento, nivel_conhecimento, descricao, cadastrado_por, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
-            if (connection == null) return null;
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
             // Configura para retornar o ID gerado
             PreparedStatement statement = connection.prepareStatement(sqlCommand, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, material.getAutor());
             statement.setString(2, material.getTitulo());
-            statement.setString(3, material.getFormato());
-            statement.setString(4, material.getArea());
+            statement.setInt(3, material.getFormato().getId());
+            statement.setInt(4, material.getArea().getId());
             statement.setString(5, material.getNivel());
             statement.setString(6, material.getDescricao());
-            statement.setString(7, material.getCadastradoPor());
+            statement.setInt(7, material.getCadastradoPor().getId());
             statement.setString(8, material.getTipo());
             int affectedRows = statement.executeUpdate();
 
@@ -42,7 +47,7 @@ public class MaterialDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao criar material", e);
+            throw new RuntimeException("Erro ao criar material: " + e.getMessage());
         }
         return null;
     }
@@ -66,7 +71,7 @@ public class MaterialDAO {
         }
     }
 
-    public MaterialFisico cadastrarMaterialFisico(MaterialFisico materialFisico, Integer idMaterial){
+    public void cadastrarMaterialFisico(MaterialFisico materialFisico, Integer idMaterial){
         String sqlCommand = "INSERT INTO Material_fisico (material_id, disponibilidade) VALUES (?, true)";
 
         try (Connection connection = ConnectionDB.getConnection()) {
@@ -78,34 +83,72 @@ public class MaterialDAO {
             statement.executeUpdate();
 
             materialFisico.setId(idMaterial);
-            return materialFisico;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public List<Material> buscarTodosMateriais(int limiteInferior, int limiteSuperior) {
-        String sqlCommand = "SELECT * FROM Material LIMIT ?, ?";
-        List<Material> materiais = new ArrayList<>();
+    public List<ListarMateriaisDTO> buscarTodosMateriais(MateriaisFiltrosDTO filtros) {
+        StringBuilder sqlBuilder = new StringBuilder("""
+                SELECT
+                    m.id,
+                    fm.nome as formato,
+                    ar.nome as area,
+                    m.titulo,
+                    p.nome as cadastrado_por,
+                    m.descricao,
+                    m.tipo,
+                    m.nivel_conhecimento
+                FROM Material as m
+                         JOIN Formato_material as fm ON fm.id = m.formato_material
+                         JOIN Area_conhecimento as ar ON ar.id = m.area_conhecimento
+                         JOIN Pessoa AS p on p.id = m.cadastrado_por
+                WHERE 1 = 1""");
+        List<Object> parametros = new ArrayList<>();
+
+        if (filtros.hasTipo()) {
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("m.tipo", filtros.tipo().size()));
+            parametros.addAll(filtros.tipo());
+        }
+
+        if (filtros.hasNivel()) {
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("nivel_conhecimento", filtros.nivel().size()));
+            parametros.addAll(filtros.nivel());
+        }
+
+        if (filtros.hasFormato()) {
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("formato_material", filtros.formato().size()));
+            parametros.addAll(filtros.formato());
+        }
+
+        if (filtros.hasArea()) {
+            sqlBuilder.append(MateriaisFiltrosDTO.buildInClause("area_conhecimento", filtros.area().size()));
+            parametros.addAll(filtros.area());
+        }
+        
+        List<ListarMateriaisDTO> materiais = new ArrayList<>();
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
 
-            PreparedStatement statement = connection.prepareStatement(sqlCommand);
-            statement.setInt(1, limiteInferior);
-            statement.setInt(2, limiteSuperior);
+            PreparedStatement statement = connection.prepareStatement(sqlBuilder.toString());
+            for (int i = 0; i < parametros.size(); i++) {
+                statement.setObject(i + 1, parametros.get(i));
+            }
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
 
                 int id = rs.getInt("id");
+                String cadastrado_por = rs.getString("cadastrado_por");
                 String titulo = rs.getString("titulo");
-                String formato = rs.getString("formato_material");
-                String area = rs.getString("area_conhecimento");
+                String formato = rs.getString("formato");
+                String area = rs.getString("area");
                 String descricao = rs.getString("descricao");
                 String nivel = rs.getString("nivel_conhecimento");
+                String tipo = rs.getString("tipo");
 
-                materiais.add(new Material(id, titulo, formato, area, descricao, nivel));
+                materiais.add(new ListarMateriaisDTO(id, cadastrado_por, titulo, formato, area, descricao, nivel, tipo));
             }
 
         } catch (SQLException e) {
@@ -125,6 +168,8 @@ public class MaterialDAO {
             statement.setInt(1, idMaterial);
 
             ResultSet rs = statement.executeQuery();
+//            if (!rs.next()) throw new RuntimeException("Não foi encontrado material com o id " + idMaterial);
+
             if (rs.next()) {
                 String autor = rs.getString("autor");
                 String tipo = rs.getString("tipo");
@@ -134,28 +179,52 @@ public class MaterialDAO {
                 String nivel = rs.getString("nivel_conhecimento");
                 String descricao = rs.getString("descricao");
                 String cadastradoPor = rs.getString("cadastrado_por");
-                Double nota = rs.getDouble("nota");
+                double nota = rs.getDouble("nota");
                 int quantidadeAvaliacoes = rs.getInt("quantidade_avaliacao");
 
                 if (tipo.equals("Digital")) {
                     String url = rs.getString("link");
-                    return new MaterialDigital(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes, url);
+                    Material material = new MaterialDigital(idMaterial, autor, tipo, titulo, MaterialNivel.fromString(nivel), descricao, nota, quantidadeAvaliacoes, url);
+                    material.setFormato(new Catalogo(null, formato));
+                    material.setArea(new Catalogo(null, area));
+                    material.setCadastradoPor(new Pessoa(cadastradoPor));
+
+                    return material;
                 }
 
                 boolean disponibilidade = rs.getBoolean("disponibilidade");
-                return new MaterialFisico(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes, disponibilidade);
-            } else {
-                System.out.println("Nenhum resultado retornado pela procedure.");
+                Material material = new MaterialFisico(idMaterial, autor, tipo, titulo, MaterialNivel.fromString(nivel), descricao, nota, quantidadeAvaliacoes, disponibilidade);
+                material.setFormato(new Catalogo(null, formato));
+                material.setArea(new Catalogo(null, area));
+                material.setCadastradoPor(new Pessoa(cadastradoPor));
+
+                return material;
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
         return null;
     }
 
     public static boolean materialValido(Integer materialId){
-        String sqlCommand = "SELECT 1 FROM Material M JOIN Material_fisico MF ON M.id = MF.material_id WHERE M.id = ? AND MF.disponibilidade = true";
+        String sqlCommand = "SELECT 1 FROM Material_fisico WHERE material_id = ? ";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, materialId);
+            ResultSet rs = statement.executeQuery();
+            return rs.next();
+
+        } catch (SQLException | RuntimeException e) {
+            throw new RuntimeException("Erro ao verificar disponibilidade do material ID: " + materialId, e);
+        }
+    }
+
+    public static boolean materialValidoAvaliacao(Integer materialId){
+        String sqlCommand = "SELECT 1 FROM Material WHERE id = ? ";
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
@@ -170,5 +239,67 @@ public class MaterialDAO {
         }
     }
 
+    public Integer getDisponibilidade(Integer materialId) {
+        String sqlCommand = "SELECT mf.id FROM Material_fisico as mf JOIN Material as m ON m.id = mf.material_id WHERE m.id = ? AND mf.disponibilidade = 1 LIMIT 1";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setInt(1, materialId);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return null;
+    }
+
+
+    public List<Material> buscarPorIdCriador(int idCriador) {
+        List<Material> materiaisDoCriador = new ArrayList<>();
+        String sql = "SELECT id, titulo, autor, formato_material, area_conhecimento, nivel_conhecimento, descricao, tipo, cadastrado_por FROM Material WHERE cadastrado_por = ?";
+
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idCriador);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Material material = new Material();
+                    material.setId(rs.getInt("id"));
+                    material.setTitulo(rs.getString("titulo"));
+                    material.setAutor(rs.getString("autor"));
+                    material.setDescricao(rs.getString("descricao"));
+                    materiaisDoCriador.add(material);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar materiais por ID do criador (" + idCriador + "): " + e.getMessage());
+        }
+        return materiaisDoCriador;
+    }
+
+    public boolean apagarPorId(int idMaterial) {
+        String sql = "DELETE FROM Material WHERE id = ?";
+        int linhasAfetadas = 0;
+
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idMaterial);
+            linhasAfetadas = pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao apagar material com ID " + idMaterial + ": " + e.getMessage());
+            return false;
+        }
+
+        return linhasAfetadas > 0;
+    }
 
 }

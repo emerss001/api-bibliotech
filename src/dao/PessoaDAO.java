@@ -137,6 +137,45 @@ public class PessoaDAO {
        return false;
    }
 
+   public boolean matriculaExiste(String matricula) {
+        String sqlCommand = "SELECT COUNT(*) FROM Aluno WHERE matricula = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setString(1, matricula);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+   }
+
+    public boolean siapExiste(String siap) {
+        String sqlCommand = "SELECT COUNT(*) FROM Professor WHERE siap = ?";
+
+        try (Connection connection = ConnectionDB.getConnection()) {
+            if (connection == null) throw new NullConnectionException("Não foi possível conectar ao banco de dados");
+
+            PreparedStatement statement = connection.prepareStatement(sqlCommand);
+            statement.setString(1, siap);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
    public Pessoa buscarPorIdentificador(PessoaVinculo userTipo, String identificador) {
         String sqlCommand = switch (userTipo) {
             case ALUNO ->
@@ -180,10 +219,10 @@ public class PessoaDAO {
                 String nome = rsPessoa.getString("nome");
                 String senha = rsPessoa.getString("senha");
 
-                return new Pessoa(id,senha, nome, email, true);
+                return new Pessoa(id, senha, nome, email, true);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar por email", e);
+            throw new RuntimeException("Erro ao buscar por email: " + e.getMessage());
         }
         return null;
     }
@@ -202,6 +241,31 @@ public class PessoaDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao verificar existencia do ID da pessoa ", e);
         }
+    }
+
+    public Pessoa buscarPorId(int id) {
+        String sql = "SELECT id, nome, email, senha FROM Pessoa WHERE id = ?";
+        Pessoa pessoaEncontrada = null;
+
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    pessoaEncontrada = new Pessoa(
+                            rs.getInt("id"),
+                            rs.getString("senha"),
+                            rs.getString("nome"),
+                            rs.getString("email"),
+                            true
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar pessoa por ID " + id + ": " + e.getMessage());
+        }
+        return pessoaEncontrada;
     }
  }
 
