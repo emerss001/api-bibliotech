@@ -6,14 +6,14 @@ import entity.pessoa.Pessoa;
 
 public class Avaliacao {
     private Integer id;
-    private Pessoa pessoa;
+    private Aluno aluno;
     private Material material;
     private Integer nota;
     private String avaliacao;
     private String data;
 
-    public Avaliacao(Pessoa pessoa, Material material, Integer nota, String avaliacao, String data){
-        this.pessoa = pessoa;
+    public Avaliacao(Aluno aluno, Material material, Integer nota, String avaliacao, String data){
+        this.aluno = aluno;
         this.material = material;
         this.nota = nota;
         this.avaliacao = avaliacao;
@@ -45,11 +45,11 @@ public class Avaliacao {
         return data;
     }
 
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
     public Material getMaterial() {
         return material;
+    }
+
+    public Aluno getAluno() {
+        return aluno;
     }
 }

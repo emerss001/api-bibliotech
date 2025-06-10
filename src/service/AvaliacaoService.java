@@ -27,12 +27,11 @@ public class AvaliacaoService {
         if (dto == null) throw new IllegalArgumentException("Dados da avaliação inválidos");
         if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
-        Pessoa pessoa = new Pessoa();
-        pessoa.setId(dto.alunoId());
+        Aluno aluno = new Aluno(dto.alunoId());
         Material material = new Material();
         material.setId(dto.materialId());
 
-        Avaliacao avaliacao = new Avaliacao(pessoa, material, dto.nota(), dto.avaliacao(), dto.data());
+        Avaliacao avaliacao = new Avaliacao(aluno, material, dto.nota(), dto.avaliacao(), dto.data());
         avaliacao.setId(avaliacao.salvar(avaliacaoDAO));
         return avaliacao;
     }

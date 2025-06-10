@@ -24,7 +24,7 @@ public class AvaliacaoDAO {
             // Configura para retornar o ID gerado
             PreparedStatement statement = connection.prepareStatement(sqlCommand, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, avaliacao.getMaterial().getId());
-            statement.setInt(2, avaliacao.getPessoa().getId());
+            statement.setInt(2, avaliacao.getAluno().getId());
             statement.setInt(3, avaliacao.getNota());
             statement.setString(4, avaliacao.getAvaliacao());
             int affectedRows = statement.executeUpdate();
