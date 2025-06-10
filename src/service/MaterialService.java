@@ -57,7 +57,8 @@ public class MaterialService {
         Catalogo formato = catalogoDAO.catalogoExiste(dto.formato(), "formato");
         Catalogo area = catalogoDAO.catalogoExiste(dto.area(), "area");
 
-        String capaUrl = FirebaseUpload.upload(dto.capa());
+        String capaUrl = "";
+        if (dto.capa() != null) capaUrl = FirebaseUpload.upload(dto.capa());
         MaterialFisico materialFisico = new MaterialFisico(adicionadoPor, dto, formato, area, capaUrl, TIPO_FISICO);
 
         return materialFisico.cadastrarMaterialFisico(materialDAO);

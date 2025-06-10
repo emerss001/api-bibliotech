@@ -1,32 +1,23 @@
 package entity.material;
 
 import dao.AvaliacaoDAO;
-import dto.AvaliacaoDTO;
+import entity.pessoa.Aluno;
+import entity.pessoa.Pessoa;
 
 public class Avaliacao {
     private Integer id;
-    private Integer alunoId;
-    private Integer materialId;
+    private Pessoa pessoa;
+    private Material material;
     private Integer nota;
     private String avaliacao;
     private String data;
 
-    public Avaliacao(Integer id, Integer alunoId, Integer materialId, Integer nota, String avaliacao, String data){
-        this.id = id;
-        this.alunoId = alunoId;
-        this.materialId = materialId;
+    public Avaliacao(Pessoa pessoa, Material material, Integer nota, String avaliacao, String data){
+        this.pessoa = pessoa;
+        this.material = material;
         this.nota = nota;
         this.avaliacao = avaliacao;
         this.data = data;
-    }
-
-    public Avaliacao(AvaliacaoDTO dto){
-        this.id = dto.id();
-        this.alunoId = dto.alunoId();
-        this.materialId = dto.materialId();
-        this.nota = dto.nota();
-        this.avaliacao = dto.avaliacao();
-        this.data = dto.data();
     }
 
     public Integer salvar(AvaliacaoDAO dao) {
@@ -41,13 +32,6 @@ public class Avaliacao {
         this.id = id;
     }
 
-    public Integer getAlunoId() {
-        return alunoId;
-    }
-
-    public Integer getMaterialId() {
-        return materialId;
-    }
 
     public Integer getNota() {
         return nota;
@@ -59,5 +43,13 @@ public class Avaliacao {
 
     public String getData() {
         return data;
+    }
+
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public Material getMaterial() {
+        return material;
     }
 }
