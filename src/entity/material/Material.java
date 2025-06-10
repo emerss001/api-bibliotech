@@ -19,7 +19,7 @@ public class Material {
     private Date adicionado;
     private int quantidadeAvaliacoes;
     private String descricao;
-    private Pessoa cadastradoPor;
+        private Pessoa cadastradoPor;
     private int uso;
     private boolean listado;
     private String capa;

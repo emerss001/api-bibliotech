@@ -13,6 +13,16 @@ public class Aluno extends Pessoa {
         this.IdNecessidade = necessidade;
     }
 
+    public Aluno(int id) {
+        super();
+        setId(id);
+    }
+
+    public Aluno(String nome) {
+        super();
+        setNome(nome);
+    }
+
     public Aluno cadastrarAluno(PessoaDAO dao) {
         int idNovaPessoa = salvar(dao);
         return dao.addAluno(this, idNovaPessoa);

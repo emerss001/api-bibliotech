@@ -5,6 +5,7 @@ import dao.MaterialDAO;
 import dao.PessoaDAO;
 import entity.material.Emprestimo;
 import entity.material.Material;
+import entity.pessoa.Aluno;
 import entity.pessoa.Pessoa;
 import util.TokenUtil;
 
@@ -32,6 +33,7 @@ public class EmprestimoService {
 
         Pessoa pessoa = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
         if (!pessoaDAO.alunoSuspenso(pessoa.getId())) throw new RuntimeException("Aluo suspenso, proibido de fazer novos empréstimos");
+        Aluno aluno = new Aluno(pessoa.getId());
 
         Integer idMaterialDisponivel = materialDAO.getDisponibilidade(materialId);
         if (idMaterialDisponivel == null || idMaterialDisponivel < 0) throw new IllegalArgumentException("Máterial não tem disponibilidade");
@@ -39,7 +41,7 @@ public class EmprestimoService {
         Material material = new Material();
         material.setId(idMaterialDisponivel);
 
-        Emprestimo emprestimo = new Emprestimo(material, pessoa, mensagem);
+        Emprestimo emprestimo = new Emprestimo(material, aluno, mensagem);
         emprestimo.setId(emprestimo.salvar(emprestimoDAO));
         return emprestimo;
     }

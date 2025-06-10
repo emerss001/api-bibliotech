@@ -25,12 +25,6 @@ public class MaterialFisico extends Material{
         this.disponibilidade = disponibilidade;
     }
 
-
-//    public MaterialFisico(Integer idMaterial, String autor, String tipo, String titulo, Integer formato, Integer area, String nivel, String descricao, String cadastradoPor, double nota, int quantidadeAvaliacoes, Boolean disponibilidade) {
-//        super(idMaterial, autor, tipo, titulo, formato, area, nivel, descricao, cadastradoPor, nota, quantidadeAvaliacoes);
-//        this.disponibilidade = disponibilidade;
-//    }
-
     public ArrayList<Integer> cadastrarMaterialFisico(MaterialDAO dao) {
         ArrayList<Integer> lista = new ArrayList<>();
         Integer id = this.salvar(dao);

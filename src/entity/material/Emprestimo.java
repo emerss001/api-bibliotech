@@ -1,6 +1,7 @@
 package entity.material;
 
 import dao.EmprestimoDAO;
+import entity.pessoa.Aluno;
 import entity.pessoa.Pessoa;
 import type.EmprestimoStatus;
 
@@ -8,7 +9,7 @@ import java.sql.Date;
 
 public class Emprestimo {
     private Integer id;
-    private Pessoa aluno;
+    private Aluno aluno;
     private Material material;
     private Date dataCriacao;
     private Date dataAprovacao;
@@ -24,13 +25,13 @@ public class Emprestimo {
 
     public Emprestimo() {}
 
-    public Emprestimo(Material material, Pessoa aluno, String mensagem) {
+    public Emprestimo(Material material, Aluno aluno, String mensagem) {
         this.aluno = aluno;
         this.material = material;
         this.mensagem = mensagem;
     }
 
-    public Emprestimo(Integer id, Pessoa aluno, Material material, Date dataCriacao, Date dataAprovacao, Date dataDevolucaoPrevista, Date dataDevolucaoReal, String status, String rejicaoMotivo){
+    public Emprestimo(Integer id, Aluno aluno, Material material, Date dataCriacao, Date dataAprovacao, Date dataDevolucaoPrevista, Date dataDevolucaoReal, String status, String rejicaoMotivo){
         this.id = id;
         this.aluno = aluno;
         this.material = material;
@@ -56,10 +57,6 @@ public class Emprestimo {
 
     public Pessoa getAluno() {
         return aluno;
-    }
-
-    public void setAluno(Pessoa aluno) {
-        this.aluno = aluno;
     }
 
     public Material getMaterial() {

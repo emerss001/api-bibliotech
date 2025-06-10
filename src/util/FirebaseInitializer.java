@@ -4,13 +4,13 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class FirebaseInitializer {
     public static void initialize() {
         try {
-            FileInputStream serviceAccount = new FileInputStream("firebase/api-bibliotech-firebase.json");
+            InputStream serviceAccount = new FileInputStream("firebase/api-bibliotech-firebase.json");
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -19,10 +19,9 @@ public class FirebaseInitializer {
 
             FirebaseApp.initializeApp(options);
             System.out.println("Firebase inicializado com sucesso!");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.err.println("Erro ao inicializar Firebase: " + e.getMessage());
+            throw new RuntimeException("Falha na inicialização do Firebase", e);
         }
     }
 }

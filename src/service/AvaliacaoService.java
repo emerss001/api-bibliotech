@@ -6,6 +6,8 @@ import dao.PessoaDAO;
 import dto.AvaliacaoDTO;
 import dto.AvaliacaoResponseDTO;
 import entity.material.Avaliacao;
+import entity.material.Material;
+import entity.pessoa.Aluno;
 import entity.pessoa.Pessoa;
 import util.TokenUtil;
 
@@ -23,10 +25,13 @@ public class AvaliacaoService {
 
     public Avaliacao addAvaliacao(AvaliacaoDTO dto){
         if (dto == null) throw new IllegalArgumentException("Dados da avaliação inválidos");
-
         if (!dto.valido()) throw new IllegalArgumentException("Dados obrigatórios não informados");
 
-        Avaliacao avaliacao = new Avaliacao(dto);
+        Aluno aluno = new Aluno(dto.alunoId());
+        Material material = new Material();
+        material.setId(dto.materialId());
+
+        Avaliacao avaliacao = new Avaliacao(aluno, material, dto.nota(), dto.avaliacao(), dto.data());
         avaliacao.setId(avaliacao.salvar(avaliacaoDAO));
         return avaliacao;
     }

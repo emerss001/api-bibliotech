@@ -1,6 +1,7 @@
 package dao;
 
 import db.ConnectionDB;
+import entity.pessoa.Aluno;
 import exception.NullConnectionException;
 import entity.catalogo.Catalogo;
 import entity.material.Emprestimo;
@@ -165,8 +166,7 @@ public class EmprestimoDAO {
             while (rs.next()) {
                 Integer id = rs.getInt("id");
 
-                Pessoa criador = new Pessoa();
-                criador.setNome(rs.getString("aluno"));
+                Aluno criador = new Aluno(rs.getString("aluno"));
 
                 Material material = new Material();
                 material.setFormato(new Catalogo(null, rs.getString("formato")));
