@@ -21,7 +21,7 @@ public class EmprestimoDAO {
 
         try (Connection connection = ConnectionDB.getConnection()) {
             if (connection == null) return null;
-            System.out.println(emprestimo.getMaterial().getId());
+
             // Configura para retornar o ID gerado
             PreparedStatement statement = connection.prepareStatement(sqlCommand, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, emprestimo.getMaterial().getId());

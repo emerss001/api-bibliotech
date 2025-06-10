@@ -66,9 +66,7 @@ public class Pessoa {
 
     // Getters e Setters
     public void setId(int id) {
-        if (this.id == -1) {
-            this.id = id; // Somente atribui um id se ainda não foi atribuído
-        }
+        this.id = id;
     }
     public int getId() {
         return id;
