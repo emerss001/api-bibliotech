@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "api-bibliotech",
+  "private_key_id": "e89d8edea946aa91266ae73f1b2b64d500c9f974",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+TzqsYjkTibhR\nnJ8/75iF7hpFP8T+Mpt1CU3It0sGMW0YQ/iDTbQ3xrEIlYGamHUgV/qHA/uWXCwi\nY4slONlP59dGMAtxzMno9wz+SWxPBmZiico+QSZ8QKrldfXbjMTSvAz/BK1J5vKP\n63USxAImxJEvZpiwSNq6xjD8swgnDQUip38ZK3RyvbmEWrQynhEtS2jenXT7khS4\ndTQ2GcvKhmufUGRPXoNpkK9rkcsu0nNaup1W0MqJFWhA7Ms15YAUtJUlA+pPjBbV\nzs43jhMlFGjAjSHMBeKEqlj0xjtBxAVpiI3U85XmmunmUdpKOPkFpRrlayLQubma\nJS0+TgsHAgMBAAECggEAHQwUxYj8czn7EyHXwLd+TTrpcZZpJ+9rgPKZl8A6SEi1\nARYm0UvD7Rt7m/bN4F3SyswC5ia6eNm6tskAzP6fVK3rUsA0jvsV+mPy7MEiMfGl\nIPctElF5YU+xhfJ6Qzd6NzwSs73wAS6p6UOkC+g099va2SRMu+Ny1z027usYnHUB\n02AdgwaI4UiGGCwQavMNjJEtLhkXqc2Wer4OFJbzE0SEoCVXJ7UndD3S1CWvvc+B\nGzD1Uf5w1fwmJQvaE01pPr5XZuTLEARNlANuGU2mSV0cG6QYDJ7mJ3GeQnn8pyZS\nFvhEOpElRNqJIkrYsyXfqJCHRWmMykoMgRy5nCBR0QKBgQDoKWJEH2OTd1+D1org\nX22iVqUeZa1kq2IJiVZiL9QMJ+2+63sYCXhkIWB0Os/J/nZACHKKMlkX4Oz3Ul/a\nYOgl5lyntu1GKxlpdmXUMz85nOq3PfLaguAffeb8l2LTK9km4LXcupLLFGXRgY4Y\nlqUOnqGOBTfGLBO6p5K7OeMiyQKBgQDR2bdzqLqMMv7RQzCt5ZP5bj1rh9nhnCOm\nV4RZhPQkqwbToxIzMPtpLreJOOIMkJS8bWHVSXrtRynYbBS7AeRIi0ER3hNQt103\nNHC6bT4zGsv2VZShZ1J6NR3c4xOHlhWgv0Y8bpE3lqi4wm7d+yuhwpqgQC0p0ifb\nSxcL20RXTwKBgQCz0JnTuZwec67/JgSalE8OFZ3+VTJfbn6YdE777Z+HasWxwiGt\nFGiy5UcXvxWBlh1wqxpL/4MSA5yGUr77HWOxNyM8o2pTlr4v+QwVtzuZG/iPxON8\nazG8Mn/d1EMu3B9tBU7Wj4tyz3GtO3MbiFJ/aE4o+dGhJDKDt5bmfId4QQKBgBaR\nW3FMzAMX2N+YYjvRXMCOYnyV95CTwiG5d7pI2hi3a9yGxQZMVj1RkNtpCqZfRh+d\ng8/0PwwVgyKLPQ9/fJVwpGbPgzRDA/tT4GusI+xLDXRIb9uLyQrre3Kt2QPT2C+Z\nYmxNV8CqqypzfojQ4jhbPVXOkQzWVQL4aFoWEptxAoGATbi3dSCGQrVkkp0ef7qF\n+rX04b5iY2zFJMhylD/Ce86tb35g5R6xfmAKeeaKUwwGPdahg6Xno+kC0jiH30GO\nBsKFndu9Y/Kk1a2WnzYenKMlL0CgWlvGWwPwT9TrMFfOxQNnX+sNSQgZ1z2lHpka\nbBpbDtjw9QHCwMIYOwZFKe8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@api-bibliotech.iam.gserviceaccount.com",
+  "client_id": "102964200623220324609",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40api-bibliotech.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
