@@ -11,14 +11,10 @@ Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
 - **Docker-compose** para executar o banco de dados MySQL
 
 - #### IMPORTANTE
-    **Variáveis de ambiente** para configuração do Firebase:
-  - `FIREBASE_API_KEY`
-  - `FIREBASE_AUTH_DOMAIN`
-  - `FIREBASE_PROJECT_ID`
-  - `FIREBASE_STORAGE_BUCKET`
-  - `FIREBASE_MESSAGING_SENDER_ID`
-  - `FIREBASE_APP_ID`
-
+    Para configurar o banco é necessário criar primeiro:
+1. Criar um banco de dados chamado `acervoinclusivo` no MySQL.
+2. alterar o arquivo `src/db/ConnectionDB.java` alterando o valor da variável `user` e `password` para o usuário e senha do seu banco de dados MySQL.
+3. Rodar o script `backup.sql` no seu banco de dados MySQL para criar as tabelas necessárias.
 
 # Estrutura de Pastas 📦
 

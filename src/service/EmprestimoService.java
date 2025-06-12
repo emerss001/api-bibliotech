@@ -32,7 +32,7 @@ public class EmprestimoService {
         }
 
         Pessoa pessoa = pessoaDAO.buscarPorEmail(TokenUtil.extrairEmail(token));
-        if (!pessoaDAO.alunoSuspenso(pessoa.getId())) throw new RuntimeException("Aluo suspenso, proibido de fazer novos empréstimos");
+        if (pessoaDAO.alunoSuspenso(pessoa.getId())) throw new RuntimeException("Aluo suspenso, proibido de fazer novos empréstimos");
         Aluno aluno = new Aluno(pessoa.getId());
 
         Integer idMaterialDisponivel = materialDAO.getDisponibilidade(materialId);
