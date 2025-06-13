@@ -17,12 +17,17 @@ Você pode acessar o sistema web desenvolvido através do seguinte link: [Acervo
 Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
 - **Java SDK 24** ou superior para compilar e executar o código
 - **Maven 3.6.3** ou superior para gerenciamento de dependências
-- 
+
 - #### IMPORTANTE
     Para configurar o banco é necessário criar primeiro:
 1. Criar um banco de dados chamado `acervoinclusivo` no MySQL.
 2. alterar o arquivo `src/db/ConnectionDB.java` alterando o valor da variável `user` e `password` para o usuário e senha do seu banco de dados MySQL.
 3. Rodar o script `backup.sql` no seu banco de dados MySQL para criar as tabelas necessárias.
+
+- #### IMPORTANTE
+    Para o funcionamento correto do projeto, é necessário adicionar o arquivo de credenciais do Firebase. Para isso, baixe o arquivo neste link: [Credenciais do Firebase](https://drive.google.com/file/d/1lbruzToZYnOcFeDYSsjSeQiBxHwvmhiA/view?usp=sharing).
+    
+    Coloque o arquivo baixado na na pasta `firebase/` na raiz do projeto.
 
 ## Usuários de Teste 👤
 Para facilitar os testes, foram criados alguns usuários de exemplo. Você pode utilizar as seguintes credenciais:
