@@ -10,7 +10,7 @@ import java.io.InputStream;
 public class FirebaseInitializer {
     public static void initialize() {
         try {
-            InputStream serviceAccount = new FileInputStream("firebase/api-bibliotech-firebase-adminsdk-fbsvc-c2df28b743.json");
+            InputStream serviceAccount = new FileInputStream("firebase/firebase.json");
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
