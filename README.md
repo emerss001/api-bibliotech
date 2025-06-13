@@ -8,13 +8,24 @@ Este projeto é uma API desenvolvida em Java cujo objetivo é prover funcionalid
 Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
 - **Java SDK 24** ou superior para compilar e executar o código
 - **Maven 3.6.3** ou superior para gerenciamento de dependências
-- **Docker-compose** para executar o banco de dados MySQL
-
+- 
 - #### IMPORTANTE
     Para configurar o banco é necessário criar primeiro:
 1. Criar um banco de dados chamado `acervoinclusivo` no MySQL.
 2. alterar o arquivo `src/db/ConnectionDB.java` alterando o valor da variável `user` e `password` para o usuário e senha do seu banco de dados MySQL.
 3. Rodar o script `backup.sql` no seu banco de dados MySQL para criar as tabelas necessárias.
+
+## Usuários de Teste 👤
+Para facilitar os testes, foram criados alguns usuários de exemplo. Você pode utilizar as seguintes credenciais:
+
+- Vinculo: Aluno
+- matricula: 2024005
+- senha: minhasenha
+
+
+- Vinculo: Bibliotecário
+- SIAP: 852
+- senha: minhasenha
 
 # Estrutura de Pastas 📦
 
