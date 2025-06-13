@@ -2,6 +2,15 @@
 
 Este projeto é uma API desenvolvida em Java cujo objetivo é prover funcionalidades para um sistema de uma biblioteca virtual de materiais acessíveis. Ele foi construído para ser escalável, fácil de utilizar e de manter.
 
+## Acesse o sistema web 🚀
+Você pode acessar o sistema web desenvolvido através do seguinte link: [Acervo Inclusivo](https://bibliotech-indol.vercel.app/)
+
+## Tecnologias Utilizadas 🛠️
+- **Java 24**: Linguagem de programação utilizada para o desenvolvimento da API.
+- **Maven 3.6.3**: Gerenciador de dependências utilizado para facilitar o gerenciamento do projeto.
+- **MySQL**: Sistema de gerenciamento de banco de dados utilizado para armazenar os dados da aplicação.
+- **Docker**: Utilizado para criar um ambiente isolado e consistente para o banco de dados MySQL.
+- **Next.js**: Framework utilizado para o desenvolvimento do front-end, proporcionando uma experiência de usuário dinâmica e responsiva.
 
 ## Requisitos ✅
 
