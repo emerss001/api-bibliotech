@@ -25,7 +25,7 @@ Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
 3. Rodar o script `backup.sql` no seu banco de dados MySQL para criar as tabelas necessárias.
 
 - #### IMPORTANTE
-    Para o funcionamento correto do projeto, é necessário adicionar o arquivo de credenciais do Firebase. Para isso, baixe o arquivo neste link: [Credenciais do Firebase](https://drive.google.com/file/d/1lbruzToZYnOcFeDYSsjSeQiBxHwvmhiA/view?usp=sharing).
+    Para o funcionamento correto do projeto, é necessário adicionar o arquivo de credenciais do Firebase. Para isso, baixe o arquivo neste link: [Credenciais do Firebase](https://drive.google.com/file/d/1GGDud3x9-wIH-bvjr6MxVjGijg-NMd7f/view?usp=sharing).
     
     Coloque o arquivo baixado na na pasta `firebase/` na raiz do projeto.
 
