@@ -19,14 +19,15 @@ Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
 - **Maven 3.6.3** ou superior para gerenciamento de dependências
 
 - #### IMPORTANTE
-    Para configurar o banco é necessário criar primeiro:
+Para configurar o banco é necessário criar primeiro:
 1. Criar um banco de dados chamado `acervoinclusivo` no MySQL.
 2. alterar o arquivo `src/db/ConnectionDB.java` alterando o valor da variável `user` e `password` para o usuário e senha do seu banco de dados MySQL.
 3. Rodar o script `backup.sql` no seu banco de dados MySQL para criar as tabelas necessárias.
 
-   - #### IMPORTANTE
-       Para o funcionamento correto do projeto, é necessário adicionar as credenciais do Firebase. Para isso, crie na raiz projeto um arquivo `.env` com as seguintes variáveis de ambiente:
-       ``ENVIRONMENT=production
+#### IMPORTANTE
+Para o funcionamento correto do projeto, é necessário adicionar as credenciais do Firebase. Para isso, crie na raiz projeto um arquivo `.env` com as seguintes variáveis de ambiente:
+
+```dotenv
    FIREBASE_TYPE=service_account
    FIREBASE_PROJECT_ID=api-bibliotech
    FIREBASE_PRIVATE_KEY_ID=c7947f8ec182fcf8c7aea7381b7e2f10ea50ff4e
@@ -38,8 +39,9 @@ Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
    FIREBASE_AUTH_PROVIDER_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
    FIREBASE_CLIENT_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40api-bibliotech.iam.gserviceaccount.com
    FIREBASE_UNIVERSE_DOMAIN=googleapis.com
-   FIREBASE_STORAGE_BUCKET=api-bibliotech.firebasestorage.app``
-    
+   FIREBASE_STORAGE_BUCKET=api-bibliotech.firebasestorage.app
+```
+
 Copie e cole as credenciais no arquivo `.env` criado na raiz do projeto. Essas credenciais são necessárias para a integração com o Firebase, utilizado para o armazenamento de arquivos.
    
 ## Usuários de Teste 👤
