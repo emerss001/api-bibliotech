@@ -10,7 +10,9 @@ public class Server {
     public static void main(String[] args) {
         // 1. Configuração mínima do servidor
         FirebaseInitializer.initialize();
-        port(8888);
+        int porta = Integer.parseInt(System.getenv().getOrDefault("PORT", "8888"));
+        port(porta);
+
         enableCORS();
         after((req, res) -> res.type("application/json"));
 
