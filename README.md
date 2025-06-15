@@ -24,11 +24,24 @@ Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
 2. alterar o arquivo `src/db/ConnectionDB.java` alterando o valor da variável `user` e `password` para o usuário e senha do seu banco de dados MySQL.
 3. Rodar o script `backup.sql` no seu banco de dados MySQL para criar as tabelas necessárias.
 
-- #### IMPORTANTE
-    Para o funcionamento correto do projeto, é necessário adicionar o arquivo de credenciais do Firebase. Para isso, baixe o arquivo neste link: [Credenciais do Firebase](https://drive.google.com/file/d/1GGDud3x9-wIH-bvjr6MxVjGijg-NMd7f/view?usp=sharing).
+   - #### IMPORTANTE
+       Para o funcionamento correto do projeto, é necessário adicionar as credenciais do Firebase. Para isso, crie na raiz projeto um arquivo `.env` com as seguintes variáveis de ambiente:
+       ``ENVIRONMENT=production
+   FIREBASE_TYPE=service_account
+   FIREBASE_PROJECT_ID=api-bibliotech
+   FIREBASE_PRIVATE_KEY_ID=c7947f8ec182fcf8c7aea7381b7e2f10ea50ff4e
+   FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCdLqaZN7k78FsX\nkYwfCQRRs3rBMzBqMXMCSgfiR6UilTcQbNqkhWfPIf9Kcvrkkuy78zZDBYy0ASqf\nPgDd0fMdpztVuOAgfdMnz+MCRjpavVwe4lZZQIbTDl911KzXT40Yvu91Y+GGX+1l\n0eLtfRpgktyqAGcbK+KMrCjzeqmCN1Z54pw8djptCK1/q3zCvoaabh7ry76xegUH\nFdwdrxJMvJHiqdCrM20jakzXUYlqt/rZEMkjk4LtbszAN5pJA3zIGCAxM0b6UHoU\nfsQ+3Vj+j1Bfxuc4LP15sX3ek+OD3h84St3wmnc836p2WbpczDut225HWQmq1Tkm\nAVfMqNbtAgMBAAECggEAA0UDZ6gCVSYaivq21rVuDtIEMW0iam8VZJyMHe+eFoJS\nlyegg7AXuPYM1KxgHi2VOZKlVA8TPnJQw+e7BmI1463FHPMfzGU5pXgcUYGK+LS8\nLBNKtwgR1eWUZEPUhZUMyxE7s24stIodytKrHQQPbqdXajzgaC8JQyJYprnsOT5r\nlqr4l2Spi4Enp0FVslUhjphPTgsYdDo+H6Q1wCncnNv6QCRxJXi0bAIrWvzv4aFo\n1WnEasmJ7/0xnitgzIj8aT6Ol1+ad5Z/B4YvJo8PE9iSG1hMqxB5pdXvsBfrBFi+\nYZWRPNG+86ZAG++I069/S/P42v4YMQYtPmz9qcSZeQKBgQDQ2/4VOvjnP24h+KC+\naA5CCCFgOEPimeDZhWHrqnZM/eb9DVrAbgVsFZM17rgwA1FsQPUJqZ8pfumD7TPp\nuhJB2e45DcH8vScxr0FqH++8Ms2srKf0neK6d9ckHuTxwABlMpI3u20hY/G0VNiN\n6/brGSscMGZLtUIVAryFuX61eQKBgQDAqLnl6ROc2mBxQRf913VG1FTutVVYfK83\nQ9vFMGVFbkWHSkOB3bfcBSNPNwnzqGn9qAEdN/SuxoVbuPW0nLDsZG2he5Je0ARo\nXL/IrnOemQa08ef4fyDEnY8jPPbMiJ4SOG7t9qWz2qzwUk1XlyC24woGUwyfO+Dt\nqRHR4qqUFQKBgBPWoZbAqD3G354ocJRFa/1HqmvqTEBs31ep/LgW0+/SOiuVJiab\nDLbMgdQgnawp1IUU0nGdg/m8DVAzqrerrepFWgRfUyq/iMaGYA9Fg078AF9Dcxyg\nFpYhpfTPXm28EA2MtSjIC8CdLqszV/J7FFQWaurdigns6J74SJHnIar5AoGACpd8\nGOK2fFIZKUDN49u7i9hSjwkTFxlLvLsTUwT1HFsSoXx4t6QL3qG9rjY1atrgcNyS\nqxuPbShm3oMNpw9SPrzKti0IAARpqZ8nwA2vN5HsJ3iBK0057PVIkERiwR3lqtTF\nbHm55GhqR5AOxnj9iHB09aINOJffJtG7tBFFFX0CgYB2cKIPJ/6L9tH/fYiDEuQg\nh6pRjLccBXstJXxIjDVB317pbfg/RvVgUku522tqItU+CbwIgz7PNUnNhzyU/zKk\ny3KF+4yF0BoNyHCrFn2EQcPbAaxLDsNOidLbyLWQyEuw1FtVNqPmp/M3nPNVyW1A\npY/SXdOHJOWBxu1Y36bE0w==\n-----END PRIVATE KEY-----"
+   FIREBASE_CLIENT_EMAIL=firebase-adminsdk-fbsvc@api-bibliotech.iam.gserviceaccount.com
+   FIREBASE_CLIENT_ID=102964200623220324609
+   FIREBASE_AUTH_URI=https://accounts.google.com/o/oauth2/auth
+   FIREBASE_TOKEN_URI=https://oauth2.googleapis.com/token
+   FIREBASE_AUTH_PROVIDER_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+   FIREBASE_CLIENT_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40api-bibliotech.iam.gserviceaccount.com
+   FIREBASE_UNIVERSE_DOMAIN=googleapis.com
+   FIREBASE_STORAGE_BUCKET=api-bibliotech.firebasestorage.app``
     
-    Coloque o arquivo baixado na na pasta `firebase/` na raiz do projeto.
-
+Copie e cole as credenciais no arquivo `.env` criado na raiz do projeto. Essas credenciais são necessárias para a integração com o Firebase, utilizado para o armazenamento de arquivos.
+   
 ## Usuários de Teste 👤
 Para facilitar os testes, foram criados alguns usuários de exemplo. Você pode utilizar as seguintes credenciais:
 
