@@ -94,11 +94,7 @@ Siga as etapas abaixo para executar o projeto localmente:
    mvn clean install
    ```
 
-3. Inicie o banco de dados MySQL usando Docker:
-   ```bash
-    docker-compose up -d
-    ```
-4. Execute o arquivo principal(Server.java):
+3. Execute o arquivo principal(Server.java):
 - se estiver usando **IntelliJ IDEA**:  
   clique com o botão direito em ```Server.java``` e escolha Run ```Server.main()```.
 
