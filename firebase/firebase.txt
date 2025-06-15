@@ -1,1 +1,0 @@
-Pasta destinada ao arquivo de credencias firebase.json
