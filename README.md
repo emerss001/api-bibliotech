@@ -18,12 +18,6 @@ Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
 - **Java SDK 24** ou superior para compilar e executar o código
 - **Maven 3.6.3** ou superior para gerenciamento de dependências
 
-- #### IMPORTANTE
-Para configurar o banco é necessário criar primeiro:
-1. Criar um banco de dados chamado `acervoinclusivo` no MySQL.
-2. alterar o arquivo `src/db/ConnectionDB.java` alterando o valor da variável `user` e `password` para o usuário e senha do seu banco de dados MySQL.
-3. Rodar o script `backup.sql` no seu banco de dados MySQL para criar as tabelas necessárias.
-
 #### IMPORTANTE
 Para o funcionamento correto do projeto, é necessário adicionar as credenciais do Firebase. Para isso, crie na raiz projeto um arquivo `.env` com as seguintes variáveis de ambiente:
 
@@ -43,7 +37,14 @@ Para o funcionamento correto do projeto, é necessário adicionar as credenciais
 ```
 
 Copie e cole as credenciais no arquivo `.env` criado na raiz do projeto. Essas credenciais são necessárias para a integração com o Firebase, utilizado para o armazenamento de arquivos.
-   
+#### IMPORTANTE
+É necessário também adicionar ao `.env` as variáveis do banco de dados, aidione também este código ao arquivo `.env`:
+
+```dotenv
+   DB_USER=avnadmin
+   DB_PASSWORD=AVNS_IE6kQ6tSruZplEe08q5
+```
+
 ## Usuários de Teste 👤
 Para facilitar os testes, foram criados alguns usuários de exemplo. Você pode utilizar as seguintes credenciais:
 

@@ -6,31 +6,27 @@ import com.google.firebase.FirebaseOptions;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class FirebaseInitializer {
+    private static final Dotenv dotenv = loadDotenv();
+
     public static void initialize() {
         try {
-            // Tenta ler das variáveis de ambiente primeiro
             String privateKey = System.getenv("FIREBASE_PRIVATE_KEY");
-
-            // Se não encontrou, tenta ler do .env (modo desenvolvimento)
-            if (privateKey == null) {
-                privateKey = Dotenv.load().get("FIREBASE_PRIVATE_KEY");
+            if (privateKey == null && dotenv != null) {
+                privateKey = dotenv.get("FIREBASE_PRIVATE_KEY");
             }
 
-            // Se ainda for nulo, lança erro
             if (privateKey == null) {
                 throw new RuntimeException("Variável FIREBASE_PRIVATE_KEY não encontrada");
             }
 
-            privateKey = privateKey
-                    .replace("\\n", "\n")
-                    .replace("\"", "");
+            // Corrige quebra de linha e remove aspas externas, se existirem
+            if (privateKey.startsWith("\"") && privateKey.endsWith("\"")) {
+                privateKey = privateKey.substring(1, privateKey.length() - 1);
+            }
+            privateKey = privateKey.replace("\\n", "\n");
 
-            // Restante do seu código...
             String serviceAccountJson = """
             {
               "type": "service_account",
@@ -65,8 +61,13 @@ public class FirebaseInitializer {
                     .setStorageBucket(getEnvOrDotenv("FIREBASE_STORAGE_BUCKET"))
                     .build();
 
-            FirebaseApp.initializeApp(options);
-            System.out.println("Firebase inicializado com sucesso!");
+            if (FirebaseApp.getApps().isEmpty()) {
+                FirebaseApp.initializeApp(options);
+                System.out.println("Firebase inicializado com sucesso!");
+            } else {
+                System.out.println("Firebase já foi inicializado.");
+            }
+
         } catch (Exception e) {
             System.err.println("Erro ao inicializar Firebase: " + e.getMessage());
             throw new RuntimeException("Falha na inicialização do Firebase", e);
@@ -75,15 +76,20 @@ public class FirebaseInitializer {
 
     private static String getEnvOrDotenv(String key) {
         String value = System.getenv(key);
-
-        // Se estiver em produção, não tenta usar Dotenv
         String environment = System.getenv("ENVIRONMENT");
+
         if (environment != null && environment.equalsIgnoreCase("production")) {
-            return value; // mesmo que seja null, não tenta ler do .env
+            return value;
         }
 
-        // Se não estiver em produção, tenta fallback no .env
-        return value != null ? value : Dotenv.load().get(key);
+        return value != null ? value : (dotenv != null ? dotenv.get(key) : null);
     }
 
+    private static Dotenv loadDotenv() {
+        try {
+            return Dotenv.load();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
