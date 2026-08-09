@@ -18,44 +18,38 @@ Certifique-se de ter os seguintes requisitos instalados para executar o projeto:
 - **Java SDK 24** ou superior para compilar e executar o código
 - **Maven 3.6.3** ou superior para gerenciamento de dependências
 
-#### IMPORTANTE
-Para o funcionamento correto do projeto, é necessário adicionar as credenciais do Firebase. Para isso, crie na raiz projeto um arquivo `.env` com as seguintes variáveis de ambiente:
+
+#### Configuração
+
+Para executar o projeto corretamente, é necessário configurar as credenciais do Firebase e do banco de dados.
+
+Crie um arquivo `.env` na raiz do projeto, utilizando o exemplo abaixo como referência:
 
 ```dotenv
-   FIREBASE_TYPE=service_account
-   FIREBASE_PROJECT_ID=api-bibliotech
-   FIREBASE_PRIVATE_KEY_ID=c7947f8ec182fcf8c7aea7381b7e2f10ea50ff4e
-   FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCdLqaZN7k78FsX\nkYwfCQRRs3rBMzBqMXMCSgfiR6UilTcQbNqkhWfPIf9Kcvrkkuy78zZDBYy0ASqf\nPgDd0fMdpztVuOAgfdMnz+MCRjpavVwe4lZZQIbTDl911KzXT40Yvu91Y+GGX+1l\n0eLtfRpgktyqAGcbK+KMrCjzeqmCN1Z54pw8djptCK1/q3zCvoaabh7ry76xegUH\nFdwdrxJMvJHiqdCrM20jakzXUYlqt/rZEMkjk4LtbszAN5pJA3zIGCAxM0b6UHoU\nfsQ+3Vj+j1Bfxuc4LP15sX3ek+OD3h84St3wmnc836p2WbpczDut225HWQmq1Tkm\nAVfMqNbtAgMBAAECggEAA0UDZ6gCVSYaivq21rVuDtIEMW0iam8VZJyMHe+eFoJS\nlyegg7AXuPYM1KxgHi2VOZKlVA8TPnJQw+e7BmI1463FHPMfzGU5pXgcUYGK+LS8\nLBNKtwgR1eWUZEPUhZUMyxE7s24stIodytKrHQQPbqdXajzgaC8JQyJYprnsOT5r\nlqr4l2Spi4Enp0FVslUhjphPTgsYdDo+H6Q1wCncnNv6QCRxJXi0bAIrWvzv4aFo\n1WnEasmJ7/0xnitgzIj8aT6Ol1+ad5Z/B4YvJo8PE9iSG1hMqxB5pdXvsBfrBFi+\nYZWRPNG+86ZAG++I069/S/P42v4YMQYtPmz9qcSZeQKBgQDQ2/4VOvjnP24h+KC+\naA5CCCFgOEPimeDZhWHrqnZM/eb9DVrAbgVsFZM17rgwA1FsQPUJqZ8pfumD7TPp\nuhJB2e45DcH8vScxr0FqH++8Ms2srKf0neK6d9ckHuTxwABlMpI3u20hY/G0VNiN\n6/brGSscMGZLtUIVAryFuX61eQKBgQDAqLnl6ROc2mBxQRf913VG1FTutVVYfK83\nQ9vFMGVFbkWHSkOB3bfcBSNPNwnzqGn9qAEdN/SuxoVbuPW0nLDsZG2he5Je0ARo\nXL/IrnOemQa08ef4fyDEnY8jPPbMiJ4SOG7t9qWz2qzwUk1XlyC24woGUwyfO+Dt\nqRHR4qqUFQKBgBPWoZbAqD3G354ocJRFa/1HqmvqTEBs31ep/LgW0+/SOiuVJiab\nDLbMgdQgnawp1IUU0nGdg/m8DVAzqrerrepFWgRfUyq/iMaGYA9Fg078AF9Dcxyg\nFpYhpfTPXm28EA2MtSjIC8CdLqszV/J7FFQWaurdigns6J74SJHnIar5AoGACpd8\nGOK2fFIZKUDN49u7i9hSjwkTFxlLvLsTUwT1HFsSoXx4t6QL3qG9rjY1atrgcNyS\nqxuPbShm3oMNpw9SPrzKti0IAARpqZ8nwA2vN5HsJ3iBK0057PVIkERiwR3lqtTF\nbHm55GhqR5AOxnj9iHB09aINOJffJtG7tBFFFX0CgYB2cKIPJ/6L9tH/fYiDEuQg\nh6pRjLccBXstJXxIjDVB317pbfg/RvVgUku522tqItU+CbwIgz7PNUnNhzyU/zKk\ny3KF+4yF0BoNyHCrFn2EQcPbAaxLDsNOidLbyLWQyEuw1FtVNqPmp/M3nPNVyW1A\npY/SXdOHJOWBxu1Y36bE0w==\n-----END PRIVATE KEY-----"
-   FIREBASE_CLIENT_EMAIL=firebase-adminsdk-fbsvc@api-bibliotech.iam.gserviceaccount.com
-   FIREBASE_CLIENT_ID=102964200623220324609
-   FIREBASE_AUTH_URI=https://accounts.google.com/o/oauth2/auth
-   FIREBASE_TOKEN_URI=https://oauth2.googleapis.com/token
-   FIREBASE_AUTH_PROVIDER_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
-   FIREBASE_CLIENT_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40api-bibliotech.iam.gserviceaccount.com
-   FIREBASE_UNIVERSE_DOMAIN=googleapis.com
-   FIREBASE_STORAGE_BUCKET=api-bibliotech.firebasestorage.app
+# Firebase
+FIREBASE_TYPE=service_account
+FIREBASE_PROJECT_ID=
+FIREBASE_PRIVATE_KEY_ID=
+FIREBASE_PRIVATE_KEY=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_CLIENT_ID=
+FIREBASE_AUTH_URI=https://accounts.google.com/o/oauth2/auth
+FIREBASE_TOKEN_URI=https://oauth2.googleapis.com/token
+FIREBASE_AUTH_PROVIDER_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+FIREBASE_CLIENT_CERT_URL=
+FIREBASE_UNIVERSE_DOMAIN=googleapis.com
+FIREBASE_STORAGE_BUCKET=
+
+# Database
+DB_USER=
+DB_PASSWORD=
 ```
 
-Copie e cole as credenciais no arquivo `.env` criado na raiz do projeto. Essas credenciais são necessárias para a integração com o Firebase, utilizado para o armazenamento de arquivos.
-#### IMPORTANTE
-É necessário também adicionar ao `.env` as variáveis do banco de dados, aidione também este código ao arquivo `.env`:
+Preencha as variáveis com as credenciais correspondentes ao seu projeto Firebase e ao banco de dados utilizado pela aplicação.
 
-```dotenv
-   DB_USER=avnadmin
-   DB_PASSWORD=AVNS_IE6kQ6tSruZplEe08q5
-```
+> ⚠️ **Importante:** nunca compartilhe ou versione o arquivo `.env`, pois ele contém informações sensíveis. O arquivo `.env` deve estar incluído no `.gitignore`.
 
-## Usuários de Teste 👤
-Para facilitar os testes, foram criados alguns usuários de exemplo. Você pode utilizar as seguintes credenciais:
-
-- Vinculo: Aluno
-- matricula: 2024005
-- senha: minhasenha
-
-
-- Vinculo: Bibliotecário
-- SIAP: 852
-- senha: minhasenha
+O Firebase é utilizado pelo projeto para realizar o armazenamento de arquivos.
 
 # Estrutura de Pastas 📦
 
